@@ -16,7 +16,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden; /* Prevent scrollbars during animation */
+            overflow: hidden;
         }
 
         .container {
@@ -38,7 +38,7 @@
         }
 
         .logo-img {
-            max-width: 300px; /* Adjust as needed */
+            max-width: 300px;
             height: auto;
         }
 
@@ -122,149 +122,14 @@
             from { transform: translateX(50px); }
             to { transform: translateX(0); }
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="logo-section">
-            <img src="your-logo.png" alt="Ukno Club Logo" class="logo-img">
-        </div>
-        <div class="button-section">
-            <a href="#" class="main-button">Sign Up / Log In</a>
-            <a href="#" class="main-button">Content</a>
-            <a href="#" class="main-button">Donate Us</a>
-            <a href="#" class="main-button">Feedback</a>
-        </div>
-    </div>
-    <script>
-        // No JS needed for the basic animation and layout in this case.
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ukno Club - Learn Freely</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            color: #fff;
-            font-family: 'Roboto', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden; /* Prevent scrollbars during animation */
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 90%;
-            max-width: 1200px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
         .logo-section {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
-        .logo-img {
-            max-width: 300px; /* Adjust as needed */
-            height: auto;
+            align-items: flex-start; /* Keep logo aligned to the start (left in LTR) */
         }
 
         .button-section {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            width: 100%;
-            margin-top: 20px;
+            align-items: flex-end; /* Keep buttons aligned to the end (right in LTR) */
         }
 
-        .main-button {
-            padding: 12px 24px;
-            margin-bottom: 10px;
-            background-color: #ffb800;
-            color: #000;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            width: 200px;
-            text-align: center;
-            text-decoration: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .main-button:hover {
-            background-color: #000;
-            color: #ffb800;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                align-items: center;
-            }
-
-            .logo-section {
-                align-items: center;
-            }
-
-            .button-section {
-                align-items: center;
-            }
-             .main-button{
-                width: 100%;
-             }
-        }
-
-        /* Animation */
-        .logo-img {
-            animation: fadeIn 1s ease, moveIn 1s ease forwards;
-            opacity: 0;
-            transform: translateY(-50px);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes moveIn {
-            from { transform: translateY(-50px); }
-            to { transform: translateY(0); }
-        }
-
-        .button-section {
-            animation: fadeInButtons 1s ease 0.5s, slideInButtons 1s ease forwards 0.5s;
-            opacity: 0;
-            transform: translateX(50px);
-        }
-
-        @keyframes fadeInButtons {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideInButtons {
-            from { transform: translateX(50px); }
-            to { transform: translateX(0); }
-        }
     </style>
 </head>
 <body>
@@ -280,7 +145,7 @@
         </div>
     </div>
     <script>
-        // No JS needed for the basic animation and layout in this case.
+        // No JS needed for the basic animation and layout.
     </script>
 </body>
 </html>
