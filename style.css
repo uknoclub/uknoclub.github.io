@@ -82,8 +82,9 @@ body {
 }
 
 .left .socials img {
-  width: 20px;  /* Make all images 20px wide */
-  height: 20px; /* Make all images 20px high */
+  width: 20px;
+  height: 20px;
+  object-fit: contain; /* Or 'cover', depending on desired behavior */
 }
 
 
