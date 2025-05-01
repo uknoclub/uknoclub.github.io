@@ -2,7 +2,7 @@ body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #121212;
+  background-color: #09230c;
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -40,7 +40,7 @@ body {
 }
 
 .left .green {
-  color: #66b3ff;
+  color: #eed600;
 }
 
 .left .outlined {
