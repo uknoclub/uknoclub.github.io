@@ -1,52 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Ukno Club – Learn Freely</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ukno Club - Learn Freely</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Prevent scrollbars during animation */
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .logo-img {
+            max-width: 300px; /* Adjust as needed */
+            height: auto;
+        }
+
+        .button-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .main-button {
+            padding: 12px 24px;
+            margin-bottom: 10px;
+            background-color: #ffb800;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            width: 200px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-button:hover {
+            background-color: #000;
+            color: #ffb800;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                align-items: center;
+            }
+
+            .logo-section {
+                align-items: center;
+            }
+
+            .button-section {
+                align-items: center;
+            }
+             .main-button{
+                width: 100%;
+             }
+        }
+
+        /* Animation */
+        .logo-img {
+            animation: fadeIn 1s ease, moveIn 1s ease forwards;
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes moveIn {
+            from { transform: translateY(-50px); }
+            to { transform: translateY(0); }
+        }
+
+        .button-section {
+            animation: fadeInButtons 1s ease 0.5s, slideInButtons 1s ease forwards 0.5s;
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        @keyframes fadeInButtons {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInButtons {
+            from { transform: translateX(50px); }
+            to { transform: translateX(0); }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="left">
-      <h1><span class="green">UKNO</span> <span class="outlined">CLUB</span><span class="symbol">?</span></h1>
-      <p class="tagline"><span class="green">Knowledge</span> Everywhere.</p>
-      <div class="socials">
-        <a href="#"><img src="assets/facebook.png" alt="Facebook"></a>
-        <a href="#"><img src="assets/x.png" alt="Twitter"></a>
-        <a href="#"><img src="assets/youtube.png" alt="YouTube"></a>
-        <a href="#"><img src="assets/instagram.png" alt="Instagram"></a>
-        <a href="#"><img src="assets/linkedin.png" alt="LinkedIn"></a>
-
-      </div>
+    <div class="container">
+        <div class="logo-section">
+            <img src="your-logo.png" alt="Ukno Club Logo" class="logo-img">
+        </div>
+        <div class="button-section">
+            <a href="#" class="main-button">Sign Up / Log In</a>
+            <a href="#" class="main-button">Content</a>
+            <a href="#" class="main-button">Donate Us</a>
+            <a href="#" class="main-button">Feedback</a>
+        </div>
     </div>
+    <script>
+        // No JS needed for the basic animation and layout in this case.
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ukno Club - Learn Freely</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Prevent scrollbars during animation */
+        }
 
-    <div class="right">
-      <div class="steps">
-        <div>1<br><span>USERNAME & PASSWORD</span></div>
-        <div class="active">2<br><span>ACCOUNT SETUP</span></div>
-        <div>3<br><span>START LEARNING</span></div>
-      </div>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-      <form>
-        <input type="email" placeholder="EMAIL" required>
-        <input type="password" placeholder="PASSWORD" required>
-        <input type="password" placeholder="CONFIRM PASSWORD" required>
-        <p class="password-note">Your password must be at least 10 characters long and must contain one uppercase letter, one lowercase letter, and one number or symbol.</p>
-        <button type="submit">CREATE ACCOUNT</button>
-        <p class="privacy">We always protect your privacy, and will not share your information.</p>
-        <p class="login">Already have an account? <a href="#">Login</a></p>
-      </form>
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .logo-img {
+            max-width: 300px; /* Adjust as needed */
+            height: auto;
+        }
+
+        .button-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .main-button {
+            padding: 12px 24px;
+            margin-bottom: 10px;
+            background-color: #ffb800;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            width: 200px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-button:hover {
+            background-color: #000;
+            color: #ffb800;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                align-items: center;
+            }
+
+            .logo-section {
+                align-items: center;
+            }
+
+            .button-section {
+                align-items: center;
+            }
+             .main-button{
+                width: 100%;
+             }
+        }
+
+        /* Animation */
+        .logo-img {
+            animation: fadeIn 1s ease, moveIn 1s ease forwards;
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes moveIn {
+            from { transform: translateY(-50px); }
+            to { transform: translateY(0); }
+        }
+
+        .button-section {
+            animation: fadeInButtons 1s ease 0.5s, slideInButtons 1s ease forwards 0.5s;
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        @keyframes fadeInButtons {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInButtons {
+            from { transform: translateX(50px); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-section">
+            <img src="your-logo.png" alt="Ukno Club Logo" class="logo-img">
+        </div>
+        <div class="button-section">
+            <a href="#" class="main-button">Sign Up / Log In</a>
+            <a href="#" class="main-button">Content</a>
+            <a href="#" class="main-button">Donate Us</a>
+            <a href="#" class="main-button">Feedback</a>
+        </div>
     </div>
-  </div>
-
-  <section class="objective">
-    <h2>Our Objective</h2>
-    <p>Ukno Club aims to be a one-stop solution for learning new technologies using the best open-source content from the internet. We believe in accessible, AI-enhanced education powered by platforms like YouTube and community-driven learning tools.</p>
-    <h3>Mission</h3>
-    <p>To democratize learning by making high-quality, curated tech education available to everyone — free, organized, and trackable.</p>
-    <h3>Vision</h3>
-    <p>To become India’s most trusted free learning hub for tech aspirants, helping learners grow with YouTube, AI tools, and real-world project exposure.</p>
-  </section>
+    <script>
+        // No JS needed for the basic animation and layout in this case.
+    </script>
 </body>
 </html>
