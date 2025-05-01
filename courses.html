@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Courses – Ukno Club</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Explore Courses</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="donate.html">Donate Us</a>
+  </nav>
+
+  <section class="course-section">
+    <h2>📊 Data Analyst – Excel</h2>
+    <iframe id="excelVideo" width="560" height="315" src="https://www.youtube.com/embed/Kjz_DDO4Fzs?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    <p><strong>Take Notes:</strong></p>
+    <textarea placeholder="Write your notes for Excel here..." rows="5" cols="60"></textarea>
+  </section>
+  
+  <section class="course-section">
+    <h2>📊 Data Analyst – SQL</h2>
+    <iframe id="sqlVideo" width="560" height="315" src="https://www.youtube.com/embed/hlGoQC332VM?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+    <p><strong>Take Notes:</strong></p>
+    <textarea placeholder="Write your notes for SQL here..." rows="5" cols="60"></textarea>
+  </section>
+
+  <!-- Add more course sections like above -->
+  
+  <script>
+    // Load YouTube API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    let excelPlayer, sqlPlayer;
+
+    function onYouTubeIframeAPIReady() {
+      excelPlayer = new YT.Player('excelVideo', {
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange
+        }
+      });
+
+      sqlPlayer = new YT.Player('sqlVideo', {
+        events: {
+          onReady: onPlayerReadySQL,
+          onStateChange: onPlayerStateChangeSQL
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      const savedTime = localStorage.getItem("excel-video-time");
+      if (savedTime) {
+        event.target.seekTo(parseFloat(savedTime), true);
+      }
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        setInterval(() => {
+          const currentTime = excelPlayer.getCurrentTime();
+          localStorage.setItem("excel-video-time", currentTime);
+        }, 1000);
+      }
+    }
+
+    function onPlayerReadySQL(event) {
+      const savedTime = localStorage.getItem("sql-video-time");
+      if (savedTime) {
+        event.target.seekTo(parseFloat(savedTime), true);
+      }
+    }
+
+    function onPlayerStateChangeSQL(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        setInterval(() => {
+          const currentTime = sqlPlayer.getCurrentTime();
+          localStorage.setItem("sql-video-time", currentTime);
+        }, 1000);
+      }
+    }
+  </script>
+  
+  <script>
+    // Get all textareas and save notes
+    const textareas = document.querySelectorAll("textarea");
+
+    textareas.forEach((textarea, index) => {
+      const key = "ukno-note-" + index;
+
+      // Load saved note
+      textarea.value = localStorage.getItem(key) || "";
+
+      // Save on change
+      textarea.addEventListener("input", () => {
+        localStorage.setItem(key, textarea.value);
+      });
+    });
+  </script>
+  
+  <p>🚧 More categories coming soon...</p>
+</body>
+</html>
