@@ -1,174 +1,243 @@
-/* Reset & Base Styles */
-* {
+body {
   margin: 0;
-  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  color: #FFFFFF;
+  overflow: hidden; /* To contain the blurred background */
+}
+
+.landing-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #2F303A;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.background-blur {
+  position: absolute;
+  width: 1627px;
+  height: 679px;
+  left: -45px;
+  top: -27px;
+  background-image: url('assets/bg.png'); /* Assuming 'bg.png' is the blurred image */
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: lighten;
+  filter: blur(5px) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); /* Adjust blur as needed */
+  z-index: -1; /* Behind other content */
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 1200px; /* Adjust as needed */
+  padding: 40px;
   box-sizing: border-box;
 }
 
-body {
-  background-color: #000;
-  font-family: 'Segoe UI', sans-serif;
-  color: #fff;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container {
-  position: relative;
-  width: 90%;
-  max-width: 1200px;
-  height: 90vh;
-  padding: 20px 40px;
-}
-
-/* Top Section */
 .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  margin-bottom: 80px; /* Adjust spacing */
 }
 
 .logo {
-  height: 80px;
-  width: auto;
+  height: 72px; /* Adjust logo size based on Figma */
 }
 
-.nav-buttons {
+.nav-buttons a {
+  display: inline-block;
+  padding: 10px 24px;
+  margin-left: 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 27px;
+  text-align: center;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.nav-buttons .sign-up-login {
+  background-color: #F52929;
+}
+
+.nav-buttons .about-us {
+  background-color: #F52929;
+}
+
+.hero-content {
   display: flex;
-  gap: 20px;
+  max-width: 1200px; /* Adjust as needed */
+  width: 100%;
+  gap: 100px; /* Adjust spacing between left and right */
+  align-items: center;
 }
 
-.nav-buttons button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 25px;
-  background-color: #ffd700;
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
+.hero-left {
+  flex: 1;
 }
 
-.nav-buttons button:hover {
-  background-color: #ffea61;
+.hero-right {
+  flex: 1;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
 }
 
-/* Feature Icons - Bottom Right */
-.feature-icons {
-  position: absolute;
-  bottom: 40px;
-  right: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
+.ukno-learn h1 {
+  font-size: 96px;
+  line-height: 112px;
+  margin-bottom: 0;
 }
 
-.feature-item {
+.ukno-learn .club {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 96px;
+  line-height: 112px;
+  color: #FFFFFF;
+  padding: 0 15px;
+  border: 7px solid #FFFFFF;
+  border-radius: 10px;
+  mix-blend-mode: hue; /* As per Figma */
+}
+
+.learn-freely {
   display: flex;
   align-items: center;
-  background-color: #2c2c2c;
-  padding: 8px 12px;
-  border-radius: 30px;
-  gap: 10px;
+  margin-top: 20px;
 }
 
-.feature-item span {
-  font-size: 14px;
-  color: #fff;
+.learn {
+  font-size: 36px;
+  line-height: 54px;
+  font-weight: 600;
+  margin-right: 15px;
+  color: #F52929;
 }
 
-.feature-item img {
-  width: 25px;
-  height: 25px;
-}
-/* Reset & Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.underline {
+  width: 80px; /* Approximate from Figma */
+  height: 5px; /* Approximate from Figma */
+  background-color: #00FFFF; /* Placeholder cyan - adjust if needed from the design */
+  margin-right: 15px;
 }
 
-body {
-  background-color: #000;
-  font-family: 'Segoe UI', sans-serif;
-  color: #fff;
-  height: 100vh;
-  overflow: hidden;
+.freely {
+  font-size: 36px;
+  line-height: 54px;
+  font-weight: 600;
+  color: #00FFFF; /* Placeholder cyan - adjust if needed from the design */
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.social-icons a.icon {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1); /* Soft white background */
+  filter: drop-shadow(0px 12px 24px rgba(0, 0, 0, 0.1));
+  text-decoration: none; /* Remove default link styling */
 }
 
-.container {
-  position: relative;
-  width: 90%;
-  max-width: 1200px;
-  height: 90vh;
-  padding: 20px 40px;
+.social-icons .icon.youtube {
+  /* You'll need to add the YouTube icon as a background image or use an <img> tag inside */
+  background-image: url('assets/youtube_icon.png'); /* Replace with your icon */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #F52929; /* Match the red from Figma */
 }
 
-/* Top Section */
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.social-icons .icon.instagram {
+  /* You'll need to add the Instagram icon */
+  background-image: url('assets/instagram_icon.png'); /* Replace with your icon */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background: linear-gradient(180.19deg, #7024C4 0.17%, #C21975 41.57%, #C74C4D 70.15%, #E09B3D 99.83%);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.logo {
-  height: 80px;
-  width: auto;
+.social-icons .icon.linkedin {
+  /* You'll need to add the LinkedIn icon */
+  background-image: url('assets/linkedin_icon.png'); /* Replace with your icon */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #007AB7;
 }
 
-.nav-buttons {
-  display: flex;
-  gap: 20px;
+.social-icons .icon.telegram {
+  /* You'll need to add the Telegram icon */
+  background-image: url('assets/telegram_icon.png'); /* Replace with your icon */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #45AEE4;
 }
 
-.nav-buttons button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 25px;
-  background-color: #ffd700;
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
+.hero-right h1 {
+  font-size: 36px;
+  line-height: 54px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-.nav-buttons button:hover {
-  background-color: #ffea61;
+.hero-right p {
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
 }
 
-/* Feature Icons - Bottom Right */
-.feature-icons {
+.feature-icons-bar {
   position: absolute;
-  bottom: 40px;
-  right: 40px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  color: #FFFFFF;
+  padding: 20px 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+  text-transform: capitalize;
+}
+
+.feature-icon {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-}
-
-.feature-item {
-  display: flex;
   align-items: center;
-  background-color: #2c2c2c;
-  padding: 8px 12px;
-  border-radius: 30px;
   gap: 10px;
+  text-align: center;
 }
 
-.feature-item span {
-  font-size: 14px;
-  color: #fff;
-}
-
-.feature-item img {
-  width: 25px;
-  height: 25px;
+.feature-icon img {
+  height: 35px; /* Adjust icon size */
 }
