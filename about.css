@@ -1,15 +1,16 @@
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: url('assets/bg2.jpg') no-repeat center center fixed;
+    background: #000000 url('assets/bg2.jpg') no-repeat center center fixed;
     background-size: cover;
-    color: #30323a;
-    overflow: hidden;
+    color: #ffffff;
+    height: 100vh;
+    overflow: auto; /* allow scrolling */
 }
 
 .about-container {
     display: flex;
-    height: 100vh;
+    height: 100%;
     width: 100%;
 }
 
@@ -17,10 +18,9 @@ body {
     flex: 0.6;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
     padding: 20px;
-    /* No background color set here, so it should inherit from body */
 }
 
 .home-button {
@@ -68,23 +68,25 @@ body {
 .left-bottom {
     display: flex;
     align-items: center;
-    margin-top: 30px;
     margin-left: 20px;
+    margin-bottom: 40px;
 }
 
 .qr-code {
     width: 80px;
     height: 80px;
-    background-color: white;
-    border-radius: 5px;
+    background-color: #fff;
+    border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 5px;
 }
 
 .qr-code img {
-    max-width: 70%;
-    max-height: 70%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     border-radius: 5px;
 }
 
@@ -94,6 +96,7 @@ body {
     line-height: 21px;
     margin-left: 15px;
     text-align: left;
+    color: #fff;
 }
 
 .right-pane {
@@ -103,7 +106,6 @@ body {
     align-items: flex-start;
     padding: 20px;
     overflow-y: auto;
-    /* No background color set here either */
 }
 
 .right-content {
@@ -115,8 +117,6 @@ body {
 }
 
 .section-title {
-    font-family: 'Poppins';
-    font-style: normal;
     font-weight: 700;
     font-size: 16px;
     line-height: 24px;
@@ -131,8 +131,6 @@ body {
 }
 
 .section-content {
-    font-family: 'Poppins';
-    font-style: normal;
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
