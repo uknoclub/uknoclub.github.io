@@ -183,7 +183,7 @@ body {
   font-size: 48px;
   line-height: 1.2;
   font-weight: 700;
-  text-align: left; /* Align text to the left */
+  text-align: center; /* Align text to the left */
   margin-bottom: 20px;
   white-space: nowrap;
 }
