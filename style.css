@@ -7,8 +7,8 @@ body {
 
 .landing-page {
   position: relative;
-  width: 1535px;
-  height: 789px;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   background: #2F303A;
   box-sizing: border-box;
@@ -20,12 +20,12 @@ body {
 
 .background-blur {
   position: absolute;
-  width: 1627px;
-  height: 679px;
-  left: -45px;
-  top: -27px;
-  background-image: url('assets/bg.png'); /* Assuming 'bg.png' is the blurred image */
-  background-size: cover;
+  width: 100%; /* Cover the entire viewport width */
+  height: 100%; /* Cover the entire viewport height */
+  left: 0;
+  top: 0;
+  background-image: url('assets/bg.png');
+  background-size: cover; /* Scale to cover, may crop */
   background-position: center;
   mix-blend-mode: lighten;
   filter: blur(5px) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); /* Adjust blur as needed */
@@ -53,7 +53,7 @@ body {
 }
 
 .logo {
-  height: 72px; /* Adjust logo size based on Figma */
+  height: 72px; /* Adjust logo height, width will scale proportionally */
 }
 
 .nav-buttons a {
@@ -162,7 +162,6 @@ body {
 }
 
 .social-icons .icon.youtube {
-  /* You'll need to add the YouTube icon as a background image or use an <img> tag inside */
   background-image: url('assets/youtube_icon.png'); /* Replace with your icon */
   background-size: contain;
   background-repeat: no-repeat;
@@ -171,7 +170,6 @@ body {
 }
 
 .social-icons .icon.instagram {
-  /* You'll need to add the Instagram icon */
   background-image: url('assets/instagram_icon.png'); /* Replace with your icon */
   background-size: contain;
   background-repeat: no-repeat;
@@ -181,7 +179,6 @@ body {
 }
 
 .social-icons .icon.linkedin {
-  /* You'll need to add the LinkedIn icon */
   background-image: url('assets/linkedin_icon.png'); /* Replace with your icon */
   background-size: contain;
   background-repeat: no-repeat;
@@ -190,7 +187,6 @@ body {
 }
 
 .social-icons .icon.telegram {
-  /* You'll need to add the Telegram icon */
   background-image: url('assets/telegram_icon.png'); /* Replace with your icon */
   background-size: contain;
   background-repeat: no-repeat;
@@ -239,5 +235,5 @@ body {
 }
 
 .feature-icon img {
-  height: 35px; /* Adjust icon size */
+  height: 35px; /* Adjust question mark icon height */
 }
