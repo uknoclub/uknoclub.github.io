@@ -13,7 +13,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* Adjust the alpha value (0.0 to 1.0) for darkness */
+  background-color: rgba(0, 0, 0, 0.6); /* Adjust the alpha value (0.0 to 1.0) for darkness */
   z-index: -2; /* Place it behind the background-blur */
 }
 
