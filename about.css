@@ -17,9 +17,10 @@ body {
     flex: 0.6;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Align items to the top */
-    align-items: flex-start; /* Align items to the left */
+    justify-content: flex-start;
+    align-items: flex-start;
     padding: 20px;
+    /* No background color set here, so it should inherit from body */
 }
 
 .home-button {
@@ -41,7 +42,7 @@ body {
 .logo {
     width: 200px;
     height: auto;
-    margin-top: 60px; /* Adjust top margin */
+    margin-top: 60px;
     margin-left: 20px;
 }
 
@@ -98,10 +99,11 @@ body {
 .right-pane {
     flex: 1;
     display: flex;
-    justify-content: flex-start; /* Align content to the left */
-    align-items: flex-start; /* Align content to the top */
+    justify-content: flex-start;
+    align-items: flex-start;
     padding: 20px;
     overflow-y: auto;
+    /* No background color set here either */
 }
 
 .right-content {
@@ -109,7 +111,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     max-width: 80%;
-    margin-top: 60px; /* Adjust top margin to align with left side */
+    margin-top: 60px;
 }
 
 .section-title {
