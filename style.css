@@ -1,10 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto&display=swap');
-
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
   color: #FFFFFF;
-  background-color: #2F303A;
+  overflow: hidden;
 }
 
 .landing-page {
@@ -12,151 +10,214 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background: #2F303A;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .background-blur {
   position: absolute;
   width: 100%;
   height: 100%;
-  top: 0;
   left: 0;
+  top: 0;
   background-image: url('assets/bg.png');
   background-size: cover;
   background-position: center;
-  filter: blur(4px);
+  mix-blend-mode: lighten;
+  filter: blur(5px) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   z-index: -1;
 }
 
 .hero {
-  padding: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
+  position: relative;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: flex-start;
-  height: calc(100vh - 100px);
+  width: 100%;
+  max-width: 1200px;
+  padding: 40px;
+  box-sizing: border-box;
 }
 
 .top-bar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 60px;
+  flex-direction: column; /* Changed to column */
+  align-items: center; /* Center items horizontally */
+  width: 100%;
+  margin-bottom: 20px; /* Reduced margin-bottom */
 }
 
 .logo {
-  height: 72px;
+  height: auto;
+  width: 250px;
+  margin-bottom: 20px;
+}
+
+.nav-buttons {
+  display: flex;
+  flex-direction: column; /* Changed to column */
+  align-items: center; /* Center items horizontally */
+  margin-top: 20px; /* Added margin-top */
 }
 
 .nav-buttons a {
-  display: inline-block;
-  padding: 10px 24px;
-  margin-left: 20px;
+  display: block; /* Changed to block */
+  padding: 12px 24px;
+  margin: 10px 0; /* Added vertical margin, removed horizontal */
   border-radius: 5px;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 24px; /* Increased font size */
+  line-height: 27px;
+  text-align: center;
   color: #FFFFFF;
   text-decoration: none;
+  width: 220px; /* Added width to buttons */
+  box-sizing: border-box;
+}
+
+
+.nav-buttons .sign-up-login {
+  background-color: #F52929;
+}
+
+.nav-buttons .about-us {
   background-color: #F52929;
 }
 
 .hero-content {
   display: flex;
-  gap: 80px;
+  flex-direction: column;
   align-items: center;
-  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  gap: 100px;
+  margin-top: 50px;
 }
 
 .hero-left {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hero-right {
   flex: 1;
-  font-size: 16px;
-  line-height: 24px;
+  font-weight: 400;
+  font-size: 20px; /* Increased font size */
+  line-height: 1.5;
   text-align: center;
 }
 
-.ukno-learn h1 {
-  font-size: 96px;
-  margin: 0;
+.ukno-learn h1.ukno-logo{
+  display: none;
 }
 
-.ukno-learn .club {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400;
-  border: 7px solid #FFFFFF;
-  border-radius: 10px;
-  padding: 0 15px;
+.ukno-learn .ukno-logo img {
+  height: auto;
+  width: 350px;
 }
+
 
 .learn-freely {
   display: flex;
+  flex-direction: column; /* changed to column */
   align-items: center;
   margin-top: 20px;
 }
 
 .learn {
-  font-size: 36px;
+  font-size: 48px; /* Increased font size */
+  line-height: 1.2;
   font-weight: 600;
+  margin-right: 0;
   color: #F52929;
-  margin-right: 10px;
 }
 
 .underline {
-  width: 80px;
-  height: 5px;
+  width: 100px;
+  height: 8px;
   background-color: #00FFFF;
-  margin-right: 10px;
+  margin: 10px 0;
 }
 
 .freely {
-  font-size: 36px;
+  font-size: 48px; /* Increased font size */
+  line-height: 1.2;
   font-weight: 600;
   color: #00FFFF;
 }
 
 .social-icons {
   display: flex;
-  gap: 15px;
+  gap: 25px;
   margin-top: 40px;
 }
 
 .social-icons a.icon {
-  width: 45px;
-  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px; /* Increased size */
+  height: 70px;
   border-radius: 50%;
-  background-size: 60%;
+  background-color: #FFFFFF;
+  filter: drop-shadow(0px 12px 24px rgba(0, 0, 0, 0.1));
+  text-decoration: none;
+}
+
+.social-icons .icon.youtube {
+  background-image: url('assets/youtube.png');
+  background-size: 40px; /* Increased size */
   background-repeat: no-repeat;
   background-position: center;
-  display: block;
-}
-
-.social-icons .youtube {
   background-color: #F52929;
-  background-image: url('assets/youtube.png');
 }
 
-.social-icons .instagram {
-  background: linear-gradient(180.19deg, #7024C4 0.17%, #C21975 41.57%, #C74C4D 70.15%, #E09B3D 99.83%);
+.social-icons .icon.instagram {
   background-image: url('assets/instagram.png');
+  background-size: 40px; /* Increased size */
+  background-repeat: no-repeat;
+  background-position: center;
+  background: linear-gradient(180.19deg, #7024C4 0.17%, #C21975 41.57%, #C74C4D 70.15%, #E09B3D 99.83%);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.social-icons .linkedin {
-  background-color: #007AB7;
+.social-icons .icon.linkedin {
   background-image: url('assets/linkedin.png');
+  background-size: 40px; /* Increased size */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #007AB7;
 }
 
-.social-icons .telegram {
-  background-color: #45AEE4;
+.social-icons .icon.telegram {
   background-image: url('assets/telegram.png');
+  background-size: 40px; /* Increased size */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #45AEE4;
 }
 
 .hero-right h1 {
-  font-size: 36px;
+  font-size: 48px; /* Increased font size */
+  line-height: 1.2;
   font-weight: 700;
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.hero-right p {
+  font-size: 20px; /* Increased font size */
+  line-height: 1.7;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .feature-icons-bar {
@@ -164,55 +225,28 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   color: #FFFFFF;
-  padding: 20px;
+  padding: 30px 20px;
   display: flex;
   justify-content: space-around;
-  font-size: 20px;
-  text-align: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-weight: 400;
+  font-size: 30px; /* Increased font size */
+  line-height: 1.2;
+  text-transform: capitalize;
 }
 
 .feature-icon {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 10px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .feature-icon img {
-  height: 35px;
-  margin-top: 5px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .hero-content {
-    flex-direction: column;
-    gap: 40px;
-  }
-
-  .ukno-learn h1,
-  .ukno-learn .club {
-    font-size: 48px;
-  }
-
-  .learn,
-  .freely {
-    font-size: 24px;
-  }
-
-  .feature-icons-bar {
-    flex-direction: column;
-    gap: 10px;
-    font-size: 16px;
-  }
-
-  .top-bar {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .nav-buttons a {
-    margin: 10px 0;
-  }
+  height: 40px; /* Increased icon height */
+  width: 40px;
 }
