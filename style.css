@@ -1,3 +1,4 @@
+/* Reset and base styles */
 * {
   margin: 0;
   padding: 0;
@@ -28,12 +29,14 @@ body {
   left: -45px;
   width: 1627px;
   height: 679px;
-  background: url('./assets/bg.png') no-repeat center center/cover;
+  background: url('./assets/images/bg.png') no-repeat center center/cover;
   mix-blend-mode: lighten;
   border: 1px solid #000000;
   border-radius: 10px;
   z-index: 0;
 }
+
+/* Logo and tagline */
 .logo-box {
   position: absolute;
   top: 69px;
@@ -80,4 +83,60 @@ body {
   font-weight: 600;
   color: #F52929;
   margin-top: 80px;
+}
+
+/* Navigation buttons */
+.nav-buttons {
+  position: absolute;
+  top: 80px;
+  right: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 2;
+}
+
+.nav-btn {
+  background-color: #FFCD1D;
+  color: #000;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+}
+
+.nav-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Center content */
+.center-content {
+  position: absolute;
+  bottom: 50px;
+  left: 139px;
+  max-width: 600px;
+  z-index: 2;
+}
+
+.headline {
+  font-size: 48px;
+  color: #FFFFFF;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.subtext {
+  font-size: 20px;
+  color: #CCCCCC;
+  margin-bottom: 30px;
+}
+
+.hero-image {
+  width: 400px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
