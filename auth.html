@@ -15,12 +15,14 @@
         <span class="freely">Freely!</span>
       </div>
     </div>
+
     <div class="right-pane">
       <div class="toggle-buttons">
-        <button class="active">Sign up</button>
-        <button>Log In</button>
+        <button id="signupBtn" class="active">Sign up</button>
+        <button id="loginBtn">Log In</button>
       </div>
-      <form id="signup-form">
+
+      <form id="signup-form" class="form">
         <input type="email" placeholder="EMAIL ID" required />
         <input type="text" placeholder="FIRST NAME" required />
         <input type="text" placeholder="LAST NAME" required />
@@ -28,12 +30,18 @@
         <input type="password" placeholder="CONFIRM PASSWORD" required />
         <input type="text" placeholder="USERNAME" required />
         <button type="submit" class="setup-btn">SETUP ACCOUNT</button>
-        <p class="privacy-note">
-          We always protect your privacy, and will not share your information.
-        </p>
+        <p class="privacy-note">We always protect your privacy, and will not share your information.</p>
+      </form>
+
+      <form id="login-form" class="form hidden">
+        <input type="email" placeholder="EMAIL ID" required />
+        <input type="password" placeholder="PASSWORD" required />
+        <button type="submit" class="setup-btn">LOG IN</button>
+        <p class="privacy-note">Welcome back to Ukno Club!</p>
       </form>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
