@@ -31,11 +31,15 @@ body {
 .menu {
   display: flex;
   flex-direction: column;
+  justify-content: center; /* Vertically center the buttons */
+  align-items: flex-end;   /* Align to right side */
   gap: 25px;
+  height: 100vh;           /* Make menu take full height */
   animation: fadeIn 1.5s ease-in forwards;
   opacity: 0;
   animation-delay: 0.5s;
 }
+
 
 .btn {
   text-decoration: none;
