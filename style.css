@@ -148,7 +148,7 @@ body {
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: #F52929;
+  background-color: #f5f5f5;
 }
 
 .hero-left .social-icons .icon.instagram {
@@ -156,7 +156,7 @@ body {
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
-  background: linear-gradient(180.19deg, #7024C4 0.17%, #C21975 41.57%, #C74C4D 70.15%, #E09B3D 99.83%);
+  background-color: #f5f5f5;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -165,7 +165,7 @@ body {
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: #007AB7;
+  background-color: #f5f5f5;
 }
 
 .hero-left .social-icons .icon.telegram {
@@ -173,7 +173,7 @@ body {
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: #45AEE4;
+  background-color: #f5f5f5;
 }
 
 .hero-right {
