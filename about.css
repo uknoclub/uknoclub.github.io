@@ -8,16 +8,30 @@ body {
 }
 
 .about-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
     display: flex;
+    height: 100vh;
+    width: 100%;
+    backdrop-filter: brightness(0.5); /* Apply the darkness filter */
+}
+
+.left-pane, .right-pane {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.left-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .home-button {
     position: absolute;
     top: 35px;
-    left: 115px;
+    left: 40px; /* Adjust from 115px to fit left pane */
     display: inline-block;
     padding: 10px 20px;
     border-radius: 5px;
@@ -26,83 +40,20 @@ body {
     line-height: 30px;
     color: #FFFFFF;
     text-decoration: none;
-    background-color: transparent; /* No background for the button */
-    z-index: 10; /* Ensure it's above other elements */
-}
-
-.left-section {
-    width: 600px; /* Adjust width as needed */
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+    background-color: transparent;
+    z-index: 10;
 }
 
 .logo {
-    width: 285px;
+    width: 200px; /* Adjust logo size */
     height: auto;
     margin-bottom: 20px;
 }
 
-.club-name {
-    position: relative;
-    width: 285px;
-    height: 109px;
-    margin-top: 20px;
-}
-
-.club-name > *:first-child { /* UKNO */
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 96px;
-    line-height: 100%; /* Adjust line-height */
-    color: #FFFFFF;
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-.club-box { /* CLUB background box */
-    position: absolute;
-    width: 223px;
-    height: 72px;
-    left: 12px;
-    top: 58px;
-    mix-blend-mode: hue;
-    border-radius: 5px;
-    background-color: #F52929; /* Approximate red color */
-}
-
-.club-name > *:nth-child(3) { /* CLUB text */
-    position: absolute;
-    width: 243px;
-    height: 72px;
-    left: 18px;
-    top: 50px;
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 96px;
-    line-height: 75%; /* Adjust line-height */
-    color: #FFFFFF;
-}
-
-.club-border { /* White border */
-    position: absolute;
-    width: 250px;
-    height: 78px;
-    left: 15px;
-    top: 55px;
-    border: 7px solid #FFFFFF;
-    border-radius: 10px;
-}
-
 .tagline {
-    margin-top: 40px;
-    font-size: 36px;
-    line-height: 54px;
+    font-size: 24px; /* Adjust tagline size */
+    line-height: 36px;
+    margin-top: 10px;
 }
 
 .learn {
@@ -118,61 +69,60 @@ body {
 }
 
 .qr-code {
-    width: 153px;
-    height: 138px;
+    width: 100px; /* Adjust QR code size */
+    height: 100px;
     background-color: #D9D9D9;
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 60px;
+    margin-top: 30px;
 }
 
 .qr-code img {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 80%;
+    max-height: 80%;
     border-radius: 5px;
 }
 
 .support-text {
-    width: 319px;
-    font-size: 20px;
-    line-height: 30px;
-    margin-top: 30px;
+    width: 80%; /* Adjust width */
+    font-size: 16px; /* Adjust font size */
+    line-height: 24px;
+    margin-top: 20px;
 }
 
-.right-section {
-    flex: 1;
-    padding: 60px;
+.right-content {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    align-items: flex-start; /* Align text to the left */
+    max-width: 600px; /* Limit width of text content */
 }
 
 .section-title {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 700;
-    font-size: 24px;
-    line-height: 36px;
+    font-size: 18px; /* Adjust font size */
+    line-height: 27px;
     text-transform: capitalize;
     color: #F52929;
-    margin-bottom: 10px;
-    margin-top: 0; /* Reset default margin-top */
+    margin-bottom: 5px;
+    margin-top: 0;
 }
 
 .section-title:not(:first-child) {
-    margin-top: 40px; /* Add spacing between sections */
+    margin-top: 20px; /* Adjust spacing between sections */
 }
 
 .section-content {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
-    font-size: 24px;
-    line-height: 36px;
+    font-size: 18px; /* Adjust font size */
+    line-height: 27px;
     text-transform: capitalize;
     color: #FFFFFF;
-    margin-bottom: 20px;
-    width: 70%; /* Adjust width as needed */
+    margin-bottom: 15px;
+    width: 100%; /* Make text take full width of right content */
 }
