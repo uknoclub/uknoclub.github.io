@@ -4,6 +4,7 @@ body {
   background: url('assets/bg.png') no-repeat center center fixed;
   background-size: cover;
   color: #fff;
+  overflow: hidden; /* Prevent scrolling if content overflows */
 }
 
 .auth-container {
@@ -15,10 +16,15 @@ body {
 
 .left-pane {
   flex: 1;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
   padding: 60px 40px;
+}
+
+.left-content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-start;
 }
 
@@ -49,14 +55,41 @@ body {
   background-color: rgba(0, 0, 0, 0.6);
   padding: 60px 40px;
   display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.right-content {
+  display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
+  align-items: flex-end; /* Align content to the right initially */
+  width: 100%;
+  max-width: 400px; /* Limit the width of the content in the right pane */
+}
+
+.home-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end; /* Align Home button to the right */
+  margin-bottom: 20px;
+}
+
+.home-button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;
+  color: #FFFFFF;
+  text-decoration: none;
+  background-color: #F52929;
+  cursor: pointer;
 }
 
 .toggle-buttons {
   display: flex;
-  width: 300px;
+  width: 100%; /* Make toggle buttons take full width */
   background-color: #F52929;
   border-radius: 20px;
   overflow: hidden;
@@ -116,4 +149,17 @@ form input {
   margin-top: 8px;
   color: white;
   opacity: 0.8;
+  text-align: center; /* Center the privacy note */
+}
+
+.forgot-password {
+  color: white;
+  font-size: 12px;
+  text-decoration: none;
+  align-self: flex-end; /* Align "Forgot Password" to the right within the form */
+  margin-bottom: 10px;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
 }
