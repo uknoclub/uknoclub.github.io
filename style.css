@@ -191,7 +191,7 @@ body {
 .hero-right p {
   font-size: 16px;
   line-height: 1.7;
-  text-align: center; /* Align text to the left */
+  text-align: left; /* Align text to the left */
   max-width: 500px;
 }
 
