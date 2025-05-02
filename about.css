@@ -1,7 +1,8 @@
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: #2F303A; /* Solid dark background */
+    background: url('assets/bg2.jpg') no-repeat center center fixed; /* Use the provided background image */
+    background-size: cover;
     color: #FFFFFF;
     overflow: hidden;
 }
@@ -10,51 +11,49 @@ body {
     display: flex;
     height: 100vh;
     width: 100%;
-    /* backdrop-filter: brightness(0.5); Removed as we're using a solid dark background */
+    /* backdrop-filter: brightness(0.5);  Removed as it's part of the background image */
 }
 
-.left-pane {
-    flex: 0.6; /* Adjust proportion of left pane */
+.left-pane, .right-pane {
+    flex: 1;
     display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    align-items: center; /* Center content horizontally */
-    padding: 40px;
-}
-
-.home-button {
-    position: absolute;
-    top: 20px; /* Adjust top position */
-    left: 20px; /* Adjust left position */
-    display: inline-block;
-    padding: 8px 16px; /* Smaller padding */
-    border-radius: 5px;
-    font-weight: 400;
-    font-size: 16px; /* Smaller font size */
-    line-height: 24px;
-    color: #FFFFFF;
-    text-decoration: none;
-    background-color: #F52929; /* Add a background to make it stand out */
-    z-index: 10;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; /* Reduced padding */
 }
 
 .left-content {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center items in the left pane */
+    align-items: flex-start;
+}
+
+.home-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FFFFFF;
+    text-decoration: none;
+    background-color: transparent; /* Removed background color */
+    z-index: 10;
 }
 
 .logo {
-    width: 250px; /* Slightly larger logo */
+    width: 200px; /* Adjusted logo size */
     height: auto;
-    margin-bottom: 10px; /* Less margin to tagline */
+    margin-bottom: 10px;
 }
 
 .tagline {
-    font-size: 20px; /* Adjust tagline size */
+    font-size: 20px; /* Adjusted tagline size */
     line-height: 30px;
-    margin-top: 5px; /* Closer to logo */
-    text-align: center; /* Center tagline */
+    margin-top: 5px;
 }
 
 .learn {
@@ -70,14 +69,14 @@ body {
 }
 
 .qr-code {
-    width: 80px; /* Adjust QR code size */
+    width: 80px; /* Adjusted QR code size */
     height: 80px;
-    background-color: black; /* Black background for QR */
+    background-color: white; /* White background for QR code */
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .qr-code img {
@@ -87,30 +86,19 @@ body {
 }
 
 .support-text {
-    width: auto; /* Adjust width */
-    font-size: 14px; /* Adjust font size */
+    width: 200px; /* Adjusted width */
+    font-size: 14px;
     line-height: 21px;
     margin-top: 10px;
-    text-align: left; /* Align to the left of QR */
-}
-
-.left-bottom {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.left-bottom > * + * {
-    margin-left: 20px; /* Space between QR and text */
+    text-align: left; /* Align to the left of QR code */
 }
 
 .right-pane {
-    flex: 0.4; /* Adjust proportion of right pane */
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: flex-start; /* Align text to the top */
-    padding: 40px;
+    padding: 20px;
     overflow-y: auto; /* Allow scrolling for long content */
 }
 
@@ -118,14 +106,14 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    max-width: 80%; /* Adjust width of text content */
+    max-width: 80%;
 }
 
 .section-title {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 700;
-    font-size: 16px; /* Adjust font size */
+    font-size: 16px;
     line-height: 24px;
     text-transform: capitalize;
     color: #F52929;
@@ -134,14 +122,14 @@ body {
 }
 
 .section-title:not(:first-child) {
-    margin-top: 20px;
+    margin-top: 15px; /* Reduced spacing */
 }
 
 .section-content {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
-    font-size: 16px; /* Adjust font size */
+    font-size: 16px;
     line-height: 24px;
     text-transform: capitalize;
     color: #FFFFFF;
