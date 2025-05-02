@@ -35,15 +35,15 @@ body {
 .hero {
   position: relative;
   display: flex;
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+  justify-content: space-between; /* Space out left and right sections */
+  align-items: center; /* Vertically center content */
   width: 100%;
-  max-width: 1400px; /* Adjust max width as needed */
+  max-width: 1200px; /* Adjust max width as needed */
   padding: 40px;
   box-sizing: border-box;
 }
 
-.top-bar {
+.top-right {
   position: absolute;
   top: 20px;
   right: 40px;
@@ -52,25 +52,25 @@ body {
   align-items: flex-end;
 }
 
-.top-bar .logo {
+.top-right .logo-small {
   height: auto;
-  width: 150px; /* Adjust top logo size */
+  width: 80px; /* Adjust size of top-right logo */
   margin-bottom: 10px;
 }
 
-.top-bar .nav-buttons a {
+.top-right .nav-buttons a {
   display: block;
-  padding: 10px 20px;
-  margin-top: 10px;
+  padding: 8px 16px;
+  margin-top: 8px;
   border-radius: 5px;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.5;
   text-align: center;
   color: #FFFFFF;
   text-decoration: none;
   background-color: #F52929;
-  width: 120px;
+  width: 90px;
   box-sizing: border-box;
 }
 
@@ -80,13 +80,15 @@ body {
   align-items: center;
   width: 100%;
   max-width: 1200px;
+  height: 600px; /* Adjust height to control vertical centering */
 }
 
 .hero-left {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align items to the left */
+  align-items: flex-start;
+  justify-content: center; /* Vertically center left content */
 }
 
 .ukno-info {
@@ -98,8 +100,8 @@ body {
 
 .ukno-info .main-logo {
   height: auto;
-  width: 300px; /* Adjust main logo size */
-  margin-bottom: 10px;
+  width: 250px; /* Adjust main logo size */
+  margin-bottom: 20px;
 }
 
 .ukno-info .tagline {
@@ -178,39 +180,11 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* Align content to the right */
-}
-
-.hero-right .right-content {
-  display: flex;
-  flex-direction: column;
   align-items: flex-end;
+  justify-content: center; /* Vertically center right content */
 }
 
-.hero-right .right-content .auth-buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  margin-bottom: 40px;
-}
-
-.hero-right .right-content .auth-buttons a {
-  display: block;
-  padding: 12px 24px;
-  margin-top: 10px;
-  border-radius: 5px;
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 1.5;
-  text-align: center;
-  color: #FFFFFF;
-  text-decoration: none;
-  background-color: #F52929;
-  width: 150px;
-  box-sizing: border-box;
-}
-
-.hero-right .right-content h1 {
+.hero-right h1 {
   font-size: 48px;
   line-height: 1.2;
   font-weight: 700;
@@ -218,7 +192,7 @@ body {
   margin-bottom: 20px;
 }
 
-.hero-right .right-content p {
+.hero-right p {
   font-size: 16px;
   line-height: 1.7;
   text-align: right;
