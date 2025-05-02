@@ -7,7 +7,7 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #000;
+  background-color: #5b616e;
   color: white;
   height: 100vh;
   display: flex;
@@ -44,7 +44,7 @@ body {
 .btn {
   text-decoration: none;
   padding: 15px 30px;
-  background-color: #FFC700;
+  background-color: #ff0000;
   color: black;
   font-weight: bold;
   border-radius: 50px;
@@ -54,7 +54,7 @@ body {
 }
 
 .btn:hover {
-  background-color: #e6b800;
+  background-color: #ff0000;
 }
 
 /* Fade in animation */
@@ -75,7 +75,7 @@ body {
 .hero-message h1 {
   font-size: 3rem;
   font-weight: 800;
-  color: #FFC700; /* Bold yellow */
+  color: #ff0000; /* Bold yellow */
   margin-bottom: 20px;
   font-family: 'Poppins', sans-serif;
   text-shadow: 2px 2px #111;
