@@ -54,17 +54,17 @@ body {
 
 .top-right .nav-buttons a {
   display: block;
-  padding: 8px 16px;
-  margin-top: 8px;
+  padding: 10px 20px;
+  margin-top: 10px;
   border-radius: 5px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
   text-align: center;
   color: #FFFFFF;
   text-decoration: none;
   background-color: #F52929;
-  width: 90px;
+  width: 120px;
   box-sizing: border-box;
 }
 
@@ -74,7 +74,7 @@ body {
   align-items: center;
   width: 100%;
   max-width: 1200px;
-  height: 600px; /* Adjust height to control vertical centering */
+  height: 500px; /* Adjust height for better vertical centering */
 }
 
 .hero-left {
@@ -94,7 +94,7 @@ body {
 
 .ukno-info .main-logo {
   height: auto;
-  width: 250px; /* Adjust main logo size */
+  width: 300px; /* Adjust main logo size */
   margin-bottom: 20px;
 }
 
@@ -184,6 +184,7 @@ body {
   font-weight: 700;
   text-align: right;
   margin-bottom: 20px;
+  white-space: nowrap; /* Keep the heading in one line */
 }
 
 .hero-right p {
