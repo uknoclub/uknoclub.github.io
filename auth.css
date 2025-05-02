@@ -4,6 +4,20 @@ body {
   background: url('assets/bg.png') no-repeat center center fixed;
   background-size: cover;
   color: #fff;
+  position: relative;
+}
+
+.home-button {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  background: #ffffff;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px;
+  z-index: 10;
 }
 
 .auth-container {
@@ -13,13 +27,17 @@ body {
   backdrop-filter: brightness(0.5);
 }
 
-.left-pane {
+.left-pane, .right-pane {
   flex: 1;
-  padding: 60px 40px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+}
+
+.left-content, .right-content {
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
 }
 
 .logo {
@@ -28,8 +46,8 @@ body {
 }
 
 .tagline {
-  margin-top: 20px;
   font-size: 32px;
+  margin-top: 20px;
 }
 
 .learn {
@@ -45,13 +63,8 @@ body {
 }
 
 .right-pane {
-  flex: 1;
   background-color: rgba(0, 0, 0, 0.6);
-  padding: 60px 40px;
-  display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
 }
 
 .toggle-buttons {
@@ -60,7 +73,7 @@ body {
   background-color: #eee;
   border-radius: 20px;
   overflow: hidden;
-  margin-bottom: 30px;
+  margin: 0 auto 30px;
 }
 
 .toggle-buttons button {
@@ -83,6 +96,7 @@ body {
   flex-direction: column;
   width: 100%;
   max-width: 400px;
+  margin: 0 auto;
 }
 
 .hidden {
@@ -97,6 +111,20 @@ form input {
   font-size: 14px;
   background: white;
   color: black;
+}
+
+.forgot-password {
+  text-align: right;
+  font-size: 12px;
+  color: #ccc;
+  margin: -10px 0 10px;
+  display: block;
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+  color: #fff;
 }
 
 .setup-btn {
