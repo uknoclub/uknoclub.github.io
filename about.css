@@ -11,7 +11,7 @@ body {
     display: flex;
     height: 100vh;
     width: 100%;
-    backdrop-filter: brightness(0.5); /* Apply the darkness filter */
+    backdrop-filter: brightness(0.2); /* Apply the darkness filter */
 }
 
 .left-pane, .right-pane {
@@ -45,7 +45,7 @@ body {
 }
 
 .logo {
-    width: 200px; /* Adjust logo size */
+    width: 250px; /* Adjust logo size */
     height: auto;
     margin-bottom: 20px;
 }
