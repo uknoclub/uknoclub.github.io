@@ -15,6 +15,7 @@ body {
   align-items: center;
 }
 
+/* Main layout */
 .container {
   display: flex;
   justify-content: space-between;
@@ -23,24 +24,23 @@ body {
   max-width: 1200px;
 }
 
+/* Logo styling */
 .logo img {
   width: 500px;
   height: auto;
 }
 
+/* Button menu styling */
 .menu {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Vertically center the buttons */
-  align-items: flex-end;   /* Align to right side */
   gap: 25px;
-  height: 100vh;           /* Make menu take full height */
   animation: fadeIn 1.5s ease-in forwards;
   opacity: 0;
   animation-delay: 0.5s;
 }
 
-
+/* Reusable button style */
 .btn {
   text-decoration: none;
   padding: 15px 30px;
