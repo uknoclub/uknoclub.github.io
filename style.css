@@ -1,8 +1,11 @@
+/* Load Poppins and Roboto fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto&display=swap');
+
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
   color: #FFFFFF;
-  overflow: hidden; /* To contain the blurred background */
+  overflow: hidden;
 }
 
 .landing-page {
@@ -11,7 +14,6 @@ body {
   height: 100vh;
   overflow: hidden;
   background: #2F303A;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,16 +22,15 @@ body {
 
 .background-blur {
   position: absolute;
-  width: 100%; /* Cover the entire viewport width */
-  height: 100%; /* Cover the entire viewport height */
+  width: 100%;
+  height: 100%;
   left: 0;
   top: 0;
   background-image: url('assets/bg.png');
-  background-size: cover; /* Scale to cover, may crop */
+  background-size: cover;
   background-position: center;
-  mix-blend-mode: lighten;
-  filter: blur(5px) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); /* Adjust blur as needed */
-  z-index: -1; /* Behind other content */
+  /* Removed blend and filter to fix clarity issues */
+  z-index: -1;
 }
 
 .hero {
@@ -39,7 +40,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  max-width: 1200px; /* Adjust as needed */
+  max-width: 1200px;
   padding: 40px;
   box-sizing: border-box;
 }
@@ -49,11 +50,11 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-bottom: 80px; /* Adjust spacing */
+  margin-bottom: 80px;
 }
 
 .logo {
-  height: 72px; /* Adjust logo height, width will scale proportionally */
+  height: 72px;
 }
 
 .nav-buttons a {
@@ -63,25 +64,21 @@ body {
   border-radius: 5px;
   font-weight: 600;
   font-size: 18px;
-  line-height: 27px;
   text-align: center;
   color: #FFFFFF;
   text-decoration: none;
 }
 
-.nav-buttons .sign-up-login {
-  background-color: #F52929;
-}
-
+.nav-buttons .sign-up-login,
 .nav-buttons .about-us {
   background-color: #F52929;
 }
 
 .hero-content {
   display: flex;
-  max-width: 1200px; /* Adjust as needed */
+  max-width: 1200px;
   width: 100%;
-  gap: 100px; /* Adjust spacing between left and right */
+  gap: 100px;
   align-items: center;
 }
 
@@ -112,7 +109,6 @@ body {
   padding: 0 15px;
   border: 7px solid #FFFFFF;
   border-radius: 10px;
-  mix-blend-mode: hue; /* As per Figma */
 }
 
 .learn-freely {
@@ -121,26 +117,26 @@ body {
   margin-top: 20px;
 }
 
-.learn {
+.learn, .freely {
   font-size: 36px;
   line-height: 54px;
   font-weight: 600;
-  margin-right: 15px;
+}
+
+.learn {
   color: #F52929;
+  margin-right: 15px;
 }
 
 .underline {
-  width: 80px; /* Approximate from Figma */
-  height: 5px; /* Approximate from Figma */
-  background-color: #00FFFF; /* Placeholder cyan - adjust if needed from the design */
+  width: 80px;
+  height: 5px;
+  background-color: #00FFFF;
   margin-right: 15px;
 }
 
 .freely {
-  font-size: 36px;
-  line-height: 54px;
-  font-weight: 600;
-  color: #00FFFF; /* Placeholder cyan - adjust if needed from the design */
+  color: #00FFFF;
 }
 
 .social-icons {
@@ -156,41 +152,30 @@ body {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1); /* Soft white background */
-  filter: drop-shadow(0px 12px 24px rgba(0, 0, 0, 0.1));
-  text-decoration: none; /* Remove default link styling */
+  background-color: rgba(255, 255, 255, 0.1);
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-decoration: none;
 }
 
 .social-icons .icon.youtube {
-  background-image: url('assets/youtube.png'); /* Replace with your icon */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #F52929; /* Match the red from Figma */
+  background-image: url('assets/youtube.png');
+  background-color: #F52929;
 }
 
 .social-icons .icon.instagram {
-  background-image: url('assets/instagram.png'); /* Replace with your icon */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-image: url('assets/instagram.png');
   background: linear-gradient(180.19deg, #7024C4 0.17%, #C21975 41.57%, #C74C4D 70.15%, #E09B3D 99.83%);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .social-icons .icon.linkedin {
-  background-image: url('assets/linkedin.png'); /* Replace with your icon */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-image: url('assets/linkedin.png');
   background-color: #007AB7;
 }
 
 .social-icons .icon.telegram {
-  background-image: url('assets/telegram.png'); /* Replace with your icon */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-image: url('assets/telegram.png');
   background-color: #45AEE4;
 }
 
@@ -198,14 +183,12 @@ body {
   font-size: 36px;
   line-height: 54px;
   font-weight: 700;
-  text-align: center;
   margin-bottom: 30px;
 }
 
 .hero-right p {
   font-size: 16px;
   line-height: 24px;
-  text-align: center;
 }
 
 .feature-icons-bar {
@@ -213,14 +196,12 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  background: rgba(0, 0, 0, 0.5);
   color: #FFFFFF;
-  padding: 20px 20px;
+  padding: 20px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  box-sizing: border-box;
-  font-weight: 400;
   font-size: 24px;
   line-height: 36px;
   text-transform: capitalize;
@@ -235,5 +216,40 @@ body {
 }
 
 .feature-icon img {
-  height: 35px; /* Adjust question mark icon height */
+  height: 35px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .ukno-learn h1,
+  .ukno-learn .club {
+    font-size: 48px;
+    line-height: 56px;
+  }
+
+  .learn, .freely {
+    font-size: 24px;
+    line-height: 36px;
+  }
+
+  .feature-icons-bar {
+    flex-direction: column;
+    gap: 10px;
+    font-size: 18px;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .nav-buttons a {
+    margin-left: 0;
+    margin-top: 10px;
+  }
 }
