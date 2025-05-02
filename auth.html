@@ -3,43 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ukno Club – Login or Signup</title>
+  <title>Ukno Club - Auth</title>
   <link rel="stylesheet" href="auth.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="left">
-      <img src="assets/1.png" alt="UKNO CLUB Logo" />
-    </div>
-    <div class="right">
-      <div class="toggle-buttons">
-        <button id="signupBtn" class="active">Sign Up</button>
-        <button id="loginBtn">Log In</button>
+  <div class="auth-container">
+    <div class="left-pane">
+      <img src="assets/logo.png" alt="Ukno Club Logo" class="logo" />
+      <div class="tagline">
+        <span class="learn">Learn</span>
+        <span class="freely">Freely!</span>
       </div>
-
-      <!-- SIGN UP FORM -->
-      <form id="signupForm" class="form active">
-        <h2>SIGN UP</h2>
-        <input type="text" placeholder="First Name" required>
-        <input type="text" placeholder="Last Name" required>
-        <input type="email" placeholder="Email ID" required>
-        <input type="text" placeholder="Username" required>
-        <input type="password" placeholder="Password" required>
-        <input type="password" placeholder="Confirm Password" required>
-        <button type="submit">Create Account</button>
-      </form>
-
-      <!-- LOGIN FORM -->
-      <form id="loginForm" class="form">
-        <h2>LOG IN</h2>
-        <input type="text" placeholder="Username" required>
-        <input type="password" placeholder="Password" required>
-        <a href="#">Forgot Password?</a>
-        <button type="submit">Log In</button>
+    </div>
+    <div class="right-pane">
+      <div class="toggle-buttons">
+        <button class="active">Sign up</button>
+        <button>Log In</button>
+      </div>
+      <form id="signup-form">
+        <input type="email" placeholder="EMAIL ID" required />
+        <input type="text" placeholder="FIRST NAME" required />
+        <input type="text" placeholder="LAST NAME" required />
+        <input type="password" placeholder="PASSWORD" required />
+        <input type="password" placeholder="CONFIRM PASSWORD" required />
+        <input type="text" placeholder="USERNAME" required />
+        <button type="submit" class="setup-btn">SETUP ACCOUNT</button>
+        <p class="privacy-note">
+          We always protect your privacy, and will not share your information.
+        </p>
       </form>
     </div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>

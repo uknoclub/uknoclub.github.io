@@ -1,18 +1,9 @@
-const signupBtn = document.getElementById('signupBtn');
-const loginBtn = document.getElementById('loginBtn');
-const signupForm = document.getElementById('signupForm');
-const loginForm = document.getElementById('loginForm');
+const buttons = document.querySelectorAll('.toggle-buttons button');
 
-signupBtn.addEventListener('click', () => {
-  signupForm.classList.add('active');
-  loginForm.classList.remove('active');
-  signupBtn.classList.add('active');
-  loginBtn.classList.remove('active');
-});
-
-loginBtn.addEventListener('click', () => {
-  loginForm.classList.add('active');
-  signupForm.classList.remove('active');
-  loginBtn.classList.add('active');
-  signupBtn.classList.remove('active');
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    // You can switch form visibility here based on active tab
+  });
 });
