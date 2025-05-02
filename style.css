@@ -162,7 +162,7 @@ body {
 }
 
 .social-icons .icon.youtube {
-  background-image: url('assets/youtube_icon.png'); /* Replace with your icon */
+  background-image: url('assets/youtube.png'); /* Replace with your icon */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -170,7 +170,7 @@ body {
 }
 
 .social-icons .icon.instagram {
-  background-image: url('assets/instagram_icon.png'); /* Replace with your icon */
+  background-image: url('assets/instagram.png'); /* Replace with your icon */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -179,7 +179,7 @@ body {
 }
 
 .social-icons .icon.linkedin {
-  background-image: url('assets/linkedin_icon.png'); /* Replace with your icon */
+  background-image: url('assets/linkedin.png'); /* Replace with your icon */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -187,7 +187,7 @@ body {
 }
 
 .social-icons .icon.telegram {
-  background-image: url('assets/telegram_icon.png'); /* Replace with your icon */
+  background-image: url('assets/telegram.png'); /* Replace with your icon */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
