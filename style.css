@@ -61,7 +61,7 @@ body {
   right: 40px; /* Your perfect positioning */
   display: flex;
   flex-direction: column;
-  gap: 120px;
+  gap: 20px;
   z-index: 10;
   transition: all 0.3s ease;
 }
@@ -69,7 +69,7 @@ body {
 .top-right .nav-buttons a {
   display: block;
   padding: 12px 24px;
-  margin-top: 0.5;
+  margin-top: 10px;
   border-radius: 6px;
   font-weight: 600;
   font-size: 16px;
