@@ -37,168 +37,110 @@ body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
   z-index: 0;
 }
 
 .hero {
-  position: relative;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  width: 100%;
-  max-width: 1200px;
-  padding: 40px;
-  box-sizing: border-box;
   height: calc(100vh - 80px);
+  padding: 40px;
 }
 
 .top-right {
   position: absolute;
   top: 20px;
-  right: 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  right: 20px;
 }
 
 .top-right .nav-buttons a {
-  display: block;
+  display: inline-block;
   padding: 10px 20px;
-  margin-top: 10px;
+  margin-left: 10px;
   border-radius: 5px;
   font-weight: 600;
   font-size: 16px;
-  line-height: 1.5;
-  text-align: center;
   color: #FFFFFF;
   text-decoration: none;
   background-color: #F52929;
-  width: 200px;
-  box-sizing: border-box;
 }
 
 .hero-content {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
   width: 100%;
-  max-width: 1200px;
-  min-height: 600px;
+  height: 100%;
 }
 
 .hero-left {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: center;
+  padding-left: 40px;
 }
 
 .ukno-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 
 .ukno-info .main-logo {
-  height: auto;
   width: 300px;
   margin-bottom: 20px;
 }
 
-.ukno-info .tagline {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
 .ukno-info .tagline .learn {
   font-size: 48px;
-  line-height: 1;
-  font-weight: 600;
   color: #F52929;
-  margin-bottom: 5px;
+  font-weight: 600;
+  line-height: 1;
 }
 
 .ukno-info .tagline .freely {
   font-size: 48px;
-  line-height: 1;
-  font-weight: 600;
   color: #FFFFFF;
+  font-weight: 600;
+  line-height: 1;
 }
 
 .hero-left .social-icons {
   display: flex;
   gap: 15px;
-  margin-top: 30px;
 }
 
 .hero-left .social-icons a.icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   background-color: #FFFFFF;
-  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.1));
-  text-decoration: none;
-}
-
-.hero-left .social-icons .icon.youtube {
-  background-image: url('assets/youtube.png');
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.hero-left .social-icons .icon.instagram {
-  background-image: url('assets/instagram.png');
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.hero-left .social-icons .icon.linkedin {
-  background-image: url('assets/linkedin.png');
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.hero-left .social-icons .icon.telegram {
-  background-image: url('assets/telegram.png');
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 .hero-right {
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-end;
-  justify-content: flex-end;
-  text-align: right;
+  padding-right: 40px;
 }
 
 .hero-right h1 {
   font-size: 48px;
-  line-height: 1.2;
-  font-weight: 700;
   margin-bottom: 20px;
-  white-space: nowrap;
+  text-align: right;
+}
+
+.hero-right h1 span:first-child {
+  color: #FFFFFF;
+}
+
+.hero-right h1 span:last-child {
+  color: #F52929;
 }
 
 .hero-right p {
-  font-size: 16px;
-  line-height: 1.7;
-  text-align: right;
   max-width: 500px;
+  text-align: right;
+  line-height: 1.7;
 }
 
 .feature-icons-bar {
@@ -207,23 +149,13 @@ body {
   left: 0;
   width: 100%;
   background: rgba(0, 0, 0, 0.5);
-  color: #FFFFFF;
-  padding: 20px 20px;
+  padding: 20px;
   display: flex;
   justify-content: space-around;
-  align-items: center;
-  box-sizing: border-box;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 1.2;
-  text-transform: capitalize;
 }
 
 .feature-icon {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  text-align: center;
+  font-size: 20px;
   white-space: nowrap;
 }
 
