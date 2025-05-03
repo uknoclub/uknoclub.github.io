@@ -61,7 +61,7 @@ body {
   right: 40px; /* Your perfect positioning */
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
   z-index: 10;
   transition: all 0.3s ease;
 }
