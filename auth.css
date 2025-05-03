@@ -22,26 +22,19 @@ body {
   align-items: center;
   padding: 40px;
   text-align: center;
-  position: relative;
 }
 
 .home-button {
   position: absolute;
   top: 20px;
   left: 20px;
-  padding: 12px 24px;
-  border-radius: 6px;
+  padding: 10px 20px;
+  border-radius: 5px;
   font-weight: 600;
   font-size: 16px;
   color: #FFFFFF;
   text-decoration: none;
   background-color: #F52929;
-  transition: all 0.3s ease;
-}
-
-.home-button:hover {
-  background-color: #e61e1e;
-  transform: translateY(-2px);
 }
 
 .logo {
@@ -51,40 +44,30 @@ body {
 
 .tagline {
   font-size: 36px;
-  margin-bottom: 20px;
+  line-height: 1.2;
+  margin-bottom: 40px;
 }
 
-.learn {
-  color: #F52929;
-  font-weight: bold;
-  display: block;
-}
-
-.freely {
-  color: white;
-  font-weight: bold;
-  display: block;
-}
+.learn { color: #F52929; font-weight: 600; }
+.freely { color: #FFFFFF; font-weight: 600; }
 
 .right-pane {
   flex: 1;
   background-color: rgba(0, 0, 0, 0.6);
-  padding: 40px;
+  padding: 60px 40px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.right-content {
+.auth-form-container {
   width: 100%;
   max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
 .toggle-buttons {
   display: flex;
+  margin-bottom: 30px;
   background-color: #F52929;
   border-radius: 20px;
   overflow: hidden;
@@ -97,13 +80,19 @@ body {
   background: transparent;
   font-size: 16px;
   font-weight: 600;
+  color: white;
   cursor: pointer;
-  color: rgb(255, 255, 255);
   transition: all 0.3s ease;
 }
 
-.toggle-buttons .active {
-  background-color: rgb(222, 0, 0);
+.toggle-buttons button.active {
+  background-color: #d50000;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .form {
@@ -112,58 +101,43 @@ body {
   gap: 15px;
 }
 
-form input {
+.form input {
   padding: 12px 15px;
   border: none;
   border-radius: 5px;
-  font-size: 14px;
-  background: white;
-  color: black;
+  font-size: 16px;
 }
 
-.setup-btn {
+.submit-btn {
   background-color: #F52929;
-  border: none;
   color: white;
   padding: 12px;
-  font-weight: bold;
-  font-size: 14px;
+  border: none;
   border-radius: 5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.setup-btn:hover {
-  background-color: #e61e1e;
-  transform: translateY(-2px);
+  margin-top: 10px;
 }
 
 .privacy-note {
-  font-size: 10px;
-  color: white;
-  opacity: 0.8;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
   text-align: center;
+  margin-top: 10px;
 }
 
 .forgot-password {
   color: white;
-  font-size: 12px;
+  font-size: 14px;
+  text-align: right;
   text-decoration: none;
-  align-self: flex-end;
+  margin-top: -10px;
 }
 
 .forgot-password:hover {
   text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-  .auth-container {
-    flex-direction: column;
-  }
-  .left-pane {
-    padding: 60px 20px 20px;
-  }
-  .right-pane {
-    padding: 20px;
-  }
+.hidden {
+  display: none;
 }
