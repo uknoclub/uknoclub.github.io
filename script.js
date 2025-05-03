@@ -4,32 +4,43 @@ document.addEventListener('DOMContentLoaded', function() {
   const signupForm = document.getElementById('signup-form');
   const loginForm = document.getElementById('login-form');
 
-  // Switch to Sign Up form
-  signupBtn.addEventListener('click', function(e) {
-    e.preventDefault();
+  function switchToSignup() {
     signupBtn.classList.add('active');
     loginBtn.classList.remove('active');
     signupForm.classList.remove('hidden');
     loginForm.classList.add('hidden');
-  });
+  }
 
-  // Switch to Login form
-  loginBtn.addEventListener('click', function(e) {
-    e.preventDefault();
+  function switchToLogin() {
     loginBtn.classList.add('active');
     signupBtn.classList.remove('active');
     loginForm.classList.remove('hidden');
     signupForm.classList.add('hidden');
+  }
+
+  signupBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    switchToSignup();
   });
 
-  // Form submissions (prevent default for demo)
+  loginBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    switchToLogin();
+  });
+
+  // Initialize form
+  switchToSignup();
+
+  // Form submissions
   signupForm.addEventListener('submit', function(e) {
     e.preventDefault();
+    // Add your signup logic here
     alert('Sign up form submitted!');
   });
 
   loginForm.addEventListener('submit', function(e) {
     e.preventDefault();
+    // Add your login logic here
     alert('Login form submitted!');
   });
 });
