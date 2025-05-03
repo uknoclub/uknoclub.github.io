@@ -400,7 +400,7 @@ body {
 /* Logout Button */
 .logout-btn {
     background: var(--primary);
-    color: #F52929;
+    color: #ffffff;
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
@@ -410,6 +410,7 @@ body {
 }
 
 .logout-btn:hover {
+    background-color: #e61e1e;
     background: var(--primary-dark);
 }
 
