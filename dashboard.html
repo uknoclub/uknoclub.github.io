@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - Ukno Club</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="branding">
+                <img src="assets/logo.png" alt="Ukno Club" class="logo">
+                <h1>Welcome back, <span class="username">User</span>!</h1>
+            </div>
+            <nav class="user-nav">
+                <a href="profile.html" class="user-avatar">
+                    <img src="assets/default-avatar.jpg" alt="Profile">
+                </a>
+                <a href="index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <!-- Progress Overview -->
+            <section class="progress-section">
+                <h2><i class="fas fa-chart-line"></i> My Learning Progress</h2>
+                <div class="progress-cards">
+                    <div class="progress-card">
+                        <h3>Data Analytics</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                        <span class="progress-percent">65% Complete</span>
+                        <a href="courses.html#data-analytics" class="resume-btn">Resume Learning</a>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Machine Learning</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 30%"></div>
+                        </div>
+                        <span class="progress-percent">30% Complete</span>
+                        <a href="courses.html#ml" class="resume-btn">Resume Learning</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Continue Learning -->
+            <section class="continue-section">
+                <h2><i class="fas fa-play-circle"></i> Continue Learning</h2>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="assets/data-analysis-thumb.jpg" alt="Video Thumbnail">
+                        <div class="video-progress">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <button class="play-btn"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div class="video-info">
+                        <h3>Data Cleaning with Python</h3>
+                        <p class="video-desc">Learn how to clean messy datasets using Pandas</p>
+                        <div class="video-meta">
+                            <span><i class="far fa-clock"></i> 22 mins remaining</span>
+                            <span><i class="far fa-bookmark"></i> Last viewed 2 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="actions-section">
+                <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+                <div class="action-grid">
+                    <a href="courses.html" class="action-card">
+                        <i class="fas fa-video"></i>
+                        <span>Browse Courses</span>
+                    </a>
+                    <a href="notes.html" class="action-card">
+                        <i class="fas fa-book"></i>
+                        <span>My Notes</span>
+                    </a>
+                    <a href="bookmarks.html" class="action-card">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Bookmarks</span>
+                    </a>
+                    <a href="feedback.html" class="action-card">
+                        <i class="fas fa-comment-alt"></i>
+                        <span>Give Feedback</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Community Updates -->
+            <section class="community-section">
+                <h2><i class="fas fa-users"></i> Community Updates</h2>
+                <div class="update-card">
+                    <div class="update-header">
+                        <img src="assets/user1.jpg" alt="User" class="update-avatar">
+                        <div>
+                            <h3>New discussion in Data Science</h3>
+                            <p class="update-meta">Posted by Alex • 3 hours ago</p>
+                        </div>
+                    </div>
+                    <p class="update-content">"Has anyone tried the new TensorFlow 2.10 update? The performance improvements are incredible!"</p>
+                    <a href="#" class="view-discussion">Join Discussion →</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
