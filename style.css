@@ -54,31 +54,49 @@ body {
   height: calc(100vh - 80px);
 }
 
+/* ===== Enhanced Navigation Buttons ===== */
 .top-right {
   position: absolute;
   top: 20px;
-  right: 40px;
+  right: 40px; /* Your perfect positioning */
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  gap: 12px;
+  z-index: 10;
+  transition: all 0.3s ease;
 }
 
 .top-right .nav-buttons a {
   display: block;
-  padding: 10px 20px;
-  margin-top: 10px;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: 6px;
   font-weight: 600;
   font-size: 16px;
-  line-height: 1.5;
-  text-align: center;
   color: #FFFFFF;
   text-decoration: none;
   background-color: #F52929;
   width: 200px;
   box-sizing: border-box;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border: 2px solid transparent;
 }
 
+/* Interactive States */
+.top-right .nav-buttons a:hover {
+  background-color: #e61e1e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.top-right .nav-buttons a:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Hero Content ===== */
 .hero-content {
   display: flex;
   justify-content: space-between;
@@ -107,6 +125,11 @@ body {
   height: auto;
   width: 300px;
   margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.ukno-info .main-logo:hover {
+  transform: scale(1.02);
 }
 
 .ukno-info .tagline {
@@ -130,6 +153,7 @@ body {
   color: #FFFFFF;
 }
 
+/* ===== Social Icons ===== */
 .hero-left .social-icons {
   display: flex;
   gap: 15px;
@@ -146,37 +170,21 @@ body {
   background-color: #FFFFFF;
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.1));
   text-decoration: none;
+  transition: all 0.3s ease;
 }
 
-.hero-left .social-icons .icon.youtube {
-  background-image: url('assets/youtube.png');
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
+.hero-left .social-icons a.icon:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.hero-left .social-icons .icon.instagram {
-  background-image: url('assets/instagram.png');
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
+/* Social icon backgrounds (unchanged) */
+.hero-left .social-icons .icon.youtube { background-image: url('assets/youtube.png'); background-size: 60%; background-repeat: no-repeat; background-position: center; }
+.hero-left .social-icons .icon.instagram { background-image: url('assets/instagram.png'); background-size: 60%; background-repeat: no-repeat; background-position: center; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); }
+.hero-left .social-icons .icon.linkedin { background-image: url('assets/linkedin.png'); background-size: 60%; background-repeat: no-repeat; background-position: center; }
+.hero-left .social-icons .icon.telegram { background-image: url('assets/telegram.png'); background-size: 60%; background-repeat: no-repeat; background-position: center; }
 
-.hero-left .social-icons .icon.linkedin {
-  background-image: url('assets/linkedin.png');
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.hero-left .social-icons .icon.telegram {
-  background-image: url('assets/telegram.png');
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
+/* ===== Right Content ===== */
 .hero-right {
   flex: 1;
   display: flex;
@@ -199,8 +207,14 @@ body {
   line-height: 1.7;
   text-align: right;
   max-width: 500px;
+  transition: opacity 0.3s ease;
 }
 
+.hero-right p:hover {
+  opacity: 0.9;
+}
+
+/* ===== Bottom Feature Bar ===== */
 .feature-icons-bar {
   position: absolute;
   bottom: 0;
@@ -208,7 +222,7 @@ body {
   width: 100%;
   background: rgba(0, 0, 0, 0.5);
   color: #FFFFFF;
-  padding: 20px 20px;
+  padding: 20px;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -225,10 +239,53 @@ body {
   gap: 5px;
   text-align: center;
   white-space: nowrap;
+  transition: transform 0.3s ease;
+}
+
+.feature-icon:hover {
+  transform: translateY(-3px);
 }
 
 .feature-icon img {
   height: 25px;
   width: 25px;
   margin-left: 5px;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    padding: 20px;
+  }
+  
+  .top-right {
+    position: static;
+    flex-direction: row;
+    justify-content: center;
+    margin: 20px 0;
+    width: 100%;
+  }
+  
+  .hero-content {
+    flex-direction: column;
+  }
+  
+  .hero-right {
+    align-items: center;
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .hero-right h1 {
+    white-space: normal;
+  }
+  
+  .feature-icons-bar {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px;
+  }
 }
