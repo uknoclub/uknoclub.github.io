@@ -57,7 +57,7 @@ body {
 .top-right {
   position: absolute;
   top: 20px;
-  right: 0px;
+  right: 40px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
