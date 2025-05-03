@@ -18,33 +18,30 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Center vertically */
-  align-items: center; /* Center horizontally */
+  justify-content: center;
+  align-items: center;
   padding: 40px;
-  text-align: center; /* Added for text centering */
-}
-
-.home-button-container {
-  position: absolute;
-  top: 20px;
-  left: 20px;
+  text-align: center;
+  position: relative;
 }
 
 .home-button {
-  display: inline-block;
-  padding: 10px 20px;
-  border-radius: 5px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 12px 24px;
+  border-radius: 6px;
   font-weight: 600;
   font-size: 16px;
   color: #FFFFFF;
   text-decoration: none;
   background-color: #F52929;
+  transition: all 0.3s ease;
 }
 
-.left-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center content */
+.home-button:hover {
+  background-color: #e61e1e;
+  transform: translateY(-2px);
 }
 
 .logo {
@@ -54,17 +51,19 @@ body {
 
 .tagline {
   font-size: 36px;
-  line-height: 40px;
+  margin-bottom: 20px;
 }
 
 .learn {
   color: #F52929;
   font-weight: bold;
+  display: block;
 }
 
 .freely {
   color: white;
   font-weight: bold;
+  display: block;
 }
 
 .right-pane {
@@ -77,20 +76,18 @@ body {
 }
 
 .right-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
   width: 100%;
   max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .toggle-buttons {
   display: flex;
-  width: 100%;
   background-color: #F52929;
   border-radius: 20px;
   overflow: hidden;
-  margin-bottom: 30px;
 }
 
 .toggle-buttons button {
@@ -102,6 +99,7 @@ body {
   font-weight: 600;
   cursor: pointer;
   color: rgb(255, 255, 255);
+  transition: all 0.3s ease;
 }
 
 .toggle-buttons .active {
@@ -111,19 +109,13 @@ body {
 .form {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 400px;
-}
-
-.hidden {
-  display: none;
+  gap: 15px;
 }
 
 form input {
   padding: 12px 15px;
   border: none;
   border-radius: 5px;
-  margin-bottom: 15px;
   font-size: 14px;
   background: white;
   color: black;
@@ -138,12 +130,16 @@ form input {
   font-size: 14px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.setup-btn:hover {
+  background-color: #e61e1e;
+  transform: translateY(-2px);
 }
 
 .privacy-note {
   font-size: 10px;
-  margin-top: 8px;
   color: white;
   opacity: 0.8;
   text-align: center;
@@ -154,9 +150,20 @@ form input {
   font-size: 12px;
   text-decoration: none;
   align-self: flex-end;
-  margin-bottom: 10px;
 }
 
 .forgot-password:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
+  .left-pane {
+    padding: 60px 20px 20px;
+  }
+  .right-pane {
+    padding: 20px;
+  }
 }
