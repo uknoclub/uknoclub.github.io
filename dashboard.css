@@ -400,7 +400,7 @@ body {
 /* Logout Button */
 .logout-btn {
     background: var(--primary);
-    color: white;
+    color: #F52929;
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
