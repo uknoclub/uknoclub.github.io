@@ -28,20 +28,33 @@ body {
   position: absolute;
   top: 20px;
   left: 20px;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: 6px;
   font-weight: 600;
   font-size: 16px;
   color: #FFFFFF;
   text-decoration: none;
   background-color: #F52929;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border: 2px solid transparent;
+}
+
+.home-button:hover {
+  background-color: #e61e1e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .logo {
   width: 280px;
   margin-bottom: 20px;
+  transition: transform 0.3s ease;
 }
 
+.logo:hover {
+  transform: scale(1.02);
+}
 .tagline {
   font-size: 36px;
   line-height: 1.2;
