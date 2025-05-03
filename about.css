@@ -18,14 +18,16 @@ body {
     flex: 0.6;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center; /* Changed to center vertically */
+    align-items: center; /* Changed to center horizontally */
     padding: 40px;
+    text-align: center; /* Added for text centering */
 }
 
 .home-button-container {
-    width: 100%;
-    margin-bottom: 40px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
 }
 
 .home-button {
@@ -54,20 +56,18 @@ body {
 .learn {
     color: #F52929;
     font-weight: 600;
-    display: block;
 }
 
 .freely {
     color: #FFFFFF;
     font-weight: 600;
-    display: block;
 }
 
 .left-bottom {
+    position: absolute;
+    bottom: 40px;
     display: flex;
     align-items: center;
-    margin-top: auto;
-    margin-bottom: 40px;
 }
 
 .qr-code {
