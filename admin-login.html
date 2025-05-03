@@ -4,86 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Ukno Club</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #F52929;
+            --bg-dark: #252835;
+            --text-main: #FFFFFF;
+            --text-secondary: #A0A0A0;
+        }
+        
         body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             font-family: 'Poppins', sans-serif;
-            background-color: #252835;
-            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
         }
         
         .login-container {
-            width: 320px;
-            text-align: center;
+            background: rgba(37, 40, 53, 0.8);
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .logo {
-            font-size: 2.5rem;
-            font-weight: bold;
+            text-align: center;
             margin-bottom: 30px;
-            color: #F52929;
+        }
+        
+        .logo img {
+            height: 50px;
         }
         
         h1 {
-            color: white;
+            text-align: center;
+            color: var(--primary);
             margin-bottom: 30px;
         }
         
         .form-group {
             margin-bottom: 20px;
-            text-align: left;
         }
         
         label {
             display: block;
             margin-bottom: 8px;
-            color: #A0A0A0;
+            color: var(--text-secondary);
         }
         
         input {
             width: 100%;
-            padding: 12px;
+            padding: 12px 15px;
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid #3A3A4A;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 6px;
-            color: white;
-            box-sizing: border-box;
+            color: var(--text-main);
+            font-size: 16px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
         }
         
         button {
             width: 100%;
             padding: 12px;
-            background: #F52929;
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 6px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #D42020;
+        }
+        
+        .error-message {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="login-container">
-        <div class="logo">UKNO CLUB</div>
+        <div class="logo">
+            <img src="assets/logo.png" alt="Ukno Club">
+        </div>
         <h1>Admin Portal</h1>
         
-        <div class="form-group">
-            <label>Username</label>
-            <input type="text" placeholder="Enter admin username">
-        </div>
-        
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" placeholder="Enter password">
-        </div>
-        
-        <button type="submit">Login</button>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter admin username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+            
+            <button type="submit">Login</button>
+            <div id="errorMessage" class="error-message">
+                Invalid credentials. Please try again.
+            </div>
+        </form>
     </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get input values
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simulate authentication (in real app, this would be a server request)
+            if (username === "admin" && password === "admin123") {
+                // Store authentication status
+                localStorage.setItem('adminAuthenticated', 'true');
+                
+                // Redirect to admin dashboard
+                window.location.href = "admin-dashboard.html";
+            } else {
+                // Show error message
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
