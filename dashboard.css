@@ -1,9 +1,8 @@
-/* dashboard.css - Modern User Dashboard */
+/* dashboard.css - Clean Learning Dashboard */
 :root {
     --primary: #F52929;
     --primary-dark: #D42020;
     --secondary: #252835;
-    --accent: #FFC700;
     --bg-dark: #252835;
     --bg-card: #252532;
     --text-main: #FFFFFF;
@@ -48,7 +47,7 @@ body {
 }
 
 .username {
-    color: var(--accent);
+    color: var(--primary);
 }
 
 .user-nav {
@@ -57,22 +56,19 @@ body {
     gap: 20px;
 }
 
-.user-avatar img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--primary);
-}
-
-.logout-btn {
-    color: var(--text-secondary);
-    font-size: 1.2rem;
+.profile-link, .logout-btn {
+    color: var(--text-main);
+    text-decoration: none;
     transition: color 0.3s ease;
+    font-weight: 500;
 }
 
-.logout-btn:hover {
+.profile-link:hover, .logout-btn:hover {
     color: var(--primary);
+}
+
+.logout-btn i {
+    margin-right: 5px;
 }
 
 /* Section Headers */
@@ -99,11 +95,6 @@ body {
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.progress-card:hover {
-    transform: translateY(-5px);
 }
 
 .progress-card h3 {
@@ -123,30 +114,18 @@ body {
     height: 100%;
     background: var(--primary);
     border-radius: 4px;
-    transition: width 0.5s ease;
 }
 
 .progress-percent {
     display: block;
-    color: var(--accent);
+    color: var(--text-main);
     font-weight: 600;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
-.resume-btn {
-    display: inline-block;
-    background: rgba(245, 41, 41, 0.2);
-    color: var(--primary);
-    padding: 8px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.resume-btn:hover {
-    background: var(--primary);
-    color: white;
+.next-topic {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
 }
 
 /* Video Card */
@@ -157,6 +136,13 @@ body {
     padding: 20px;
     border-radius: 12px;
     margin-bottom: 30px;
+    text-decoration: none;
+    color: var(--text-main);
+    transition: transform 0.3s ease;
+}
+
+.video-card:hover {
+    transform: translateY(-3px);
 }
 
 .video-thumbnail {
@@ -189,17 +175,12 @@ body {
     width: 50px;
     height: 50px;
     background: rgba(245, 41, 41, 0.8);
-    border: none;
     border-radius: 50%;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.play-btn:hover {
-    background: var(--primary);
-    transform: translate(-50%, -50%) scale(1.1);
 }
 
 .video-info {
@@ -245,52 +226,13 @@ body {
     color: var(--primary);
 }
 
+.action-card span {
+    font-weight: 500;
+}
+
 .action-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* Community Updates */
-.update-card {
-    background: var(--bg-card);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 40px;
-}
-
-.update-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.update-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.update-meta {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.update-content {
-    margin: 15px 0;
-    line-height: 1.6;
-}
-
-.view-discussion {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
-}
-
-.view-discussion:hover {
-    color: var(--accent);
+    background: rgba(245, 41, 41, 0.1);
 }
 
 /* Responsive Design */
@@ -321,6 +263,6 @@ body {
     }
 
     .action-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
     }
 }
