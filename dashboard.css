@@ -1,4 +1,4 @@
-/* dashboard.css - Clean Learning Dashboard */
+/* dashboard.css - Ukno Club Dashboard Styles */
 :root {
     --primary: #F52929;
     --primary-dark: #D42020;
@@ -8,8 +8,10 @@
     --text-main: #FFFFFF;
     --text-secondary: #A0A0A0;
     --border: #3A3A4A;
+    --success: #4CAF50;
 }
 
+/* Base Styles */
 body {
     background-color: var(--bg-dark);
     color: var(--text-main);
@@ -72,7 +74,7 @@ body {
 }
 
 /* Section Headers */
-.dashboard-content h2 {
+.section-title-red {
     color: var(--primary);
     margin-top: 40px;
     margin-bottom: 20px;
@@ -235,37 +237,6 @@ body {
     background: rgba(245, 41, 41, 0.1);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .video-card {
-        flex-direction: column;
-    }
-
-    .video-thumbnail {
-        min-width: 100%;
-    }
-
-    .video-meta {
-        flex-direction: column;
-        gap: 5px;
-    }
-}
-
-@media (max-width: 480px) {
-    .progress-cards {
-        grid-template-columns: 1fr;
-    }
-
-    .action-grid {
-        grid-template-columns: 1fr;
-    }
-}
 /* Onboarding Steps */
 .onboarding-steps {
     display: flex;
@@ -289,7 +260,16 @@ body {
 }
 
 .step-card.current {
-    border-left: 4px solid #4CAF50;
+    border-left: 4px solid var(--success);
+    text-decoration: none;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.step-card.current:hover {
+    background: rgba(245, 41, 41, 0.05);
+    transform: translateY(-3px);
 }
 
 .step-card h3 {
@@ -300,7 +280,15 @@ body {
     position: absolute;
     top: 20px;
     right: 20px;
-    color: #4CAF50;
+    color: var(--success);
+    font-size: 1.5rem;
+}
+
+.step-card .fa-arrow-right {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--primary);
     font-size: 1.5rem;
 }
 
@@ -320,6 +308,8 @@ body {
     color: var(--text-main);
     transition: transform 0.3s ease;
     text-align: center;
+    position: relative;
+    padding-bottom: 50px;
 }
 
 .course-card:hover {
@@ -345,4 +335,40 @@ body {
     color: var(--primary);
     font-size: 0.9rem;
     font-weight: 600;
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .video-card {
+        flex-direction: column;
+    }
+
+    .video-thumbnail {
+        min-width: 100%;
+    }
+
+    .video-meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .onboarding-steps {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .progress-cards, .action-grid {
+        grid-template-columns: 1fr;
+    }
 }
