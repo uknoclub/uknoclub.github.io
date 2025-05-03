@@ -102,6 +102,12 @@ body {
   background-color: #d50000;
 }
 
+.toggle-buttons:hover {
+  background-color: #e61e1e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
