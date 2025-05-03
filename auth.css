@@ -4,7 +4,7 @@ body {
   background: url('assets/bg.png') no-repeat center center fixed;
   background-size: cover;
   color: #fff;
-  overflow: hidden; /* Prevent scrolling if content overflows */
+  overflow: hidden;
 }
 
 .auth-container {
@@ -17,25 +17,41 @@ body {
 .left-pane {
   flex: 1;
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  padding: 60px 40px;
+  flex-direction: column;
+  padding: 40px;
+}
+
+.home-button-container {
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.home-button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-decoration: none;
+  background-color: #F52929;
 }
 
 .left-content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-top: 40px;
 }
 
 .logo {
-  width: 250px;
-  margin-bottom: 30px;
+  width: 280px;
+  margin-bottom: 20px;
 }
 
 .tagline {
-  margin-top: 20px;
-  font-size: 32px;
+  font-size: 36px;
+  line-height: 40px;
 }
 
 .learn {
@@ -53,43 +69,23 @@ body {
 .right-pane {
   flex: 1;
   background-color: rgba(0, 0, 0, 0.6);
-  padding: 60px 40px;
+  padding: 40px;
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  justify-content: center;
+  align-items: center;
 }
 
 .right-content {
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* Align content to the right initially */
+  align-items: flex-end;
   width: 100%;
-  max-width: 400px; /* Limit the width of the content in the right pane */
-}
-
-.home-button-container {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end; /* Align Home button to the right */
-  margin-bottom: 20px;
-}
-
-.home-button {
-  display: inline-block;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-weight: 600;
-  font-size: 16px;
-  text-align: center;
-  color: #FFFFFF;
-  text-decoration: none;
-  background-color: #F52929;
-  cursor: pointer;
+  max-width: 400px;
 }
 
 .toggle-buttons {
   display: flex;
-  width: 100%; /* Make toggle buttons take full width */
+  width: 100%;
   background-color: #F52929;
   border-radius: 20px;
   overflow: hidden;
@@ -149,14 +145,14 @@ form input {
   margin-top: 8px;
   color: white;
   opacity: 0.8;
-  text-align: center; /* Center the privacy note */
+  text-align: center;
 }
 
 .forgot-password {
   color: white;
   font-size: 12px;
   text-decoration: none;
-  align-self: flex-end; /* Align "Forgot Password" to the right within the form */
+  align-self: flex-end;
   margin-bottom: 10px;
 }
 
