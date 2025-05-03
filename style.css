@@ -69,6 +69,7 @@ body {
 .top-right .nav-buttons a {
   display: block;
   padding: 12px 24px;
+  margin-top: 0;
   border-radius: 6px;
   font-weight: 600;
   font-size: 16px;
