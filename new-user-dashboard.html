@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started - Ukno Club</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="branding">
+                <img src="assets/logo.png" alt="Ukno Club" class="logo">
+                <h1>Welcome, <span class="username">New User</span>!</h1>
+            </div>
+            <nav class="user-nav">
+                <a href="profile.html" class="profile-link">Profile</a>
+                <a href="index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </header>
+
+        <!-- Onboarding Guide -->
+        <section class="onboarding-section">
+            <h2><i class="fas fa-rocket"></i> Start Your Learning Journey</h2>
+            <div class="onboarding-steps">
+                <div class="step-card completed">
+                    <h3>Account Ready</h3>
+                    <p>You've successfully joined Ukno Club!</p>
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                
+                <div class="step-card current">
+                    <h3>Choose Your First Course</h3>
+                    <p>Begin with our recommended path below</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended Starter Course -->
+        <section class="recommendations-section">
+            <h2><i class="fas fa-star"></i> Recommended Starting Point</h2>
+            <div class="course-cards">
+                <a href="courses.html#data-analytics" class="course-card">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Data Analytics Path</h3>
+                    <p>Master Excel, SQL, and Power BI step-by-step</p>
+                    <div class="course-meta">Beginner Friendly</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="actions-section">
+            <h2><i class="fas fa-bolt"></i> Quick Start</h2>
+            <div class="action-grid">
+                <a href="courses.html" class="action-card">
+                    <i class="fas fa-book-open"></i>
+                    <span>All Courses</span>
+                </a>
+                <a href="tutorials.html" class="action-card">
+                    <i class="fas fa-video"></i>
+                    <span>Video Tutorials</span>
+                </a>
+                <a href="help.html" class="action-card">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Get Help</span>
+                </a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
