@@ -1,0 +1,301 @@
+/* courses.css - Modern Learning Interface */
+:root {
+    --primary: #F52929;
+    --primary-dark: #D42020;
+    --secondary: #252835; /* Dark background for containers */
+    --bg-dark: #121218; /* Body background */
+    --bg-card: #1e1e27; /* Card background */
+    --text-main: #FFFFFF;
+    --text-secondary: #A0A0A0; /* Muted text */
+    --text-highlight: #FFC700; /* Yellow highlight */
+    --link-color: #66ccff; /* Link blue */
+    --border: #3A3A4A; /* Border color */
+    --success: #4CAF50; /* Green for success/completion */
+     --error: #ff4444; /* Red for errors */
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.course-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles (Similar to Dashboard/Notes/Feedback) */
+.course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+}
+
+.branding {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    height: 40px;
+    width: auto;
+}
+
+.course-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--primary);
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-nav a {
+    color: var(--text-main);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.header-nav a:hover {
+    color: var(--primary);
+    background-color: rgba(245, 41, 41, 0.1);
+}
+
+/* Course Module Styles (for the index page) */
+.course-module {
+    margin-bottom: 40px;
+}
+
+.course-module h2 {
+    color: var(--text-highlight); /* Highlight color for module titles */
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.module-goal {
+    color: var(--text-secondary); /* Muted text for goal */
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.track-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.track-card {
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none; /* Remove underline */
+    color: var(--text-main);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.track-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.track-card h3 {
+    color: var(--link-color); /* Link color for track title */
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.track-card p {
+    color: var(--text-secondary); /* Muted text for topics list */
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.view-track-link {
+    display: block;
+    text-align: right;
+    color: var(--primary); /* Red color for the link */
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.coming-soon {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    margin-top: 40px;
+}
+
+
+/* --- Video Player Section Styles (Keep existing) --- */
+/* These styles will apply when courses.html is used as a video player page */
+.video-player-section {
+    /* Initially hidden, displayed via JS when videoId parameter is present */
+}
+
+.hidden { /* Utility class to hide elements */
+    display: none;
+}
+
+
+/* Keep existing styles for video container, notes section, etc. */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    margin-bottom: 20px;
+    background-color: #000; /* Placeholder background */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none; /* Remove default iframe border */
+}
+
+.notes-section {
+    margin-top: 25px;
+    background: var(--bg-card); /* Match card background */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notes-section label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--text-highlight); /* Highlight color */
+    font-size: 1.1rem;
+}
+
+.notes-section textarea {
+    width: 100%;
+    padding: 12px;
+    background: var(--secondary); /* Darker input background */
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-main);
+    font-family: 'Roboto Mono', monospace; /* Monospaced font for notes */
+    font-size: 1rem;
+    min-height: 150px;
+    resize: vertical;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+/* Placeholder for progress tracker if added here */
+/* .progress-tracker { ... } */
+
+
+/* Responsive Adjustments (Keep existing and add for new elements) */
+@media (max-width: 768px) {
+    .course-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .header-nav {
+        margin-top: 10px;
+         width: 100%;
+         justify-content: center;
+         gap: 15px;
+    }
+     .header-nav a {
+         padding: 8px 15px;
+         font-size: 0.9rem;
+    }
+     .branding {
+        width: 100%;
+        justify-content: center;
+        gap: 10px;
+    }
+     .course-header h1 {
+         font-size: 1.5rem;
+     }
+      .course-module h2 {
+          font-size: 1.4rem;
+      }
+       .module-goal {
+           font-size: 0.9rem;
+       }
+       .track-list {
+           grid-template-columns: 1fr; /* Stack cards on smaller screens */
+       }
+       .track-card {
+           padding: 15px;
+       }
+       .track-card h3 {
+           font-size: 1.1rem;
+       }
+       .track-card p {
+           font-size: 0.8rem;
+       }
+        .view-track-link {
+            font-size: 0.8rem;
+        }
+        .notes-section {
+            padding: 15px;
+        }
+        .notes-section label {
+            font-size: 1rem;
+        }
+         .notes-section textarea {
+             font-size: 0.9rem;
+         }
+}
+
+@media (max-width: 480px) {
+    .course-container {
+        padding: 10px;
+    }
+     .course-header h1 {
+         font-size: 1.3rem;
+     }
+      .header-nav a {
+          font-size: 0.8rem;
+          padding: 6px 10px;
+      }
+      .course-module h2 {
+          font-size: 1.2rem;
+      }
+       .module-goal {
+           font-size: 0.8rem;
+       }
+        .track-card h3 {
+            font-size: 1rem;
+        }
+         .track-card p {
+             font-size: 0.7rem;
+         }
+          .notes-section textarea {
+              min-height: 100px;
+          }
+}
