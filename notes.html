@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Notes - Ukno Club</title>
+    <link rel="stylesheet" href="notes.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> </head>
+<body>
+    <div class="notes-container">
+        <header class="notes-header">
+            <div class="branding">
+                <img src="assets/logo.png" alt="Ukno Club" class="logo">
+                <h1>My Notes</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="feedback.html">Feedback</a>
+                 </nav>
+        </header>
+
+        <section class="notes-section">
+            <h2><i class="fas fa-book"></i> Saved Notes</h2>
+            <div id="notesList">
+                <p class="no-notes-message">Loading notes...</p> </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const notesListDiv = document.getElementById('notesList');
+
+            // Function to load and display notes
+            function loadAndDisplayNotes() {
+                // Clear current content
+                notesListDiv.innerHTML = '';
+
+                // --- Placeholder Logic for Loading Notes ---
+                // In a real app, you would fetch notes from a backend specific to the logged-in user.
+                // For this frontend-only example, we'll retrieve notes from localStorage
+                // saved by the courses.html page.
+
+                const notes = []; // Array to hold note objects { videoTitle: '...', content: '...', timestamp: '...' }
+
+                // --- Example: Loading notes from localStorage keys used in courses.html ---
+                // This assumes courses.html saves notes with keys like "excel-note", "sql-note", etc.
+                // You might need to adjust this logic based on how notes are actually saved.
+
+                // We need a way to map the localStorage key back to a video title.
+                // This mapping should ideally be managed centrally or fetched.
+                const videoNoteMapping = {
+                    'excel-note': '📊 Data Analyst – Excel',
+                    'sql-note': '📊 Data Analyst – SQL',
+                    // Add mappings for other video notes as you create them in courses.html
+                };
+
+                for (const key in localStorage) {
+                    if (key.endsWith('-note')) { // Check if the key looks like a note key
+                        const noteContent = localStorage.getItem(key);
+                        if (noteContent) {
+                            const videoId = key.replace('-note', '');
+                            const videoTitle = videoNoteMapping[key] || 'Unknown Video'; // Get title from mapping
+                             // We don't have timestamps saved in the current courses.html script,
+                             // so we'll use a placeholder or the current date/time when loading.
+                             // Ideally, the save script in courses.html should save timestamp too.
+                            const timestamp = new Date().toLocaleString(); // Placeholder timestamp
+
+                            notes.push({
+                                videoTitle: videoTitle,
+                                content: noteContent,
+                                timestamp: timestamp
+                            });
+                        }
+                    }
+                }
+                // --- End Placeholder Logic ---
+
+
+                if (notes.length === 0) {
+                    notesListDiv.innerHTML = '<p class="no-notes-message">No notes saved yet. Start watching a course and take some notes!</p>';
+                } else {
+                    // Sort notes if needed (e.g., by timestamp or video title)
+                    // notes.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Example sort by date
+
+                    notes.forEach(note => {
+                        const noteElement = document.createElement('div');
+                        noteElement.classList.add('note-item');
+                        noteElement.innerHTML = `
+                            <h3>${note.videoTitle}</h3>
+                            <p>${note.content}</p>
+                            <span class="note-timestamp">Saved on ${note.timestamp}</span>
+                        `;
+                        notesListDiv.appendChild(noteElement);
+                    });
+                }
+            }
+
+            // Load notes when the page loads
+            loadAndDisplayNotes();
+
+            // In a real application, you might want to refresh notes if they can be edited or deleted
+            // on this page, but with localStorage, changes are immediate upon reload.
+        });
+    </script>
+</body>
+</html>

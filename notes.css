@@ -1,0 +1,181 @@
+/* notes.css - Ukno Club Notes Page Styles */
+:root {
+    --primary: #F52929;
+    --primary-dark: #D42020;
+    --secondary: #252835; /* Dark background for containers */
+    --bg-dark: #121218; /* Body background */
+    --bg-card: #1e1e27; /* Card background */
+    --text-main: #FFFFFF;
+    --text-secondary: #A0A0A0; /* Muted text */
+    --text-highlight: #FFC700; /* Yellow highlight */
+    --link-color: #66ccff; /* Link blue */
+    --border: #3A3A4A; /* Border color */
+    --success: #4CAF50; /* Green for success/completion */
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    min-height: 100vh; /* Ensure background covers viewport */
+}
+
+.notes-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles (Similar to Dashboard) */
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+}
+
+.branding {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    height: 40px;
+    width: auto;
+}
+
+.notes-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--primary);
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-nav a {
+    color: var(--text-main);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 500;
+    padding: 5px 10px; /* Add some padding */
+    border-radius: 4px; /* Rounded corners */
+}
+
+.header-nav a:hover {
+    color: var(--primary);
+    background-color: rgba(245, 41, 41, 0.1); /* Subtle hover background */
+}
+
+
+/* Notes Section */
+.notes-section {
+    margin-top: 30px;
+}
+
+.notes-section h2 {
+    color: var(--text-highlight); /* Highlight color for section title */
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.note-item {
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.note-item h3 {
+    color: var(--link-color); /* Link color for video title */
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.note-item p {
+    color: var(--text-secondary); /* Muted text for note content */
+    margin-bottom: 10px;
+    white-space: pre-wrap; /* Preserve whitespace and line breaks */
+}
+
+.note-timestamp {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: right;
+    margin-top: 10px;
+    display: block; /* Ensure it's on a new line */
+}
+
+.no-notes-message {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    margin-top: 50px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .notes-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .header-nav {
+        margin-top: 10px;
+         width: 100%;
+         justify-content: center;
+         gap: 15px;
+    }
+    .header-nav a {
+         padding: 8px 15px;
+         font-size: 0.9rem;
+    }
+
+    .branding {
+        width: 100%;
+        justify-content: center;
+        gap: 10px;
+    }
+     .notes-header h1 {
+         font-size: 1.5rem;
+     }
+
+    .note-item {
+        padding: 15px;
+    }
+    .note-item h3 {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .notes-container {
+        padding: 10px;
+    }
+    .notes-section h2 {
+        font-size: 1.3rem;
+    }
+     .note-item h3 {
+         font-size: 1rem;
+     }
+     .note-item p {
+         font-size: 0.9rem;
+     }
+     .note-timestamp {
+         font-size: 0.7rem;
+     }
+}

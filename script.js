@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (signupForm) signupForm.classList.remove('hidden');
         if (loginForm) loginForm.classList.add('hidden');
         if (loginErrorMessage) loginErrorMessage.style.display = 'none'; // Hide error message on switch
+         window.location.hash = ''; // Clear hash
     }
 
     function switchToLogin() {
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (loginForm) loginForm.classList.remove('hidden');
         if (signupForm) signupForm.classList.add('hidden');
         if (loginErrorMessage) loginErrorMessage.style.display = 'none'; // Hide error message on switch
+        window.location.hash = '#login'; // Add hash for direct linking
     }
 
     // Add event listeners only if buttons exist
@@ -37,8 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             switchToLogin();
         });
 
-        // Initialize form state based on which button is active or default to signup
-        // Check URL hash to potentially start on login if navigating back from somewhere
+        // Initialize form state based on URL hash or default to signup
         if (window.location.hash === '#login') {
              switchToLogin();
         } else {
@@ -69,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Using credentials from your last provided script: admin@uknoclub.com / admin2024
             if (identifier === "admin@uknoclub.com" && password === "admin2024") {
                 console.log("Admin login successful");
-                localStorage.setItem('adminAuthenticated', 'true'); // CORRECTED KEY
+                localStorage.setItem('adminAuthenticated', 'true'); // Use consistent key
                 window.location.href = "admin-dashboard.html"; // Redirect to admin dashboard
                 return; // Stop further processing
             }
@@ -79,56 +80,73 @@ document.addEventListener('DOMContentLoaded', function() {
             // In a real app, you'd send these credentials to your backend for user verification.
             // This is a placeholder. Replace with your actual user authentication fetch call.
 
-             // Simulate failed login if not admin
-             console.log("User login failed (simulated)");
-             if (loginErrorMessage) {
-                 loginErrorMessage.textContent = 'Invalid credentials. Please try again.'; // Generic error for failed user/non-admin attempt
-                 loginErrorMessage.style.display = 'block'; // Show error
+            // Simulate a successful user login for demonstration
+             if (identifier === "user@example.com" && password === "password123") { // << Example user credentials
+                 console.log("User login successful (simulated)");
+                 localStorage.setItem('userAuthenticated', 'true'); // Use a separate key for user auth
+                 localStorage.setItem('loggedInUsername', 'Regular User'); // Store placeholder username << ADDED
+                 window.location.href = "dashboard.html"; // Redirect to user dashboard
+                 if (loginErrorMessage) loginErrorMessage.style.display = 'none';
+                 return; // Stop further processing
              }
 
 
-            // Example of simulated successful user login after a delay (commented out)
-            // setTimeout(() => {
-            //      alert('User Login simulated successful! (Placeholder)'); // For demonstration
-            //      // Redirect to the user dashboard or desired page
-            //      // window.location.href = "dashboard.html"; // Uncomment in a real app
-            //      if (loginErrorMessage) loginErrorMessage.style.display = 'none';
-            // }, 500);
+             // If not admin and not the example user, then failed login
+             console.log("Login failed");
+             if (loginErrorMessage) {
+                 loginErrorMessage.textContent = 'Invalid credentials. Please try again.'; // Generic error
+                 loginErrorMessage.style.display = 'block'; // Show error
+             }
              // --- End Placeholder ---
         });
 
-        // Show password toggle (remains unchanged as per your implemented code)
+        // Show password toggle (remains unchanged)
         document.querySelectorAll('.show-password').forEach(icon => {
             icon.addEventListener('click', function() {
                 const input = this.previousElementSibling;
-                if (input && input.type === 'password') { // Added check for input
+                if (input && input.type === 'password') {
                     input.type = 'text';
                     this.classList.replace('fa-eye', 'fa-eye-slash');
-                } else if (input) { // Added check for input
+                } else if (input) {
                     input.type = 'password';
                     this.classList.replace('fa-eye-slash', 'fa-eye');
                 }
             });
         });
 
-        // Remember me functionality (remains unchanged as per your implemented code)
-        const rememberMeCheckbox = document.getElementById('rememberMe'); // Renamed to avoid conflict
-        if (rememberMeCheckbox && loginEmailInput) { // Added checks
-             const rememberedEmail = localStorage.getItem('rememberedEmail');
-             if (rememberedEmail) {
-               loginEmailInput.value = rememberedEmail;
-               rememberMeCheckbox.checked = true;
-             }
+        // Remember me functionality (remains unchanged)
+        const rememberMeCheckbox = document.getElementById('rememberMe');
+        const rememberedEmail = localStorage.getItem('rememberedEmail');
 
-             // Save email on form submission if "Remember me" is checked
-             loginForm.addEventListener('submit', function() {
-                  if (rememberMeCheckbox.checked) {
-                      localStorage.setItem('rememberedEmail', loginEmailInput.value);
-                  } else {
-                      localStorage.removeItem('rememberedEmail');
-                  }
-             });
+        if (rememberMeCheckbox && loginEmailInput) {
+            if (rememberedEmail) {
+              loginEmailInput.value = rememberedEmail;
+              rememberMeCheckbox.checked = true;
+            }
         }
+
+         // Save/Remove email from localStorage when the checkbox state changes
+         if (rememberMeCheckbox && loginEmailInput) {
+            rememberMeCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    // Save email when checkbox is checked
+                     localStorage.setItem('rememberedEmail', loginEmailInput.value);
+                } else {
+                    // Remove email when checkbox is unchecked
+                    localStorage.removeItem('rememberedEmail');
+                }
+            });
+
+            // Also save the email right before form submission if checked
+            loginForm.addEventListener('submit', function() {
+                 if (rememberMeCheckbox.checked) {
+                     localStorage.setItem('rememberedEmail', loginEmailInput.value);
+                 } else {
+                     localStorage.removeItem('rememberedEmail');
+                 }
+            });
+         }
+
     } else {
         console.error("Authentication elements not found on the page.");
     }
