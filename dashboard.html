@@ -33,12 +33,14 @@
         </header>
 
         <main class="dashboard-content">
-            <section class="progress-section">
-                <h2><i class="fas fa-chart-line"></i> My Learning Progress</h2>
-                <div class="progress-cards" id="learningProgressCards">
-                    <p class="no-progress-message">Loading progress...</p>
-                </div>
-            </section>
+
+            <section class="recommended-section">
+                 <h2><i class="fas fa-arrow-right"></i> Your Next Step</h2>
+                 <div id="recommendedLearningContent">
+                      <p class="no-progress-message">Finding your next topic...</p>
+                 </div>
+             </section>
+
 
             <section class="continue-section">
                 <h2><i class="fas fa-play-circle"></i> Continue Learning</h2>
@@ -46,6 +48,14 @@
                      <p class="no-progress-message">Start a course to see your progress here!</p>
                 </div>
                  </section>
+
+             <section class="progress-section">
+                 <h2><i class="fas fa-chart-line"></i> My Learning Progress</h2>
+                 <div class="progress-cards" id="learningProgressCards">
+                     <p class="no-progress-message">Loading progress...</p>
+                 </div>
+             </section>
+
 
             <section class="actions-section">
                 <h2><i class="fas fa-bolt"></i> Quick Access</h2>
@@ -70,10 +80,12 @@
             const logoutBtn = document.getElementById('logoutBtn');
             const learningProgressCardsDiv = document.getElementById('learningProgressCards');
             const continueLearningContentDiv = document.getElementById('continueLearningContent');
+             const recommendedLearningContentDiv = document.getElementById('recommendedLearningContent'); // New recommended section div
+
 
             // --- localStorage Keys ---
             const VIDEO_STORAGE_KEY = 'uknoClubVideoData'; // From admin interface
-            const USER_PROGRESS_KEY_PREFIX = 'uknoClubProgress-'; // User-specific progress { videoId: { completed: true, ... } }
+            const USER_PROGRESS_KEY_PREFIX = 'uknoClubProgress-'; // User-specific completion { videoId: { completed: true, ... } }
              const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-'; // Individual video progress { time: ..., timestamp: ... }
 
 
@@ -106,14 +118,24 @@
             // --- Function to Load All Video Data ---
             function loadAllVideosData() {
                  const videosJson = localStorage.getItem(VIDEO_STORAGE_KEY);
-                 return videosJson ? JSON.parse(videosJson) : [];
+                 try {
+                     return videosJson ? JSON.parse(videosJson) : [];
+                 } catch (e) {
+                     console.error("Error parsing video data from localStorage:", e);
+                     return [];
+                 }
             }
 
              // --- Function to Load User Progress Data ---
              function loadUserProgress() {
                  if (loggedInUsername && loggedInUsername !== 'Guest') {
                      const progressJson = localStorage.getItem(USER_PROGRESS_KEY_PREFIX + loggedInUsername);
-                     return progressJson ? JSON.parse(progressJson) : {};
+                     try {
+                          return progressJson ? JSON.parse(progressJson) : {};
+                     } catch (e) {
+                          console.error("Error parsing user progress from localStorage:", e);
+                          return {};
+                     }
                  }
                  return {}; // Return empty object if no user or guest
              }
@@ -190,8 +212,7 @@
                             <div class="progress-fill" style="width: ${completionPercentage}%"></div>
                         </div>
                         <span class="progress-percent">${completionPercentage}% Complete</span>
-                        <div class="next-topic">${completionPercentage === 100 ? 'Module Completed!' : `${completedVideosInModule} of ${totalVideosInModule} videos completed`}</div>
-                    `;
+                        <div class="next-topic">${completedVideosInModule} of ${totalVideosInModule} videos completed</div> `;
                     learningProgressCardsDiv.appendChild(progressCard);
                 });
             }
@@ -204,6 +225,20 @@
                  const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
                  const paddedSeconds = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds;
                  return `${paddedMinutes}:${paddedSeconds}`;
+             }
+
+             // --- Helper to format seconds into HH:MM:SS (if needed for display) ---
+             function formatTimeToHHMMSS(totalSeconds) {
+                if (isNaN(totalSeconds) || totalSeconds < 0) return '00:00:00';
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = Math.floor(totalSeconds % 60);
+
+                const paddedHours = hours < 10 ? '0' + hours : hours;
+                const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                const paddedSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+                return hours > 0 ? `${paddedHours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
              }
 
 
@@ -224,9 +259,13 @@
                            try {
                                const progressData = JSON.parse(savedProgressJson);
                                // Check if there's a timestamp and a saved time (time > 0)
-                               if (progressData.timestamp && progressData.time !== undefined && parseFloat(progressData.time) > 0) {
+                               // Also ensure the video is NOT marked as completed in user progress
+                               const userProgress = loadUserProgress();
+                               const isCompleted = userProgress[video.topicId] && userProgress[video.topicId].completed;
+
+                               if (!isCompleted && progressData.timestamp && progressData.time !== undefined && parseFloat(progressData.time) > 0) {
                                     const currentTimestamp = new Date(progressData.timestamp);
-                                    // Find the latest timestamp among videos with saved progress > 0
+                                    // Find the latest timestamp among videos with saved progress > 0 AND not completed
                                     if (latestTimestamp === null || currentTimestamp > latestTimestamp) {
                                         latestTimestamp = currentTimestamp;
                                         mostRecentlyWatchedVideo = video;
@@ -246,8 +285,9 @@
                        // Found the most recently watched video
                        const continueCard = document.createElement('a');
                        continueCard.classList.add('video-card');
-                       // Link to the video player page for this video
-                       continueCard.href = `courses.html?video=${mostRecentlyWatchedVideo.topicId}`;
+                       // Link to the video player page for this video, resuming from last time
+                       continueCard.href = `courses.html?video=${mostRecentlyWatchedVideo.topicId}`; // Link to the video player view
+
 
                         // Calculate time remaining using saved time and total duration
                         const totalDurationSeconds = mostRecentlyWatchedVideo.totalDuration; // Use total duration from admin data
@@ -291,16 +331,125 @@
                        continueLearningContentDiv.appendChild(continueCard);
 
                   } else {
-                       // No video progress found, show the default message
-                      continueLearningContentContentDiv.innerHTML = '<p class="no-progress-message">Start a course to see your progress here!</p>';
+                       // No video progress found that isn't completed, show the default message
+                      continueLearningContentDiv.innerHTML = '<p class="no-progress-message">Start a course to see your progress here!</p>';
                   }
 
+             }
+
+
+             // --- Function to Display Recommended Next Topic (New) ---
+             function displayRecommendedLearning() {
+                 recommendedLearningContentDiv.innerHTML = ''; // Clear current content
+
+                 const allVideos = loadAllVideosData();
+                 const userProgress = loadUserProgress();
+                 let recommendedVideo = null;
+
+                 // Logic: Find the last watched video (if any). If completed, find the next in the same module.
+                 // If no last watched or it's completed and no next, find the first uncompleted video in any module.
+
+                 let mostRecentlyWatchedVideo = null;
+                 let latestTimestamp = null;
+
+                 // Find the most recently watched video (completed or not)
+                 allVideos.forEach(video => {
+                     const savedProgressJson = localStorage.getItem(VIDEO_PROGRESS_KEY_PREFIX + video.topicId);
+                      if (savedProgressJson) {
+                          try {
+                              const progressData = JSON.parse(savedProgressJson);
+                              if (progressData.timestamp) {
+                                   const currentTimestamp = new Date(progressData.timestamp);
+                                   if (latestTimestamp === null || currentTimestamp > latestTimestamp) {
+                                       latestTimestamp = currentTimestamp;
+                                       mostRecentlyWatchedVideo = video;
+                                   }
+                              }
+                          } catch (e) {
+                              console.error(`Failed to parse progress for video ${video.topicId}:`, e);
+                          }
+                      }
+                 });
+
+
+                 if (mostRecentlyWatchedVideo) {
+                     // Check if the most recent video is completed
+                     const isCompleted = userProgress[mostRecentlyWatchedVideo.topicId] && userProgress[mostRecentlyWatchedVideo.topicId].completed;
+
+                     if (isCompleted) {
+                         // If the last watched video is completed, find the next uncompleted in the same module
+                         const moduleVideos = allVideos.filter(v => v.videoModule === mostRecentlyWatchedVideo.videoModule)
+                                                   .sort((a, b) => a.videoTitle.localeCompare(b.videoTitle)); // Sort to get a logical order
+
+                         const currentIndex = moduleVideos.findIndex(v => v.topicId === mostRecentlyWatchedVideo.topicId);
+
+                         // Find the next uncompleted video in this module
+                         for (let i = currentIndex + 1; i < moduleVideos.length; i++) {
+                             const nextVideo = moduleVideos[i];
+                             if (!userProgress[nextVideo.topicId] || !userProgress[nextVideo.topicId].completed) {
+                                 recommendedVideo = nextVideo;
+                                 break; // Found the next uncompleted video
+                             }
+                         }
+                     } else {
+                          // If the last watched video is NOT completed, recommend that one to finish it
+                          // This case is largely covered by "Continue Learning", but we could still list it here
+                          // For simplicity, let's prioritize the *next* topic if the current one is finished
+                          // If the current one is NOT finished, "Continue Learning" handles it.
+                     }
+                 }
+
+                 // If no next video was found in the last watched module (or no last watched),
+                 // find the first uncompleted video in the first module
+                 if (!recommendedVideo) {
+                      const moduleKeys = Object.keys(modules).sort(); // Get sorted module keys
+
+                      for (const moduleKey of moduleKeys) {
+                          const moduleVideos = allVideos.filter(v => v.videoModule === moduleKey)
+                                                      .sort((a, b) => a.videoTitle.localeCompare(b.videoTitle)); // Sort for order
+
+                          for (const video of moduleVideos) {
+                              if (!userProgress[video.topicId] || !userProgress[video.topicId].completed) {
+                                  recommendedVideo = video;
+                                  break; // Found the first uncompleted video overall
+                              }
+                          }
+                          if (recommendedVideo) break; // Stop searching modules
+                      }
+                 }
+
+
+                 if (recommendedVideo) {
+                      const recommendedCard = document.createElement('a');
+                       recommendedCard.classList.add('video-card'); // Reuse video-card styling
+                       recommendedCard.href = `courses.html?video=${recommendedVideo.topicId}`; // Link to the video
+
+
+                       recommendedCard.innerHTML = `
+                            <div class="video-thumbnail">
+                                <img src="assets/placeholder-thumb.jpg" alt="Video Thumbnail">
+                                <div class="play-btn"><i class="fas fa-arrow-right"></i></div> </div>
+                            <div class="video-info">
+                                <h3>${recommendedVideo.videoTitle}</h3>
+                                <p class="video-desc">${recommendedVideo.videoDescription || 'No description available.'}</p>
+                                <div class="video-meta">
+                                     <span><i class="fas fa-book-open"></i> Module: ${recommendedVideo.videoModule}</span>
+                                </div>
+                            </div>
+                       `;
+                       recommendedLearningContentDiv.appendChild(recommendedCard);
+
+                 } else {
+                     // No uncompleted videos found
+                     recommendedLearningContentDiv.innerHTML = '<p class="no-progress-message">You have completed all available videos! 🎉 Check back later for new content.</p>';
+                 }
              }
 
 
             // --- Initial Load and Display ---
              displayLearningProgress(); // Display progress cards
              displayContinueLearning(); // Display continue learning section
+             displayRecommendedLearning(); // Display recommended learning section
 
         });
 
