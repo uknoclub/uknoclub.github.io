@@ -1,14 +1,15 @@
 /* Basic styling for the profile page */
 body {
-    font-family: 'Poppins', sans-serif;
     margin: 0;
-    padding: 0;
-    background-color: var(--background); /* Use consistent variables */
-    color: var(--text-primary);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+    background: #252835 url('assets/bg2.png') no-repeat center center fixed;
+    background-size: cover;
+    color: #ffffff;
+    height: 100vh;
+    overflow-y: auto; /* Allow vertical scrolling for content */
+     overflow-x: hidden; /* Prevent horizontal overflow */
 }
+
 
 .profile-container {
     width: 100%;

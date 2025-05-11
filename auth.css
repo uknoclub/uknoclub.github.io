@@ -5,14 +5,22 @@ body {
     background: url('assets/bg.png') no-repeat center center fixed;
     background-size: cover;
     color: #fff;
-    overflow: hidden;
+    /* Allow vertical scrolling */
+    overflow-y: auto;
+    /* Prevent horizontal scrolling */
+    overflow-x: hidden;
+    /* Ensure body takes at least the full viewport height for background coverage */
+    min-height: 100vh;
 }
 
 .auth-container {
     display: flex;
-    height: 100vh;
+    /* Use min-height instead of fixed height to allow content to push it taller */
+    min-height: 100vh;
     width: 100%;
     backdrop-filter: brightness(0.5);
+    /* Allow panes to wrap on smaller screens */
+    flex-wrap: wrap;
 }
 
 .left-pane {
@@ -23,6 +31,9 @@ body {
     align-items: center;
     padding: 40px;
     text-align: center;
+    /* Ensure min-height on left pane so background filter covers it */
+    min-height: 100vh; /* Match min-height of container */
+    box-sizing: border-box; /* Include padding in height calculation */
 }
 
 .home-button {
@@ -39,6 +50,7 @@ body {
     transition: all 0.3s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     border: 2px solid transparent;
+    z-index: 10; /* Ensure it's above other content */
 }
 
 .home-button:hover {
@@ -68,23 +80,39 @@ body {
 .right-pane {
     flex: 1;
     background-color: rgba(0, 0, 0, 0.6);
-    padding: 60px 40px;
+    padding: 40px 40px; /* Adjusted padding */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    width: 100%; /* Ensure it takes full width on small screens */
+    box-sizing: border-box; /* Include padding in width */
+    /* Allow scrolling within the right pane if its content overflows */
+    overflow-y: auto;
+     flex-grow: 1; /* Allow right pane to grow */
+     /* Ensure min-height on right pane so background covers it */
+    min-height: 100vh; /* Match min-height of container */
 }
 
+/* Container for forms and toggle buttons */
 .auth-form-container {
-    width: 100%;
-    max-width: 400px;
+    width: 100%; /* Take full width of right-pane padding */
+    max-width: 400px; /* Keep the max width for the forms */
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    gap: 25px; /* Space between toggle buttons and form container */
+     /* Ensure content within this container is managed */
+     flex-shrink: 0; /* Prevent shrinking below content size */
 }
 
+/* Toggle Buttons Container */
 .toggle-buttons {
     display: flex;
-    margin-bottom: 30px;
+    /* Removed margin-bottom as gap is used in auth-form-container */
     background-color: #F52929;
     border-radius: 20px;
     overflow: hidden;
+    width: 100%; /* Ensure toggle buttons container takes full width */
 }
 
 .toggle-buttons button {
@@ -97,6 +125,7 @@ body {
     color: white;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-align: center; /* Ensure button text is centered */
 }
 
 /* Individual button hover effect */
@@ -108,200 +137,26 @@ body {
     background-color: #d50000;
 }
 
+/* Container holding the actual form divs */
 .form-container {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: column; /* Stack forms vertically (though only one is visible) */
+    gap: 20px; /* Space between forms (not really needed as only one is shown) */
+     width: 100%; /* Ensure form container takes full width */
 }
 
+/* Individual Form Styles */
 .form {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: column; /* Stack form groups vertically */
+    gap: 15px; /* Space between form groups */
+     width: 100%; /* Ensure each form takes full width of its container */
+    /* Background and padding handled by auth-form-container or right-pane */
 }
-
-.form input {
-    padding: 12px 15px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box; /* Added for consistency */
-}
-
-/* Added styles for password container, show password icon, and login options */
-.password-container {
-    position: relative;
-    width: 100%; /* Ensure container takes full width */
-}
-
-.password-container input {
-    padding-right: 40px; /* Increased padding to make space for the icon */
-    width: 100%;
-    box-sizing: border-box; /* FIX: Include padding and border in the element's total width */
-}
-
-.password-container .show-password {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #A0A0A0;
-    font-size: 18px; /* Adjusted size */
-    z-index: 10; /* Ensure icon is above input */
-}
-
-.login-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 0;
-    font-size: 14px; /* Adjusted size */
-}
-
-.login-options label {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Adjusted gap */
-    color: #A0A0A0;
-    cursor: pointer;
-    user-select: none; /* Prevent text selection on label */
-}
-
-.login-options input[type="checkbox"] {
-    width: auto;
-    margin: 0;
-    accent-color: #F52929; /* Style the checkbox color */
-    cursor: pointer;
-}
-/* End added styles */
-
-
-.submit-btn {
-    background-color: #F52929;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    box-sizing: border-box; /* Added for consistency */
-}
-
-.submit-btn:hover {
-    background-color: #e61e1e;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-
-.privacy-note {
-    font-size: 12px;
-    color: rgba(255,255,255,0.7);
-    text-align: center;
-    margin-top: 10px;
-}
-
-.forgot-password {
-    color: white;
-    font-size: 14px;
-    text-align: right;
-    text-decoration: none;
-    margin-top: -10px;
-    display: block; /* Ensure it takes full width for text-align right */
-}
-
-.forgot-password:hover {
-    text-decoration: underline;
-}
-
-.hidden {
-    display: none;
-}
-
-.error-message {
-    color: #ff4444;
-    text-align: center;
-    margin-top: 15px;
-    font-size: 14px;
-}
-
-
-@media (max-width: 768px) {
-    .auth-container {
-        flex-direction: column;
-        height: auto;
-        min-height: 100vh;
-        overflow-y: auto;
-    }
-
-    .left-pane, .right-pane {
-        flex: none;
-        width: 100%;
-        padding: 30px 20px;
-    }
-
-    .left-pane {
-        padding-top: 80px;
-        text-align: center;
-    }
-
-    .home-button {
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .logo {
-        width: 220px;
-    }
-
-    .tagline {
-        font-size: 28px;
-        margin-bottom: 30px;
-    }
-
-    .toggle-buttons {
-        margin-bottom: 20px;
-    }
-
-    .form input, .submit-btn {
-        font-size: 14px;
-        padding: 10px 12px;
-    }
-
-     .password-container input { /* Adjust padding for smaller screens */
-        padding-right: 30px;
-     }
-
-    .forgot-password, .login-options { /* Adjust font size */
-        font-size: 12px;
-    }
-
-    .login-options label { /* Adjust gap */
-        gap: 5px;
-    }
-}
-
-@media (max-width: 480px) {
-    .toggle-buttons button {
-        font-size: 14px;
-        padding: 10px 0;
-    }
-
-    .privacy-note {
-        font-size: 10px;
-    }
-}
-/* auth.css */
-
-/* ... (keep your existing styles above) ... */
-
 
 /* Adjustments for form group alignment */
 .form-group {
-    margin-bottom: 15px; /* Adjust spacing between form groups */
+    margin-bottom: 0; /* Use gap in .form instead of margin-bottom here */
     display: flex; /* Make form group a flex container */
     align-items: center; /* Align items vertically in the center */
     gap: 15px; /* Add space between the label and the input */
@@ -317,6 +172,7 @@ body {
     flex-basis: 120px; /* Give labels a base width - adjust this value as needed */
     min-width: 80px; /* Minimum width for labels */
     text-align: right; /* Align label text to the right */
+    flex-shrink: 0; /* Prevent label from shrinking */
 }
 
 /* Style for input fields within form groups */
@@ -325,66 +181,174 @@ body {
 .form-group input[type="password"] {
     flex-grow: 1; /* Allow input to grow and fill available space */
     width: auto; /* Override any fixed width that might be causing issues */
-    /* Keep your existing padding, border, border-radius, font-size, box-sizing */
     padding: 12px 15px;
-    border: none; /* Or 1px solid ... */
+    border: none;
     border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box;
+    color: #333; /* Darker text for input */
+    background-color: #fff; /* White background for input */
 }
 
-/* Adjust password container within the flex form group */
-.form-group.password-container {
-    /* No major changes needed here if .form-group is flex,
-       as flex handles its children's layout. */
+/* Style for disabled input (e.g., Username in profile) */
+.form-group input:disabled {
+    background-color: #e9e9eb; /* Light grey background */
+    color: #555; /* Darker grey text */
+    cursor: not-allowed;
+}
+
+
+/* Added styles for password container, show password icon, and login options */
+.password-container {
     position: relative; /* Keep relative for icon positioning */
-}
-
-/* Adjust the position of the show password icon within the flex form group */
-.form-group .show-password {
-     position: absolute;
-     right: 15px;
-     top: 50%;
-     transform: translateY(-50%);
-     cursor: pointer;
-     color: #A0A0A0;
-     font-size: 18px;
-     z-index: 10;
-}
-
-
-/* Ensure form actions align correctly */
-.form-actions {
-    margin-top: 20px; /* Space above buttons */
-    display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
-    gap: 15px; /* Space between buttons */
     width: 100%; /* Ensure container takes full width */
+    /* No need for display: flex here if .form-group is already flex */
 }
 
-/* Ensure the submit button has proper width/sizing */
+/* Position the show password icon */
+.password-container .show-password {
+    position: absolute;
+    right: 15px;
+    top: 50%; /* Vertically center relative to password input */
+    transform: translateY(-50%); /* Adjust vertical centering */
+    cursor: pointer;
+    color: #A0A0A0;
+    font-size: 18px;
+    z-index: 10;
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0; /* Adjust margin */
+    font-size: 14px;
+     width: 100%; /* Ensure it takes full width */
+}
+
+.login-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #A0A0A0;
+    cursor: pointer;
+    user-select: none;
+    flex-basis: auto; /* Override label flex-basis from form-group */
+    text-align: left; /* Override label text-align */
+}
+
+.login-options input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    accent-color: #F52929;
+    cursor: pointer;
+}
+/* End added styles */
+
+
 .submit-btn {
-    /* Keep your existing styles */
+    background-color: #F52929;
+    color: white;
     padding: 12px;
     border: none;
     border-radius: 5px;
     font-weight: 600;
     cursor: pointer;
-    background-color: #F52929;
-    color: white;
+    margin-top: 10px; /* Space above the button */
     box-sizing: border-box;
-    width: auto; /* Ensure it doesn't try to take full width unless intended */
+    width: 100%; /* Make button take full width */
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* ... (keep your existing media queries below) ... */
+.submit-btn:hover {
+    background-color: #e61e1e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+.privacy-note {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    margin-top: 10px;
+    width: 100%; /* Ensure it takes full width for centering */
+}
+
+.forgot-password {
+    color: white;
+    font-size: 14px;
+    text-align: right;
+    text-decoration: none;
+    /* Removed margin-top: -10px; use margin on login-options instead if needed */
+    display: block;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.hidden {
+    display: none;
+}
+
+.error-message {
+    color: #ff4444;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    width: 100%; /* Ensure it takes full width for centering */
+}
+
 
 @media (max-width: 768px) {
-    /* ... (keep your existing responsive styles) ... */
+    .auth-container {
+        flex-direction: column;
+        height: auto; /* Allow height to be determined by content */
+        min-height: 100vh;
+         overflow-y: auto; /* Allow scrolling on the container itself if needed */
+         /* Remove flex-wrap here if column direction is set */
+    }
+
+    .left-pane, .right-pane {
+        flex: none;
+        width: 100%; /* Take full width when stacked */
+        padding: 30px 20px;
+        box-sizing: border-box;
+         min-height: auto; /* Allow height to be determined by content in stacked layout */
+    }
+
+    /* Position home button relative to the left pane */
+     .left-pane {
+         position: relative;
+         padding-top: 80px; /* Adjust padding to make space for button */
+         text-align: center;
+     }
+
+     .home-button {
+         position: absolute;
+         top: 20px;
+         left: 50%;
+         transform: translateX(-50%);
+     }
+
+
+     .auth-form-container {
+         width: 100%; /* Take full width on small screens */
+         max-width: none; /* No max-width restriction on small screens */
+         gap: 20px; /* Adjust gap for stacked layout */
+     }
+
+      .form-container {
+          gap: 15px; /* Adjust gap between forms in stacked layout */
+      }
+
 
     .form-group {
         flex-direction: column; /* Stack label and input on small screens */
         align-items: flex-start; /* Align stacked items to the start */
         gap: 5px; /* Reduced gap when stacked */
+        width: 100%; /* Ensure form group takes full width */
     }
 
     .form-group label {
@@ -399,10 +363,47 @@ body {
          width: 100%; /* Make inputs take full width when stacked */
      }
 
-     .form-group .show-password {
-         right: 10px; /* Adjust icon position in stacked layout */
-         top: auto; /* Reset top */
-         bottom: 10px; /* Position relative to bottom of input */
-         transform: none; /* Reset transform */
+     /* Adjust position of the show password icon in stacked layout */
+     .form-group.password-container {
+          /* No major change needed, it's relative */
      }
+
+     .form-group .show-password {
+         position: absolute; /* Keep absolute */
+         right: 10px; /* Adjust right position */
+         top: auto; /* Remove top position */
+         bottom: 10px; /* Position from the bottom of the form-group */
+         transform: none; /* Remove transform */
+     }
+
+     .login-options {
+         flex-direction: column; /* Stack options */
+         align-items: flex-start; /* Align stacked options to the start */
+         gap: 10px; /* Space between stacked options */
+     }
+
+     .login-options label {
+         width: auto; /* Auto width for stacked label */
+     }
+
+     .forgot-password {
+         text-align: left; /* Align stacked forgot password to the left */
+     }
+
+
+}
+
+@media (max-width: 480px) {
+    .toggle-buttons button {
+        font-size: 14px;
+        padding: 10px 0;
+    }
+
+    .privacy-note {
+        font-size: 10px;
+    }
+
+    .right-pane {
+         padding: 30px 15px; /* Reduce padding further on very small screens */
+    }
 }
