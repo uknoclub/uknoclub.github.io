@@ -1,8 +1,3 @@
-<script>
-  if (!localStorage.getItem('isAdmin') || localStorage.getItem('isAdmin') !== 'true') {
-    window.location.href = 'auth.html';
-  }
-</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Ukno Club</title>
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         // Check authentication on page load
-        if (!localStorage.getItem('adminAuthenticated')) {
-            window.location.href = "admin-login.html";
+        if (!localStorage.getItem('adminAuthenticated')) { // Checking for 'adminAuthenticated'
+            window.location.href = "auth.html"; // CORRECTED REDIRECT URL
         }
     </script>
 </head>
@@ -73,8 +72,8 @@
     <script>
         // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('adminAuthenticated');
-            window.location.href = "admin-login.html";
+            localStorage.removeItem('adminAuthenticated'); // Remove the auth key
+            window.location.href = "auth.html"; // Redirect to the main auth page
         });
     </script>
 </body>
