@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         // Check authentication on page load
-        if (!localStorage.getItem('adminAuthenticated')) { // Checking for 'adminAuthenticated'
-            window.location.href = "auth.html"; // CORRECTED REDIRECT URL
+        if (!localStorage.getItem('adminAuthenticated')) {
+            window.location.href = "auth.html"; // Redirect to auth page if not admin
         }
     </script>
 </head>
@@ -35,9 +35,7 @@
                 <h2 class="section-title-red"><i class="fas fa-cog"></i> Admin Tools</h2>
                 <div class="action-grid">
                     <a href="manage-videos.html" class="action-card">
-                        <i class="fas fa-book"></i>
-                        <span>Manage Courses</span>
-                    </a>
+                        <i class="fas fa-book"></i> <span>Manage Courses</span> </a>
                     <a href="manage-users.html" class="action-card">
                         <i class="fas fa-users"></i>
                         <span>Manage Users</span>
