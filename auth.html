@@ -4,193 +4,234 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authentication - Ukno Club</title>
-    <link rel="stylesheet" href="auth.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="auth.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="auth-container">
-        <div class="auth-box">
-            <div class="logo-container">
-                <img src="assets/logo.png" alt="Ukno Club" class="auth-logo">
+
+        <div class="left-pane">
+            <a href="index.html" class="home-button">Home</a> <img src="assets/logo.png" alt="Ukno Club" class="logo">
+            <div class="tagline">
+                <span class="learn">Learn</span>
+                <span class="freely">Freely</span>
+                <span>?</span>
             </div>
+             </div>
 
-            <div id="loginForm" class="auth-form">
-                <h2>Login</h2>
-                <div class="form-group">
-                    <label for="loginUsername">Username:</label>
-                    <input type="text" id="loginUsername" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password:</label>
-                    <input type="password" id="loginPassword" required>
-                </div>
-                <button id="loginBtn" class="auth-button">Login</button>
-                <p class="auth-message" id="loginMessage"></p>
-                <p class="toggle-link">Don't have an account? <a href="#" id="showRegister">Register here</a></p>
-                 <p class="admin-link"><a href="#" id="showAdminLogin">Admin Login</a></p> </div>
+        <div class="right-pane">
+             <div class="auth-form-container">
 
-            <div id="registerForm" class="auth-form hidden">
-                <h2>Register</h2>
-                <div class="form-group">
-                    <label for="registerUsername">Username:</label>
-                    <input type="text" id="registerUsername" required>
-                </div>
-                 <div class="form-group">
-                     <label for="registerFullName">Full Name:</label>
-                     <input type="text" id="registerFullName">
-                </div>
-                 <div class="form-group">
-                     <label for="registerEmail">Email:</label>
-                     <input type="email" id="registerEmail">
-                </div>
-                <div class="form-group">
-                    <label for="registerPassword">Password:</label>
-                    <input type="password" id="registerPassword" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm Password:</label>
-                    <input type="password" id="confirmPassword" required>
-                </div>
-                <button id="registerBtn" class="auth-button">Register</button>
-                <p class="auth-message" id="registerMessage"></p>
-                <p class="toggle-link">Already have an account? <a href="#" id="showLogin">Login here</a></p>
-            </div>
+                <div class="toggle-buttons">
+                     <button id="showUserLoginBtn" class="active" data-form="loginForm">User Login</button>
+                     <button id="showRegisterBtn" data-form="registerForm">Register</button>
+                      <button id="showAdminLoginBtn" data-form="adminLoginForm">Admin Login</button>
+                 </div>
 
-            <div id="adminLoginForm" class="auth-form hidden">
-                <h2>Admin Login</h2>
-                <div class="form-group">
-                    <label for="adminUsername">Admin Username:</label>
-                    <input type="text" id="adminUsername" required>
-                </div>
-                <div class="form-group">
-                    <label for="adminPassword">Admin Password:</label>
-                    <input type="password" id="adminPassword" required>
-                </div>
-                <button id="adminLoginBtn" class="auth-button">Login as Admin</button>
-                <p class="auth-message" id="adminLoginMessage"></p>
-                <p class="toggle-link"><a href="#" id="hideAdminLogin">Back to User Login</a></p>
-            </div>
 
-        </div>
-    </div>
+                 <div class="form-container">
 
-    <script>
+                     <div id="loginForm" class="form"> <h2>Login</h2>
+                        <div class="form-group">
+                            <label for="loginUsername">Username:</label>
+                            <input type="text" id="loginUsername" required>
+                        </div>
+                        <div class="form-group password-container"> <label for="loginPassword">Password:</label>
+                            <input type="password" id="loginPassword" required>
+                             <i class="fas fa-eye show-password" id="toggleLoginPassword"></i> </div>
+                         <div class="login-options">
+                            <label>
+                                <input type="checkbox" id="rememberMe"> Remember Me
+                            </label>
+                            <a href="#" class="forgot-password">Forgot Password?</a>
+                        </div>
+                        <button id="loginBtn" class="submit-btn">Login</button> <p class="error-message" id="loginMessage"></p> </div>
+
+                    <div id="registerForm" class="form hidden"> <h2>Register</h2>
+                        <div class="form-group">
+                            <label for="registerUsername">Username:</label>
+                            <input type="text" id="registerUsername" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerFullName">Full Name:</label>
+                            <input type="text" id="registerFullName">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email:</label>
+                            <input type="email" id="registerEmail">
+                        </div>
+                        <div class="form-group password-container"> <label for="registerPassword">Password:</label>
+                            <input type="password" id="registerPassword" required>
+                             <i class="fas fa-eye show-password" id="toggleRegisterPassword"></i> </div>
+                        <div class="form-group password-container"> <label for="confirmPassword">Confirm Password:</label>
+                            <input type="password" id="confirmPassword" required>
+                             <i class="fas fa-eye show-password" id="toggleConfirmPassword"></i> </div>
+                        <button id="registerBtn" class="submit-btn">Register</button> <p class="error-message" id="registerMessage"></p> <p class="privacy-note">By registering, you agree to our Privacy Policy.</p> </div>
+
+                    <div id="adminLoginForm" class="form hidden"> <h2>Admin Login</h2>
+                        <div class="form-group">
+                            <label for="adminUsername">Admin Username:</label>
+                            <input type="text" id="adminUsername" required>
+                        </div>
+                        <div class="form-group password-container"> <label for="adminPassword">Admin Password:</label>
+                            <input type="password" id="adminPassword" required>
+                             <i class="fas fa-eye show-password" id="toggleAdminPassword"></i> </div>
+                        <button id="adminLoginBtn" class="submit-btn">Login as Admin</button> <p class="error-message" id="adminLoginMessage"></p> </div>
+
+                 </div> </div> </div> </div> <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Form divs
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
-            const adminLoginForm = document.getElementById('adminLoginForm'); // Admin login form
+            const adminLoginForm = document.getElementById('adminLoginForm');
 
-            const showRegisterLink = document.getElementById('showRegister');
-            const showLoginLink = document.getElementById('showLogin');
-             const showAdminLoginLink = document.getElementById('showAdminLogin'); // Link to show admin login
-             const hideAdminLoginLink = document.getElementById('hideAdminLogin'); // Link to hide admin login
+            // Toggle buttons
+             const toggleButtons = document.querySelectorAll('.toggle-buttons button'); // Get all toggle buttons
 
 
+            // Login form elements
             const loginUsernameInput = document.getElementById('loginUsername');
             const loginPasswordInput = document.getElementById('loginPassword');
             const loginBtn = document.getElementById('loginBtn');
             const loginMessage = document.getElementById('loginMessage');
+             const toggleLoginPasswordIcon = document.getElementById('toggleLoginPassword'); // Show password icon
 
+            // Register form elements
             const registerUsernameInput = document.getElementById('registerUsername');
-             const registerFullNameInput = document.getElementById('registerFullName'); // Added
-             const registerEmailInput = document.getElementById('registerEmail'); // Added
+            const registerFullNameInput = document.getElementById('registerFullName');
+            const registerEmailInput = document.getElementById('registerEmail');
             const registerPasswordInput = document.getElementById('registerPassword');
             const confirmPasswordInput = document.getElementById('confirmPassword');
             const registerBtn = document.getElementById('registerBtn');
             const registerMessage = document.getElementById('registerMessage');
+             const toggleRegisterPasswordIcon = document.getElementById('toggleRegisterPassword'); // Show password icon
+             const toggleConfirmPasswordIcon = document.getElementById('toggleConfirmPassword'); // Show password icon
 
-             const adminUsernameInput = document.getElementById('adminUsername'); // Admin username input
-             const adminPasswordInput = document.getElementById('adminPassword'); // Admin password input
-             const adminLoginBtn = document.getElementById('adminLoginBtn'); // Admin login button
-             const adminLoginMessage = document.getElementById('adminLoginMessage'); // Admin login message
+            // Admin login form elements
+            const adminUsernameInput = document.getElementById('adminUsername');
+            const adminPasswordInput = document.getElementById('adminPassword');
+            const adminLoginBtn = document.getElementById('adminLoginBtn');
+            const adminLoginMessage = document.getElementById('adminLoginMessage');
+             const toggleAdminPasswordIcon = document.getElementById('toggleAdminPassword'); // Show password icon
 
 
             // --- localStorage Keys ---
-             const USERS_STORAGE_KEY = 'uknoClubUsers'; // New key for user data
-             const ADMIN_AUTH_KEY = 'adminAuthenticated'; // Keep admin key separate
+            const USERS_STORAGE_KEY = 'uknoClubUsers';
+            const ADMIN_AUTH_KEY = 'adminAuthenticated';
+            const LOGGED_IN_USERNAME_KEY = 'loggedInUsername'; // Key for logged in username
 
 
             // --- Helper function to get user data from localStorage ---
-             function getUsers() {
-                 const usersJson = localStorage.getItem(USERS_STORAGE_KEY);
-                 try {
-                     return usersJson ? JSON.parse(usersJson) : {};
-                 } catch (e) {
-                     console.error("Error parsing users data from localStorage:", e);
-                     return {}; // Return empty object if parsing fails
-                 }
-             }
+            function getUsers() {
+                const usersJson = localStorage.getItem(USERS_STORAGE_KEY);
+                try {
+                    return usersJson ? JSON.parse(usersJson) : {};
+                } catch (e) {
+                    console.error("Error parsing users data from localStorage:", e);
+                    return {};
+                }
+            }
 
             // --- Helper function to save user data to localStorage ---
-             function saveUsers(usersObject) {
-                 localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usersObject));
-             }
-
+            function saveUsers(usersObject) {
+                localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usersObject));
+            }
 
             // --- Helper function to clear messages ---
             function clearMessages() {
                 loginMessage.textContent = '';
                 registerMessage.textContent = '';
-                adminLoginMessage.textContent = ''; // Clear admin message
+                adminLoginMessage.textContent = '';
             }
 
+            // --- Toggle Forms Function ---
+            function showForm(formId) {
+                const forms = document.querySelectorAll('.auth-form-container .form'); // Select all form divs by class
+                forms.forEach(form => {
+                    if (form.id === formId) {
+                        form.classList.remove('hidden');
+                    } else {
+                        form.classList.add('hidden');
+                    }
+                });
 
-            // --- Toggle Forms ---
-            showRegisterLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                loginForm.classList.add('hidden');
-                adminLoginForm.classList.add('hidden'); // Hide admin form
-                registerForm.classList.remove('hidden');
-                clearMessages();
-            });
+                 // Set active class on toggle buttons
+                 toggleButtons.forEach(button => {
+                     if (button.getAttribute('data-form') === formId) {
+                         button.classList.add('active');
+                     } else {
+                         button.classList.remove('active');
+                     }
+                 });
 
-            showLoginLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                registerForm.classList.add('hidden');
-                adminLoginForm.classList.add('hidden'); // Hide admin form
-                loginForm.classList.remove('hidden');
-                clearMessages();
-            });
+                clearMessages(); // Clear messages when switching forms
+            }
 
-             // Show Admin Login Form
-             showAdminLoginLink.addEventListener('click', function(e) {
-                 e.preventDefault();
-                 loginForm.classList.add('hidden');
-                 registerForm.classList.add('hidden');
-                 adminLoginForm.classList.remove('hidden');
-                 clearMessages();
+            // --- Event Listeners for Toggle Buttons ---
+             toggleButtons.forEach(button => {
+                 button.addEventListener('click', function() {
+                     const targetFormId = this.getAttribute('data-form');
+                     showForm(targetFormId);
+                 });
              });
 
-             // Hide Admin Login Form
-             hideAdminLoginLink.addEventListener('click', function(e) {
-                 e.preventDefault();
-                 adminLoginForm.classList.add('hidden');
-                 loginForm.classList.remove('hidden'); // Go back to user login
-                 registerForm.classList.add('hidden');
-                 clearMessages();
-             });
+
+            // --- Show/Hide Password Functionality ---
+             function togglePasswordVisibility(passwordInput, toggleIcon) {
+                 if (passwordInput.type === 'password') {
+                     passwordInput.type = 'text';
+                     toggleIcon.classList.remove('fa-eye');
+                     toggleIcon.classList.add('fa-eye-slash');
+                 } else {
+                     passwordInput.type = 'password';
+                     toggleIcon.classList.remove('fa-eye-slash');
+                     toggleIcon.classList.add('fa-eye');
+                 }
+             }
+
+             if (toggleLoginPasswordIcon) {
+                 toggleLoginPasswordIcon.addEventListener('click', () => togglePasswordVisibility(loginPasswordInput, toggleLoginPasswordIcon));
+             }
+             if (toggleRegisterPasswordIcon) {
+                 toggleRegisterPasswordIcon.addEventListener('click', () => togglePasswordVisibility(registerPasswordInput, toggleRegisterPasswordIcon));
+             }
+              if (toggleConfirmPasswordIcon) {
+                 toggleConfirmPasswordIcon.addEventListener('click', () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPasswordIcon));
+             }
+              if (toggleAdminPasswordIcon) {
+                 toggleAdminPasswordIcon.addEventListener('click', () => togglePasswordVisibility(adminPasswordInput, toggleAdminPasswordIcon));
+             }
 
 
             // --- Registration ---
             registerBtn.addEventListener('click', function() {
                 clearMessages();
                 const username = registerUsernameInput.value.trim();
-                 const fullName = registerFullNameInput.value.trim(); // Added
-                 const email = registerEmailInput.value.trim(); // Added
+                const fullName = registerFullNameInput.value.trim();
+                const email = registerEmailInput.value.trim();
                 const password = registerPasswordInput.value.trim();
                 const confirmPassword = confirmPasswordInput.value.trim();
 
                 // Basic validation
                 if (!username || !password || !confirmPassword) {
-                    registerMessage.textContent = 'Please fill all required fields.';
+                    registerMessage.textContent = 'Please fill all required fields (Username, Password, Confirm Password).';
+                    registerMessage.style.color = 'var(--error)';
                     return;
                 }
 
+                 // Simple email format validation (optional but good practice)
+                 if (email && !/@.+\..+/.test(email)) {
+                     registerMessage.textContent = 'Please enter a valid email address.';
+                     registerMessage.style.color = 'var(--error)';
+                     return;
+                 }
+
+
                 if (password !== confirmPassword) {
                     registerMessage.textContent = 'Passwords do not match.';
+                    registerMessage.style.color = 'var(--error)';
                     return;
                 }
 
@@ -198,25 +239,35 @@
                 const users = getUsers();
                 if (users[username]) {
                     registerMessage.textContent = 'Username already exists.';
+                    registerMessage.style.color = 'var(--error)';
                     return;
                 }
 
                 // Store new user data including new fields
-                 users[username] = {
-                     password: password, // In a real app, hash the password!
-                     fullName: fullName, // Store full name
-                     email: email // Store email
-                 };
+                users[username] = {
+                    password: password, // In a real app, hash the password!
+                    fullName: fullName,
+                    email: email
+                };
 
                 saveUsers(users); // Save updated users object
 
                 registerMessage.textContent = 'Registration successful! You can now login.';
-                registerMessage.style.color = 'var(--success)'; // Style for success
+                registerMessage.style.color = 'var(--success)';
                 // Optionally clear registration form or switch to login form
-                 registerForm.reset(); // Clear the form
-                 setTimeout(() => {
-                     showLoginLink.click(); // Automatically switch to login form after a delay
-                 }, 2000); // Switch after 2 seconds
+                registerForm.reset(); // Clear the form
+                 // Clear password visibility state
+                 registerPasswordInput.type = 'password';
+                 toggleRegisterPasswordIcon.classList.remove('fa-eye-slash');
+                 toggleRegisterPasswordIcon.classList.add('fa-eye');
+                 confirmPasswordInput.type = 'password';
+                 toggleConfirmPasswordIcon.classList.remove('fa-eye-slash');
+                 toggleConfirmPasswordIcon.classList.add('fa-eye');
+
+                // Automatically switch to login form after a delay
+                setTimeout(() => {
+                    showForm('loginForm'); // Switch to login form
+                }, 2000); // Switch after 2 seconds
             });
 
 
@@ -228,6 +279,7 @@
 
                 if (!username || !password) {
                     loginMessage.textContent = 'Please enter username and password.';
+                    loginMessage.style.color = 'var(--error)';
                     return;
                 }
 
@@ -238,52 +290,66 @@
                 if (user && user.password === password) { // In a real app, compare hashed passwords
                     // Authentication successful!
                     localStorage.setItem('userAuthenticated', 'true'); // Mark user as authenticated
-                    localStorage.setItem('loggedInUsername', username); // Store the username
+                    localStorage.setItem(LOGGED_IN_USERNAME_KEY, username); // Store the username
                     loginMessage.textContent = 'Login successful! Redirecting...';
                     loginMessage.style.color = 'var(--success)';
                     window.location.href = "dashboard.html"; // Redirect to dashboard
                 } else {
                     loginMessage.textContent = 'Invalid username or password.';
-                    loginMessage.style.color = 'var(--error)'; // Style for error
+                    loginMessage.style.color = 'var(--error)';
                 }
             });
 
             // --- Admin Login ---
-             adminLoginBtn.addEventListener('click', function() {
-                 clearMessages();
-                 const adminUsername = adminUsernameInput.value.trim();
-                 const adminPassword = adminPasswordInput.value.trim();
+            adminLoginBtn.addEventListener('click', function() {
+                clearMessages();
+                const adminUsername = adminUsernameInput.value.trim();
+                const adminPassword = adminPasswordInput.value.trim();
 
-                 // Basic hardcoded admin credentials (Replace in a real app!)
-                 const ADMIN_USERNAME = 'admin';
-                 const ADMIN_PASSWORD = 'adminpassword'; // Use a strong password!
+                // Basic hardcoded admin credentials (Replace in a real app!)
+                const ADMIN_USERNAME = 'admin';
+                const ADMIN_PASSWORD = 'adminpassword'; // Use a strong password!
 
-                 if (!adminUsername || !adminPassword) {
-                     adminLoginMessage.textContent = 'Please enter admin username and password.';
-                     return;
-                 }
+                if (!adminUsername || !adminPassword) {
+                    adminLoginMessage.textContent = 'Please enter admin username and password.';
+                    adminLoginMessage.style.color = 'var(--error)';
+                    return;
+                }
 
-                 if (adminUsername === ADMIN_USERNAME && adminPassword === ADMIN_PASSWORD) {
-                     // Admin authentication successful!
-                     localStorage.setItem(ADMIN_AUTH_KEY, 'true'); // Mark admin as authenticated
-                     localStorage.removeItem('userAuthenticated'); // Ensure user authentication is removed
-                     localStorage.removeItem('loggedInUsername'); // Ensure user username is removed
-                     adminLoginMessage.textContent = 'Admin login successful! Redirecting...';
-                     adminLoginMessage.style.color = 'var(--success)';
-                      // Redirect to admin dashboard
-                      window.location.href = "admin-dashboard.html"; // Redirect to admin dashboard
-                 } else {
-                     adminLoginMessage.textContent = 'Invalid admin username or password.';
-                     adminLoginMessage.style.color = 'var(--error)';
-                 }
-             });
+                if (adminUsername === ADMIN_USERNAME && adminPassword === ADMIN_PASSWORD) {
+                    // Admin authentication successful!
+                    localStorage.setItem(ADMIN_AUTH_KEY, 'true'); // Mark admin as authenticated
+                    localStorage.removeItem('userAuthenticated'); // Ensure user authentication is removed
+                    localStorage.removeItem(LOGGED_IN_USERNAME_KEY); // Ensure user username is removed
+                    adminLoginMessage.textContent = 'Admin login successful! Redirecting...';
+                    adminLoginMessage.style.color = 'var(--success)';
+                    // Redirect to admin dashboard
+                    window.location.href = "admin-dashboard.html"; // Redirect to admin dashboard
+                } else {
+                    adminLoginMessage.textContent = 'Invalid admin username or password.';
+                    adminLoginMessage.style.color = 'var(--error)';
+                }
+            });
 
-             // Check if admin is already authenticated on page load and redirect
-             if (localStorage.getItem(ADMIN_AUTH_KEY)) {
-                  // If already admin, redirect to admin dashboard immediately
-                  // Removed automatic redirect on auth.html load to allow user login even if admin is authenticated
-                  // The dashboard will handle the redirect if user tries to access admin page.
+
+             // --- Initial form display ---
+             // Check URL hash to determine which form to show on load
+             const urlHash = window.location.hash;
+             if (urlHash === '#register') {
+                 showForm('registerForm');
+             } else if (urlHash === '#admin') {
+                 showForm('adminLoginForm');
+             } else {
+                 showForm('loginForm'); // Default to login form
              }
+
+             // Check if already authenticated and redirect
+             if (localStorage.getItem('userAuthenticated') && localStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
+                  window.location.href = "dashboard.html"; // Redirect user to dashboard if already logged in
+             } else if (localStorage.getItem(ADMIN_AUTH_KEY)) {
+                  window.location.href = "admin-dashboard.html"; // Redirect admin to admin dashboard if already logged in
+             }
+
 
         });
     </script>
