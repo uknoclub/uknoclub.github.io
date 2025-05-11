@@ -7,7 +7,7 @@
     --bg-card: #1e1e27; /* Card background */
     --text-main: #FFFFFF;
     --text-secondary: #A0A0A0; /* Muted text */
-    --text-highlight: #FFC700; /* Yellow highlight */
+    --text-highlight: #FFC700; /* Yellow highlight */ /* Keeping for potential other uses */
     --link-color: #66ccff; /* Link blue */
     --border: #3A3A4A; /* Border color */
     --success: #4CAF50; /* Green for success/completion */
@@ -78,12 +78,12 @@ body {
 }
 
 /* Course Module Styles (for the index page) */
-.course-main .course-module { /* Added .course-main to scope this to the index page layout */
+.course-main .course-module {
     margin-bottom: 40px;
 }
 
-.course-main .course-module h2 { /* Added .course-main */
-    color: var(--text-highlight);
+.course-main .course-module h2 {
+    color: var(--text-main); /* Changed from --text-highlight to --text-main (white) */
     margin-bottom: 15px;
     font-size: 1.6rem;
     display: flex;
@@ -91,58 +91,68 @@ body {
     gap: 10px;
 }
 
-.course-main .module-goal { /* Added .course-main */
+.course-main .module-goal {
     color: var(--text-secondary);
     font-size: 1rem;
     margin-bottom: 20px;
 }
 
-.course-main .track-list { /* Added .course-main */
+.course-main .topic-list-grid { /* Styles for the grid of topic links */
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjusted min-width */
+    gap: 15px; /* Adjusted gap */
 }
 
-.course-main .track-card { /* Added .course-main */
+.course-main .topic-card { /* Styles for the individual topic links */
     background: var(--bg-card);
     border-radius: 8px;
-    padding: 20px;
+    padding: 15px; /* Adjusted padding */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-decoration: none;
     color: var(--text-main);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    min-height: 100px; /* Ensure minimum height for cards */
+    cursor: pointer; /* Indicate it's clickable */
 }
 
-.course-main .track-card:hover { /* Added .course-main */
+.course-main .topic-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
 }
 
-.course-main .track-card h3 { /* Added .course-main */
-    color: var(--link-color);
+.course-main .topic-card h4 { /* Topic title inside the card */
+    color: var(--link-color); /* Link color for the topic title */
     margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
+    margin-bottom: 8px; /* Adjusted margin */
+    font-size: 1.1rem; /* Adjusted size */
 }
 
-.course-main .track-card p { /* Added .course-main */
+.course-main .topic-card p { /* Sub-topics/description inside the card */
     color: var(--text-secondary);
     font-size: 0.9rem;
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Adjusted margin */
+     flex-grow: 1; /* Allow paragraph to take up space */
 }
 
-.course-main .view-track-link { /* Added .course-main */
+.course-main .view-video-link { /* Style for the "Watch Video" link */
     display: block;
     text-align: right;
-    color: var(--primary);
+    color: var(--primary); /* Red color */
     font-weight: 600;
     font-size: 0.9rem;
+    margin-top: auto; /* Push to the bottom */
 }
 
-.coming-soon { /* This applies to the index page message */
+.course-main .view-video-link i {
+    margin-right: 5px;
+    color: var(--primary); /* Ensure icon is red */
+}
+
+
+.coming-soon {
     text-align: center;
     color: var(--text-secondary);
     font-size: 1.2rem;
@@ -150,74 +160,42 @@ body {
 }
 
 
-/* --- Track Page Styles --- */
-.track-content { /* Styles for the main content area on track pages */
-    margin-top: 20px;
-}
-
-.track-overview h2 {
-    color: var(--text-highlight);
-    font-size: 1.5rem;
-    margin-bottom: 30px;
-    text-align: center; /* Center the goal */
-}
-
-.track-topics h3 {
-    color: var(--text-highlight);
-    font-size: 1.4rem;
-    margin-bottom: 20px;
-    display: flex; /* Align icon and text */
-    align-items: center;
-    gap: 10px;
-}
-
-.topic-item {
-    background: var(--bg-card);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.topic-item h4 {
-    color: var(--primary); /* Primary color for topic title */
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-}
-
-.topic-item p {
-    color: var(--text-secondary); /* Muted text for sub-topics */
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-}
-
-.video-link {
-    display: inline-block; /* Or block if you want each link on new line */
-    color: var(--link-color);
-    text-decoration: none;
-    font-weight: 500;
-    margin-right: 20px; /* Space between multiple video links in one topic */
-    transition: color 0.3s ease;
-}
-
-.video-link:hover {
-    color: var(--primary); /* Red on hover */
-    text-decoration: underline;
-}
-
-.video-link i {
-    margin-right: 5px;
-}
-
-
 /* --- Video Player Section Styles --- */
-.video-player-section {
-    /* Initially hidden, displayed via JS when videoId parameter is present */
+#videoPlayerContent { /* Use ID for specific styling when visible */
+     /* Initially hidden, displayed via JS when videoId parameter is present */
 }
 
 .hidden { /* Utility class to hide elements */
     display: none;
+}
+
+.back-link-container { /* Container for the back button */
+    margin-bottom: 20px;
+}
+
+.back-link { /* Style for the back link */
+    display: inline-block;
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: var(--primary); /* Red on hover */
+    text-decoration: underline;
+}
+
+.back-link i {
+    margin-right: 5px;
+}
+
+
+#videoPlayerContent #videoTitle { /* Style for the video title above the player */
+    color: var(--text-highlight); /* Yellow highlight for video title */
+    font-size: 1.5rem;
+    margin-bottom: 20px;
 }
 
 
@@ -308,43 +286,34 @@ body {
        .course-main .module-goal {
            font-size: 0.9rem;
        }
-       .course-main .track-list {
-           grid-template-columns: 1fr;
+       .course-main .topic-list-grid { /* Adjusted for smaller screens */
+           grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Smaller min-width */
+           gap: 10px; /* Smaller gap */
        }
-       .course-main .track-card {
-           padding: 15px;
+       .course-main .topic-card { /* Adjusted for smaller screens */
+           padding: 12px;
+            min-height: 80px; /* Adjusted min height */
        }
-       .course-main .track-card h3 {
-           font-size: 1.1rem;
+       .course-main .topic-card h4 {
+           font-size: 1rem;
        }
-       .course-main .track-card p {
+       .course-main .topic-card p {
            font-size: 0.8rem;
+           margin-bottom: 8px;
        }
-        .course-main .view-track-link {
+        .course-main .view-video-link {
             font-size: 0.8rem;
         }
 
 
-       /* Track page adjustments */
-       .track-content .track-overview h2 { /* Added .track-content */
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-       }
-        .track-content .track-topics h3 { /* Added .track-content */
-            font-size: 1.3rem;
-        }
-       .track-content .topic-item { /* Added .track-content */
-           padding: 15px;
-       }
-        .track-content .topic-item h4 { /* Added .track-content */
-            font-size: 1rem;
-        }
-         .track-content .topic-item p { /* Added .track-content */
-             font-size: 0.8rem;
+        /* Video Player adjustments */
+         .back-link {
+             font-size: 0.9rem;
+             margin-bottom: 15px;
          }
-         .track-content .video-link { /* Added .track-content */
-             font-size: 0.8rem;
-             margin-right: 10px;
+         #videoPlayerContent #videoTitle {
+             font-size: 1.3rem;
+             margin-bottom: 15px;
          }
 
 
@@ -378,36 +347,28 @@ body {
        .course-main .module-goal {
            font-size: 0.8rem;
        }
-        .course-main .track-card h3 {
-            font-size: 1rem;
-        }
-         .course-main .track-card p {
-             font-size: 0.7rem;
-         }
-
-
-        /* Track page adjustments */
-         .track-content .track-overview h2 { /* Added .track-content */
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-         }
-         .track-content .track-topics h3 { /* Added .track-content */
-             font-size: 1.1rem;
-         }
-         .track-content .topic-item { /* Added .track-content */
+        .course-main .topic-card {
              padding: 10px;
+             min-height: 60px;
+        }
+         .course-main .topic-card h4 {
+             font-size: 0.9rem;
          }
-          .track-content .topic-item h4 { /* Added .track-content */
-              font-size: 0.9rem;
+          .course-main .topic-card p {
+              font-size: 0.7rem;
           }
-           .track-content .topic-item p { /* Added .track-content */
+           .course-main .view-video-link {
                font-size: 0.7rem;
            }
-           .track-content .video-link { /* Added .track-content */
-                font-size: 0.7rem;
-                margin-right: 8px;
-            }
 
+
+           /* Video Player adjustments */
+            .back-link {
+                font-size: 0.8rem;
+            }
+            #videoPlayerContent #videoTitle {
+                font-size: 1.1rem;
+            }
 
           .notes-section textarea {
               min-height: 100px;

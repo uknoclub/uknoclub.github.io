@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Courses - Ukno Club</title> <link rel="stylesheet" href="courses.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+  <title>Course Catalog - Ukno Club</title> <link rel="stylesheet" href="courses.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> </head>
@@ -13,8 +13,7 @@
         <div class="branding">
             <img src="assets/logo.png" alt="Ukno Club" class="logo">
             <h1 id="pageTitle">Course Catalog</h1> </div>
-        <nav class="header-nav">
-            <a href="dashboard.html">Dashboard</a>
+        <nav class="header-nav"> <a href="dashboard.html">Dashboard</a>
             <a href="courses.html">Catalog</a> <a href="notes.html">My Notes</a>
             <a href="feedback.html">Feedback</a>
         </nav>
@@ -24,23 +23,65 @@
         <div id="courseIndexContent"> <section class="course-module">
                 <h2>🟦 MODULE 1: Data Analyst Track</h2>
                 <p class="module-goal">Goal: Learn tools to analyze and visualize data using spreadsheets, SQL, and BI tools.</p>
-                <div class="track-list">
-                     <a href="data-analyst.html" class="track-card">
-                         <h3>Data Analyst Track</h3>
-                         <p>Statistics, Excel, SQL, Power BI / Tableau</p>
-                         <span class="view-track-link">View Track →</span>
+                <div class="topic-list-grid"> <a href="courses.html?video=stats-fundamentals" class="topic-card">
+                         <h4>Statistics Fundamentals</h4>
+                         <p>Descriptive stats, probability, hypothesis testing</p>
+                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
                      </a>
+
+                     <a href="courses.html?video=excel-analysis" class="topic-card">
+                          <h4>Excel for Data Analysis</h4>
+                          <p>Pivot tables, formulas, dashboards</p>
+                          <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
+                      </a>
+
+                     <a href="courses.html?video=sql-analytics" class="topic-card">
+                         <h4>SQL for Analytics</h4>
+                         <p>Joins, subqueries, aggregation, window functions</p>
+                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
+                     </a>
+
+                     <a href="courses.html?video=powerbi-full" class="topic-card">
+                          <h4>Power BI Full Course</h4>
+                          <p>Data visualization, DAX, storytelling with data</p>
+                          <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
+                      </a>
+
+                      <a href="courses.html?video=tableau-full" class="topic-card">
+                           <h4>Tableau Full Course</h4>
+                           <p>Data visualization, dashboards</p>
+                           <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
+                       </a>
                 </div>
             </section>
 
             <section class="course-module">
                 <h2>🟨 MODULE 2: Business Analyst Track</h2>
                  <p class="module-goal">Goal: Learn tools to interpret and present business insights, focusing on decision-making, reporting, and stakeholder communication.</p>
-                 <div class="track-list">
-                     <a href="business-analyst.html" class="track-card">
-                         <h3>Business Analyst Track</h3>
-                         <p>Python, R, SPSS, Business Decision Making</p>
-                          <span class="view-track-link">View Track →</span>
+                 <div class="topic-list-grid">
+
+                     <a href="courses.html?video=python-analytics" class="topic-card">
+                          <h4>Python for Analysis</h4>
+                          <p>NumPy, Pandas, data cleaning, EDA</p>
+                          <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
+                      </a>
+
+                     <a href="courses.html?video=r-programming" class="topic-card">
+                         <h4>R Programming for Analytics</h4>
+                         <p>Data wrangling, ggplot2, R Markdown</p>
+                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
+                     </a>
+
+                     <a href="courses.html?video=spss-basics" class="topic-card">
+                         <h4>SPSS Basics</h4>
+                         <p>Survey data, regression, ANOVA</p>
+                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
+                     </a>
+
+                     <a href="courses.html?video=managerial-economics" class="topic-card">
+                         <h4>Business Decision Making</h4>
+                         <p>Business case studies, A/B testing, KPIs</p>
+                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
                      </a>
                  </div>
             </section>
@@ -48,11 +89,24 @@
             <section class="course-module">
                 <h2>🟥 MODULE 3: Data Scientist Track</h2>
                 <p class="module-goal">Goal: Learn modeling, prediction, and advanced data processing using ML and AI.</p>
-                 <div class="track-list">
-                     <a href="data-scientist.html" class="track-card">
-                         <h3>Data Scientist Track</h3>
-                         <p>Machine Learning, Deep Learning, Artificial Intelligence</p>
-                          <span class="view-track-link">View Track →</span>
+                 <div class="topic-list-grid">
+
+                     <a href="courses.html?video=ml-basics" class="topic-card">
+                          <h4>Machine Learning Basics</h4>
+                          <p>Supervised/unsupervised learning, regression, classification</p>
+                          <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
+                      </a>
+
+                     <a href="courses.html?video=deeplearning-nptel" class="topic-card">
+                         <h4>Deep Learning & Neural Networks</h4>
+                         <p>ANN, CNN, RNN basics</p>
+                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
+                     </a>
+
+                     <a href="courses.html?video=ai-concepts" class="topic-card">
+                         <h4>Artificial Intelligence Concepts</h4>
+                         <p>Search, logic, agents, decision trees</p>
+                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
                      </a>
                  </div>
             </section>
@@ -60,11 +114,18 @@
             <section class="course-module">
                 <h2>🟩 MODULE 4: Big Data & Cloud Tools</h2>
                  <p class="module-goal">Goal: Learn to work with massive datasets using scalable tools and platforms.</p>
-                 <div class="track-list">
-                     <a href="big-data.html" class="track-card">
-                         <h3>Big Data & Cloud Track</h3>
-                         <p>Big Data Tools, Cloud Platforms (AWS, GCP, Azure)</p>
-                          <span class="view-track-link">View Track →</span>
+                 <div class="topic-list-grid">
+
+                      <a href="courses.html?video=bigdata-computing" class="topic-card">
+                          <h4>Big Data Tools (Hadoop & Spark)</h4>
+                          <p>Distributed computing, HDFS, MapReduce</p>
+                          <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
+                      </a>
+
+                     <a href="courses.html?video=aws-analytics" class="topic-card">
+                         <h4>Cloud Platforms (AWS, GCP, Azure)</h4>
+                         <p>Data pipelines, cloud storage, serverless</p>
+                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
                      </a>
                  </div>
             </section>
@@ -72,7 +133,9 @@
         </div>
 
 
-         <div id="videoPlayerContent" class="hidden"> <h2 id="videoTitle">Loading Video...</h2> <div class="video-container">
+         <div id="videoPlayerContent" class="hidden"> <div class="back-link-container"> <a href="courses.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
+             </div>
+              <h2 id="videoTitle">Loading Video...</h2> <div class="video-container">
                   <div id="youtubePlayer"></div> </div>
               <p id="resumeMessage" style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-top: 10px; display: none;"></p> <div class="notes-section">
                   <label for="videoNotes">Take Notes:</label>
@@ -93,7 +156,7 @@
 
           // --- YouTube Player API Script ---
           var tag = document.createElement('script');
-          tag.src = "https://www.youtube.com/iframe_api"; // Use the official API URL
+          tag.src = "http://www.youtube.com/iframe_api"; // Correct official API URL
           var firstScriptTag = document.getElementsByTagName('script')[0];
           firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -124,23 +187,22 @@
                        pageTitle.textContent = "Watching Course"; // Update page title
 
                        // --- Map our internal videoId to a YouTube Video ID and details ---
-                       // This mapping is crucial. You need to populate this with your actual YouTube video IDs
-                       // and the title you want to display.
+                       // IMPORTANT: Populate this map with your actual YouTube video IDs!
                        const videoMap = {
-                           'stats-fundamentals': { youtubeId: 'YT_ID_STATS_FUNDAMENTALS', title: 'Statistics Fundamentals' }, // Replace with actual YouTube IDs and titles
-                           'excel-analysis': { youtubeId: 'YT_ID_EXCEL_ANALYSIS', title: 'Excel for Data Analysis' },
-                           'sql-analytics': { youtubeId: 'YT_ID_SQL_ANALYTICS', title: 'SQL for Analytics' },
-                           'powerbi-full': { youtubeId: 'YT_ID_POWERBI_FULL', title: 'Power BI Full Course' },
-                           'tableau-full': { youtubeId: 'YT_ID_TABLEAU_FULL', title: 'Tableau Full Course' },
-                           'python-analytics': { youtubeId: 'YT_ID_PYTHON_ANALYTICS', title: 'Python for Analysis' },
-                           'r-programming': { youtubeId: 'YT_ID_R_PROGRAMMING', title: 'R Programming for Analytics' },
-                           'spss-basics': { youtubeId: 'YT_ID_SPSS_BASICS', title: 'SPSS Basics' },
-                           'managerial-economics': { youtubeId: 'YT_ID_MANAGERIAL_ECONOMICS', title: 'Business Decision Making' },
-                           'ml-basics': { youtubeId: 'YT_ID_ML_BASICS', title: 'Machine Learning Basics' },
-                           'deeplearning-nptel': { youtubeId: 'YT_ID_DEEPLEARNING_NPTEL', title: 'Deep Learning & Neural Networks' },
-                           'ai-concepts': { youtubeId: 'YT_ID_AI_CONCEPTS', title: 'Artificial Intelligence Concepts' },
-                           'bigdata-computing': { youtubeId: 'YT_ID_BIGDATA_COMPUTING', title: 'Big Data Tools (Hadoop & Spark)' },
-                           'aws-analytics': { youtubeId: 'YT_ID_AWS_ANALYTICS', title: 'Cloud Platforms (AWS Data Analytics)' },
+                           'stats-fundamentals': { youtubeId: 'r3d9GW1r0lQ', title: 'Statistics Fundamentals' }, // Example, Replace with actual YouTube IDs and titles
+                           'excel-analysis': { youtubeId: 'EXAMPLE_EXCEL_ID', title: 'Excel for Data Analysis' }, // Replace
+                           'sql-analytics': { youtubeId: 'EXAMPLE_SQL_ID', title: 'SQL for Analytics' }, // Replace
+                           'powerbi-full': { youtubeId: 'EXAMPLE_POWERBI_ID', title: 'Power BI Full Course' }, // Replace
+                           'tableau-full': { youtubeId: 'EXAMPLE_TABLEAU_ID', title: 'Tableau Full Course' }, // Replace
+                           'python-analytics': { youtubeId: 'EXAMPLE_PYTHON_ID', title: 'Python for Analysis' }, // Replace
+                           'r-programming': { youtubeId: 'EXAMPLE_R_ID', title: 'R Programming for Analytics' }, // Replace
+                           'spss-basics': { youtubeId: 'EXAMPLE_SPSS_ID', title: 'SPSS Basics' }, // Replace
+                           'managerial-economics': { youtubeId: 'EXAMPLE_MANAGERIAL_ID', title: 'Business Decision Making' }, // Replace
+                           'ml-basics': { youtubeId: 'EXAMPLE_ML_ID', title: 'Machine Learning Basics' }, // Replace
+                           'deeplearning-nptel': { youtubeId: 'EXAMPLE_DEEPLEARNING_ID', title: 'Deep Learning & Neural Networks' }, // Replace
+                           'ai-concepts': { youtubeId: 'EXAMPLE_AI_ID', title: 'Artificial Intelligence Concepts' }, // Replace
+                           'bigdata-computing': { youtubeId: 'EXAMPLE_BIGDATA_ID', title: 'Big Data Tools (Hadoop & Spark)' }, // Replace
+                           'aws-analytics': { youtubeId: 'EXAMPLE_AWS_ID', title: 'Cloud Platforms (AWS Data Analytics)' }, // Replace
                            // Add all video IDs from your outline here with their actual YouTube IDs and titles
                        };
 
@@ -200,21 +262,6 @@
                        videoPlayerContent.classList.add('hidden');
                        pageTitle.textContent = "Course Catalog";
                    }
-
-                   // Function to show temporary messages (can be expanded)
-                    function showMessage(message, type = 'info') {
-                         // Basic message display, could be improved
-                        console.log("Message:", message, "Type:", type);
-                        // Example: Update a dedicated message area on the page
-                        // const messageDiv = document.getElementById('messageArea');
-                        // if (messageDiv) {
-                        //     messageDiv.textContent = message;
-                        //     messageDiv.style.color = type === 'error' ? 'red' : (type === 'success' ? 'green' : 'white');
-                        //     messageDiv.style.display = 'block';
-                        //     setTimeout(() => { messageDiv.style.display = 'none'; }, 5000);
-                        // }
-                    }
-
               });
           }
 
@@ -267,7 +314,7 @@
                   saveProgressTimer = setInterval(() => {
                       const currentTime = player.getCurrentTime();
                       localStorage.setItem('ukno-video-progress-' + videoId, currentTime.toString());
-                      // console.log('Saved progress:', currentTime, 'seconds');
+                      // console.log('Saved progress:', currentTime, 'seconds'); // Avoid excessive logging
                   }, 5000); // Save every 5 seconds
               } else {
                   console.log('Video is not playing. Stopping save timer...');
