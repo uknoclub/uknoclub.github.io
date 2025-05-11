@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Videos - Admin | Ukno Club</title>
+    <link rel="stylesheet" href="manage-videos.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <script>
+        // Admin Authentication Check
+        const adminAuthenticated = localStorage.getItem('adminAuthenticated');
+        if (!adminAuthenticated) {
+            window.location.href = "auth.html"; // Redirect to auth page if not admin
+        }
+    </script>
+</head>
+<body>
+    <div class="manage-videos-container">
+        <header class="manage-videos-header">
+            <div class="branding">
+                <img src="assets/logo.png" alt="Ukno Club" class="logo">
+                <h1>Manage Videos</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="admin-dashboard.html">Dashboard</a>
+                <a href="courses.html">Courses</a> <a href="#" id="adminLogoutBtn">Logout</a> </nav>
+        </header>
+
+        <main class="manage-videos-content">
+            <section class="video-form-section">
+                <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Add New Video</h2>
+                <form id="videoForm" class="video-form">
+                    <input type="hidden" id="videoId"> <div class="form-group">
+                        <label for="topicId">Topic ID (Unique):</label>
+                        <input type="text" id="topicId" required placeholder="e.g., stats-fundamentals">
+                    </div>
+
+                    <div class="form-group">
+                         <label for="videoType">Content Type:</label>
+                         <select id="videoType" required>
+                             <option value="video">Single Video</option>
+                             <option value="playlist">Playlist</option>
+                         </select>
+                    </div>
+
+                    <div class="form-group">
+                         <label for="youtubeId">YouTube Video/Playlist ID:</label>
+                         <input type="text" id="youtubeId" required placeholder="e.g., Ys_J-GfFwT8 or PL... ">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="videoTitle">Video/Topic Title:</label>
+                        <input type="text" id="videoTitle" required placeholder="e.g., Statistics Fundamentals">
+                    </div>
+
+                     <div class="form-group">
+                         <label for="videoDescription">Short Description:</label>
+                         <input type="text" id="videoDescription" placeholder="e.g., Descriptive stats, probability...">
+                     </div>
+
+                     <div class="form-group">
+                         <label for="videoModule">Module/Track:</label>
+                         <select id="videoModule" required>
+                              <option value="">--Select Module--</option>
+                              <option value="data-analyst">Data Analyst Track</option>
+                              <option value="business-analyst">Business Analyst Track</option>
+                              <option value="data-scientist">Data Scientist Track</option>
+                              <option value="big-data">Big Data & Cloud</option>
+                         </select>
+                     </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="add-button"><i class="fas fa-save"></i> Save Video</button>
+                         <button type="button" class="cancel-button" id="cancelEditBtn" style="display: none;"><i class="fas fa-times-circle"></i> Cancel Edit</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="video-list-section">
+                <h2><i class="fas fa-list"></i> Existing Videos</h2>
+                <table class="video-table">
+                    <thead>
+                        <tr>
+                            <th>Topic ID</th>
+                            <th>Type</th>
+                            <th>YouTube ID</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Module</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="videosTableBody">
+                        <tr><td colspan="7" class="no-videos-message">Loading videos...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoForm = document.getElementById('videoForm');
+            const videoIdInput = document.getElementById('videoId'); // Hidden ID field
+            const topicIdInput = document.getElementById('topicId');
+            const videoTypeSelect = document.getElementById('videoType');
+            const youtubeIdInput = document.getElementById('youtubeId');
+            const videoTitleInput = document.getElementById('videoTitle');
+            const videoDescriptionInput = document.getElementById('videoDescription');
+            const videoModuleSelect = document.getElementById('videoModule');
+            const saveButton = videoForm.querySelector('.add-button'); // Save button
+            const cancelEditBtn = document.getElementById('cancelEditBtn'); // Cancel button
+            const formTitle = document.getElementById('formTitle'); // Form title element
+            const videosTableBody = document.getElementById('videosTableBody'); // Table body
+            const adminLogoutBtn = document.getElementById('adminLogoutBtn'); // Logout button
+
+
+            // --- localStorage Key ---
+            const VIDEO_STORAGE_KEY = 'uknoClubVideoData';
+
+            // --- Helper Function to Load Videos from localStorage ---
+            function loadVideos() {
+                const videosJson = localStorage.getItem(VIDEO_STORAGE_KEY);
+                return videosJson ? JSON.parse(videosJson) : [];
+            }
+
+            // --- Helper Function to Save Videos to localStorage ---
+            function saveVideos(videosArray) {
+                localStorage.setItem(VIDEO_STORAGE_KEY, JSON.stringify(videosArray));
+            }
+
+             // --- Helper Function to Show Messages ---
+             function showMessage(message, type = 'info') {
+                  // Implement a more visible message display (e.g., a div above the form)
+                 console.log(`Message (${type}):`, message);
+                 // Example (needs message element in HTML):
+                 // const msgElement = document.getElementById('adminMessageArea');
+                 // if(msgElement) {
+                 //     msgElement.textContent = message;
+                 //     msgElement.style.color = type === 'error' ? 'red' : (type === 'success' ? 'green' : 'white');
+                 //     msgElement.style.display = 'block';
+                 //     setTimeout(() => { msgElement.style.display = 'none'; }, 5000);
+                 // }
+             }
+
+
+            // --- Function to Render Video Table ---
+            function renderVideoTable() {
+                const videos = loadVideos();
+                videosTableBody.innerHTML = ''; // Clear current table
+
+                if (videos.length === 0) {
+                    videosTableBody.innerHTML = '<tr><td colspan="7" class="no-videos-message">No videos added yet.</td></tr>';
+                } else {
+                    videos.forEach(video => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td data-label="Topic ID">${video.topicId}</td>
+                            <td data-label="Type">${video.videoType === 'video' ? 'Single Video' : 'Playlist'}</td>
+                            <td data-label="YouTube ID">${video.youtubeId}</td>
+                            <td data-label="Title">${video.videoTitle}</td>
+                            <td data-label="Description">${video.videoDescription || '-'}</td>
+                            <td data-label="Module">${video.videoModule}</td>
+                            <td data-label="Actions" class="video-actions">
+                                <button class="edit-video-btn" data-id="${video.id}"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="delete-video-btn" data-id="${video.id}"><i class="fas fa-trash-alt"></i> Delete</button>
+                            </td>
+                        `;
+                        videosTableBody.appendChild(row);
+                    });
+
+                    // Attach event listeners to edit and delete buttons after rendering
+                    attachVideoActionListeners();
+                }
+            }
+
+            // --- Function to Attach Event Listeners to Action Buttons ---
+            function attachVideoActionListeners() {
+                document.querySelectorAll('.edit-video-btn').forEach(button => {
+                    button.addEventListener('click', handleEditVideo);
+                });
+                document.querySelectorAll('.delete-video-btn').forEach(button => {
+                    button.addEventListener('click', handleDeleteVideo);
+                });
+            }
+
+
+            // --- Handle Form Submission (Add/Edit) ---
+            videoForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const id = videoIdInput.value; // Check if we are editing (ID exists)
+                const topicId = topicIdInput.value.trim();
+                const videoType = videoTypeSelect.value;
+                const youtubeId = youtubeIdInput.value.trim();
+                const videoTitle = videoTitleInput.value.trim();
+                const videoDescription = videoDescriptionInput.value.trim();
+                const videoModule = videoModuleSelect.value;
+
+                // Basic validation
+                 if (!topicId || !youtubeId || !videoTitle || !videoModule) {
+                     showMessage("Please fill all required fields.", 'error');
+                     return;
+                 }
+
+
+                const videos = loadVideos();
+
+                if (id) { // Editing existing video
+                    const videoIndex = videos.findIndex(v => v.id === id);
+                    if (videoIndex > -1) {
+                        // Check if the updated topicId creates a duplicate unique ID
+                        const duplicateTopic = videos.find((v, index) => v.topicId === topicId && index !== videoIndex);
+                         if (duplicateTopic) {
+                              showMessage("Error: Topic ID must be unique.", 'error');
+                              return;
+                         }
+
+                        videos[videoIndex] = {
+                            id: id, // Keep the original ID
+                            topicId: topicId,
+                            videoType: videoType,
+                            youtubeId: youtubeId,
+                            videoTitle: videoTitle,
+                            videoDescription: videoDescription,
+                            videoModule: videoModule
+                        };
+                        showMessage("Video updated successfully!", 'success');
+                    } else {
+                         showMessage("Error: Video not found for editing.", 'error');
+                    }
+                } else { // Adding new video
+                     // Check if the topicId already exists
+                     const duplicateTopic = videos.find(v => v.topicId === topicId);
+                     if (duplicateTopic) {
+                          showMessage("Error: Topic ID must be unique.", 'error');
+                          return;
+                     }
+
+                    const newVideo = {
+                        id: Date.now().toString() + Math.random().toString(16).slice(2), // Simple unique ID
+                        topicId: topicId,
+                        videoType: videoType,
+                        youtubeId: youtubeId,
+                        videoTitle: videoTitle,
+                        videoDescription: videoDescription,
+                        videoModule: videoModule
+                    };
+                    videos.push(newVideo);
+                    showMessage("Video added successfully!", 'success');
+                }
+
+                saveVideos(videos); // Save the updated array
+                renderVideoTable(); // Re-render the table
+                resetForm(); // Clear the form
+
+            });
+
+
+            // --- Handle Edit Button Click ---
+            function handleEditVideo() {
+                const videoIdToEdit = this.getAttribute('data-id');
+                const videos = loadVideos();
+                const videoToEdit = videos.find(v => v.id === videoIdToEdit);
+
+                if (videoToEdit) {
+                    // Populate the form with video data
+                    videoIdInput.value = videoToEdit.id;
+                    topicIdInput.value = videoToEdit.topicId;
+                    videoTypeSelect.value = videoToEdit.videoType;
+                    youtubeIdInput.value = videoToEdit.youtubeId;
+                    videoTitleInput.value = videoToEdit.videoTitle;
+                    videoDescriptionInput.value = videoToEdit.videoDescription;
+                    videoModuleSelect.value = videoToEdit.videoModule;
+
+                    // Change form title and button text
+                    formTitle.innerHTML = '<i class="fas fa-edit"></i> Edit Video';
+                    saveButton.innerHTML = '<i class="fas fa-save"></i> Update Video';
+                    cancelEditBtn.style.display = 'inline-block'; // Show cancel button
+
+                    // Disable editing Topic ID while editing to maintain uniqueness constraint easily
+                    topicIdInput.disabled = true;
+
+                     showMessage("Editing video...", 'info');
+
+                } else {
+                    showMessage("Error: Video not found for editing.", 'error');
+                }
+            }
+
+
+            // --- Handle Cancel Edit Button Click ---
+             cancelEditBtn.addEventListener('click', resetForm);
+
+
+            // --- Handle Delete Button Click ---
+            function handleDeleteVideo() {
+                if (confirm('Are you sure you want to delete this video entry?')) {
+                    const videoIdToDelete = this.getAttribute('data-id');
+                    let videos = loadVideos();
+
+                    // Filter out the video to delete
+                    videos = videos.filter(v => v.id !== videoIdToDelete);
+
+                    saveVideos(videos); // Save the updated array
+                    renderVideoTable(); // Re-render the table
+                    showMessage("Video deleted successfully!", 'success');
+                     resetForm(); // Reset form in case the deleted item was being edited
+                }
+            }
+
+
+            // --- Function to Reset the Form ---
+            function resetForm() {
+                videoForm.reset(); // Clear all form fields
+                videoIdInput.value = ''; // Ensure hidden ID is cleared
+                formTitle.innerHTML = '<i class="fas fa-plus-circle"></i> Add New Video'; // Reset form title
+                saveButton.innerHTML = '<i class="fas fa-save"></i> Save Video'; // Reset button text
+                cancelEditBtn.style.display = 'none'; // Hide cancel button
+                topicIdInput.disabled = false; // Re-enable topic ID field
+                 showMessage("", 'info'); // Clear message area
+            }
+
+             // --- Handle Admin Logout ---
+             if(adminLogoutBtn) {
+                 adminLogoutBtn.addEventListener('click', function(e) {
+                     e.preventDefault();
+                     localStorage.removeItem('adminAuthenticated'); // Clear admin auth
+                      // Optionally clear other admin-specific localStorage if any
+                     window.location.href = "auth.html"; // Redirect to auth page
+                 });
+             }
+
+
+            // --- Initial Render ---
+            renderVideoTable(); // Load and display videos when the page loads
+
+        });
+    </script>
+
+</body>
+</html>
