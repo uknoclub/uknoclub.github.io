@@ -6,6 +6,7 @@
   <title>Ukno Club - Auth</title>
   <link rel="stylesheet" href="auth.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <div class="auth-container">
@@ -30,7 +31,10 @@
             <input type="email" placeholder="EMAIL ID" required>
             <input type="text" placeholder="FIRST NAME" required>
             <input type="text" placeholder="LAST NAME" required>
-            <input type="password" placeholder="PASSWORD" required>
+            <div class="password-container">
+              <input type="password" id="signupPassword" placeholder="PASSWORD" required>
+              <i class="fas fa-eye show-password"></i>
+            </div>
             <input type="password" placeholder="CONFIRM PASSWORD" required>
             <input type="text" placeholder="USERNAME" required>
             <button type="submit" class="submit-btn">SETUP ACCOUNT</button>
@@ -38,11 +42,22 @@
           </form>
 
           <form id="login-form" class="form hidden">
-            <input type="email" placeholder="EMAIL ID" required>
-            <input type="password" placeholder="PASSWORD" required>
-            <a href="#" class="forgot-password">Forgot Password?</a>
+            <input type="email" id="loginEmail" placeholder="EMAIL ID" required>
+            <div class="password-container">
+              <input type="password" id="loginPassword" placeholder="PASSWORD" required>
+              <i class="fas fa-eye show-password"></i>
+            </div>
+            <div class="login-options">
+              <label>
+                <input type="checkbox" id="rememberMe"> Remember me
+              </label>
+              <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
             <button type="submit" class="submit-btn">LOG IN</button>
             <p class="privacy-note">Welcome back to Ukno Club!</p>
+            <div id="loginErrorMessage" class="error-message" style="display: none;">
+              Invalid credentials. Please try again.
+            </div>
           </form>
         </div>
       </div>

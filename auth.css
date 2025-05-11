@@ -1,227 +1,40 @@
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: url('assets/bg.png') no-repeat center center fixed;
-  background-size: cover;
-  color: #fff;
-  overflow: hidden;
+
+/* New styles for auth page */
+.password-container {
+  position: relative;
 }
 
-.auth-container {
-  display: flex;
-  height: 100vh;
+.password-container input {
+  padding-right: 40px;
   width: 100%;
-  backdrop-filter: brightness(0.5);
 }
 
-.left-pane {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
-  text-align: center;
-}
-
-.home-button {
+.password-container .show-password {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 16px;
-  color: #FFFFFF;
-  text-decoration: none;
-  background-color: #F52929;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  border: 2px solid transparent;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #A0A0A0;
 }
 
-.home-button:hover {
-  background-color: #e61e1e;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.logo {
-  width: 280px;
-  margin-bottom: 20px;
-  transition: transform 0.3s ease;
-}
-
-.logo:hover {
-  transform: scale(1.02);
-}
-.tagline {
-  font-size: 36px;
-  line-height: 1.2;
-  margin-bottom: 40px;
-}
-
-.learn { color: #F52929; font-weight: 600; }
-.freely { color: #FFFFFF; font-weight: 600; }
-
-.right-pane {
-  flex: 1;
-  background-color: rgba(0, 0, 0, 0.6);
-  padding: 60px 40px;
+.login-options {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  margin: 10px 0;
 }
 
-.auth-form-container {
-  width: 100%;
-  max-width: 400px;
-}
-
-.toggle-buttons {
+.login-options label {
   display: flex;
-  margin-bottom: 30px;
-  background-color: #F52929;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-.toggle-buttons button {
-  flex: 1;
-  padding: 12px 0;
-  border: none;
-  background: transparent;
-  font-size: 16px;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-/* Individual button hover effect */
-.toggle-buttons button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.toggle-buttons button.active {
-  background-color: #d50000;
-}
-
-/* Remove the .toggle-buttons:hover rule completely */
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.form input {
-  padding: 12px 15px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.submit-btn {
-  background-color: #F52929;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 5px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.submit-btn:hover {
-  background-color: #e61e1e;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.privacy-note {
-  font-size: 12px;
-  color: rgba(255,255,255,0.7);
-  text-align: center;
-  margin-top: 10px;
-}
-
-.forgot-password {
-  color: white;
+  align-items: center;
+  gap: 5px;
   font-size: 14px;
-  text-align: right;
-  text-decoration: none;
-  margin-top: -10px;
+  color: #A0A0A0;
+  cursor: pointer;
 }
 
-.forgot-password:hover {
-  text-decoration: underline;
-}
-
-.hidden {
-  display: none;
-}
-/* Add this at the bottom of your existing auth.css */
-@media (max-width: 768px) {
-  .auth-container {
-    flex-direction: column;
-    height: auto;
-    min-height: 100vh;
-    overflow-y: auto;
-  }
-
-  .left-pane, .right-pane {
-    flex: none;
-    width: 100%;
-    padding: 30px 20px;
-  }
-
-  .left-pane {
-    padding-top: 80px;
-    text-align: center;
-  }
-
-  .home-button {
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .logo {
-    width: 220px;
-  }
-
-  .tagline {
-    font-size: 28px;
-    margin-bottom: 30px;
-  }
-
-  .toggle-buttons {
-    margin-bottom: 20px;
-  }
-
-  .form input, .submit-btn {
-    font-size: 14px;
-    padding: 10px 12px;
-  }
-
-  .forgot-password {
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .toggle-buttons button {
-    font-size: 14px;
-    padding: 10px 0;
-  }
-  
-  .privacy-note {
-    font-size: 10px;
-  }
+.login-options input[type="checkbox"] {
+  width: auto;
+  margin: 0;
 }
