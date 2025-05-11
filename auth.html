@@ -13,7 +13,7 @@
     <div class="auth-container">
 
         <div class="left-pane">
-            <a href="index.html" class="home-button">Home</a> <img src="assets/logo.png" alt="Ukno Club" class="logo">
+             <a href="index.html" class="home-button">Home</a> <img src="assets/logo.png" alt="Ukno Club" class="logo">
             <div class="tagline">
                 <span class="learn">Learn</span>
                 <span class="freely">Freely</span>
@@ -25,31 +25,34 @@
              <div class="auth-form-container">
 
                 <div class="toggle-buttons">
-                     <button id="showUserLoginBtn" class="active" data-form="loginForm">User Login</button>
-                     <button id="showRegisterBtn" data-form="registerForm">Register</button>
-                      <button id="showAdminLoginBtn" data-form="adminLoginForm">Admin Login</button>
+                     <button id="showUserLoginBtn" class="active" data-form="loginForm">Login</button> <button id="showRegisterBtn" data-form="registerForm">Register</button>
                  </div>
 
 
                  <div class="form-container">
 
-                     <div id="loginForm" class="form"> <h2>Login</h2>
-                        <div class="form-group">
+                     <div id="loginForm" class="form">
+                        <h2>Login</h2> <div class="form-group">
                             <label for="loginUsername">Username:</label>
                             <input type="text" id="loginUsername" required>
                         </div>
-                        <div class="form-group password-container"> <label for="loginPassword">Password:</label>
+                        <div class="form-group password-container">
+                            <label for="loginPassword">Password:</label>
                             <input type="password" id="loginPassword" required>
-                             <i class="fas fa-eye show-password" id="toggleLoginPassword"></i> </div>
+                             <i class="fas fa-eye show-password" id="toggleLoginPassword"></i>
+                        </div>
                          <div class="login-options">
                             <label>
                                 <input type="checkbox" id="rememberMe"> Remember Me
                             </label>
                             <a href="#" class="forgot-password">Forgot Password?</a>
                         </div>
-                        <button id="loginBtn" class="submit-btn">Login</button> <p class="error-message" id="loginMessage"></p> </div>
+                        <button id="loginBtn" class="submit-btn">Login</button>
+                         <p class="error-message" id="loginMessage"></p>
+                    </div>
 
-                    <div id="registerForm" class="form hidden"> <h2>Register</h2>
+                    <div id="registerForm" class="form hidden">
+                        <h2>Register</h2>
                         <div class="form-group">
                             <label for="registerUsername">Username:</label>
                             <input type="text" id="registerUsername" required>
@@ -62,33 +65,31 @@
                             <label for="registerEmail">Email:</label>
                             <input type="email" id="registerEmail">
                         </div>
-                        <div class="form-group password-container"> <label for="registerPassword">Password:</label>
+                        <div class="form-group password-container">
+                            <label for="registerPassword">Password:</label>
                             <input type="password" id="registerPassword" required>
-                             <i class="fas fa-eye show-password" id="toggleRegisterPassword"></i> </div>
-                        <div class="form-group password-container"> <label for="confirmPassword">Confirm Password:</label>
-                            <input type="password" id="confirmPassword" required>
-                             <i class="fas fa-eye show-password" id="toggleConfirmPassword"></i> </div>
-                        <button id="registerBtn" class="submit-btn">Register</button> <p class="error-message" id="registerMessage"></p> <p class="privacy-note">By registering, you agree to our Privacy Policy.</p> </div>
-
-                    <div id="adminLoginForm" class="form hidden"> <h2>Admin Login</h2>
-                        <div class="form-group">
-                            <label for="adminUsername">Admin Username:</label>
-                            <input type="text" id="adminUsername" required>
+                             <i class="fas fa-eye show-password" id="toggleRegisterPassword"></i>
                         </div>
-                        <div class="form-group password-container"> <label for="adminPassword">Admin Password:</label>
-                            <input type="password" id="adminPassword" required>
-                             <i class="fas fa-eye show-password" id="toggleAdminPassword"></i> </div>
-                        <button id="adminLoginBtn" class="submit-btn">Login as Admin</button> <p class="error-message" id="adminLoginMessage"></p> </div>
+                        <div class="form-group password-container">
+                            <label for="confirmPassword">Confirm Password:</label>
+                            <input type="password" id="confirmPassword" required>
+                             <i class="fas fa-eye show-password" id="toggleConfirmPassword"></i>
+                        </div>
+                        <button id="registerBtn" class="submit-btn">Register</button>
+                         <p class="error-message" id="registerMessage"></p>
+                         <p class="privacy-note">By registering, you agree to our Privacy Policy.</p>
+                    </div>
 
-                 </div> </div> </div> </div> <script>
+                     </div> </div> </div> </div> <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Form divs
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
-            const adminLoginForm = document.getElementById('adminLoginForm');
+            // Removed: const adminLoginForm = document.getElementById('adminLoginForm');
 
-            // Toggle buttons
-             const toggleButtons = document.querySelectorAll('.toggle-buttons button'); // Get all toggle buttons
+
+            // Toggle buttons (Now only Login and Register)
+            const toggleButtons = document.querySelectorAll('.toggle-buttons button');
 
 
             // Login form elements
@@ -96,7 +97,7 @@
             const loginPasswordInput = document.getElementById('loginPassword');
             const loginBtn = document.getElementById('loginBtn');
             const loginMessage = document.getElementById('loginMessage');
-             const toggleLoginPasswordIcon = document.getElementById('toggleLoginPassword'); // Show password icon
+            const toggleLoginPasswordIcon = document.getElementById('toggleLoginPassword');
 
             // Register form elements
             const registerUsernameInput = document.getElementById('registerUsername');
@@ -106,21 +107,16 @@
             const confirmPasswordInput = document.getElementById('confirmPassword');
             const registerBtn = document.getElementById('registerBtn');
             const registerMessage = document.getElementById('registerMessage');
-             const toggleRegisterPasswordIcon = document.getElementById('toggleRegisterPassword'); // Show password icon
-             const toggleConfirmPasswordIcon = document.getElementById('toggleConfirmPassword'); // Show password icon
+            const toggleRegisterPasswordIcon = document.getElementById('toggleRegisterPassword');
+            const toggleConfirmPasswordIcon = document.getElementById('toggleConfirmPassword');
 
-            // Admin login form elements
-            const adminUsernameInput = document.getElementById('adminUsername');
-            const adminPasswordInput = document.getElementById('adminPassword');
-            const adminLoginBtn = document.getElementById('adminLoginBtn');
-            const adminLoginMessage = document.getElementById('adminLoginMessage');
-             const toggleAdminPasswordIcon = document.getElementById('toggleAdminPassword'); // Show password icon
+            // Removed Admin login form elements references
 
 
             // --- localStorage Keys ---
             const USERS_STORAGE_KEY = 'uknoClubUsers';
             const ADMIN_AUTH_KEY = 'adminAuthenticated';
-            const LOGGED_IN_USERNAME_KEY = 'loggedInUsername'; // Key for logged in username
+            const LOGGED_IN_USERNAME_KEY = 'loggedInUsername';
 
 
             // --- Helper function to get user data from localStorage ---
@@ -143,12 +139,12 @@
             function clearMessages() {
                 loginMessage.textContent = '';
                 registerMessage.textContent = '';
-                adminLoginMessage.textContent = '';
+                 // Removed adminLoginMessage.textContent = '';
             }
 
-            // --- Toggle Forms Function ---
+            // --- Toggle Forms Function (Now only toggles between login and register) ---
             function showForm(formId) {
-                const forms = document.querySelectorAll('.auth-form-container .form'); // Select all form divs by class
+                const forms = document.querySelectorAll('.auth-form-container .form');
                 forms.forEach(form => {
                     if (form.id === formId) {
                         form.classList.remove('hidden');
@@ -200,9 +196,7 @@
               if (toggleConfirmPasswordIcon) {
                  toggleConfirmPasswordIcon.addEventListener('click', () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPasswordIcon));
              }
-              if (toggleAdminPasswordIcon) {
-                 toggleAdminPasswordIcon.addEventListener('click', () => togglePasswordVisibility(adminPasswordInput, toggleAdminPasswordIcon));
-             }
+             // Removed admin password toggle listener
 
 
             // --- Registration ---
@@ -221,12 +215,12 @@
                     return;
                 }
 
-                 // Simple email format validation (optional but good practice)
-                 if (email && !/@.+\..+/.test(email)) {
-                     registerMessage.textContent = 'Please enter a valid email address.';
-                     registerMessage.style.color = 'var(--error)';
-                     return;
-                 }
+                // Simple email format validation (optional but good practice)
+                if (email && !/@.+\..+/.test(email)) {
+                    registerMessage.textContent = 'Please enter a valid email address.';
+                    registerMessage.style.color = 'var(--error)';
+                    return;
+                }
 
 
                 if (password !== confirmPassword) {
@@ -264,6 +258,7 @@
                  toggleConfirmPasswordIcon.classList.remove('fa-eye-slash');
                  toggleConfirmPasswordIcon.classList.add('fa-eye');
 
+
                 // Automatically switch to login form after a delay
                 setTimeout(() => {
                     showForm('loginForm'); // Switch to login form
@@ -271,7 +266,7 @@
             });
 
 
-            // --- Login ---
+            // --- Login (Handles both User and Admin) ---
             loginBtn.addEventListener('click', function() {
                 clearMessages();
                 const username = loginUsernameInput.value.trim();
@@ -283,52 +278,38 @@
                     return;
                 }
 
-                // Check user credentials
-                const users = getUsers();
-                const user = users[username];
+                // Check if it's admin credentials first
+                 const ADMIN_USERNAME = 'admin';
+                 const ADMIN_PASSWORD = 'adminpassword'; // Use a strong password!
 
-                if (user && user.password === password) { // In a real app, compare hashed passwords
-                    // Authentication successful!
-                    localStorage.setItem('userAuthenticated', 'true'); // Mark user as authenticated
-                    localStorage.setItem(LOGGED_IN_USERNAME_KEY, username); // Store the username
-                    loginMessage.textContent = 'Login successful! Redirecting...';
-                    loginMessage.style.color = 'var(--success)';
-                    window.location.href = "dashboard.html"; // Redirect to dashboard
-                } else {
-                    loginMessage.textContent = 'Invalid username or password.';
-                    loginMessage.style.color = 'var(--error)';
-                }
-            });
+                 if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                     // Admin authentication successful!
+                     localStorage.setItem(ADMIN_AUTH_KEY, 'true'); // Mark admin as authenticated
+                     localStorage.removeItem('userAuthenticated'); // Ensure user authentication is removed
+                     localStorage.removeItem(LOGGED_IN_USERNAME_KEY); // Ensure user username is removed
+                     loginMessage.textContent = 'Admin login successful! Redirecting...'; // Use login message area
+                     loginMessage.style.color = 'var(--success)';
+                     window.location.href = "admin-dashboard.html"; // Redirect to admin dashboard
 
-            // --- Admin Login ---
-            adminLoginBtn.addEventListener('click', function() {
-                clearMessages();
-                const adminUsername = adminUsernameInput.value.trim();
-                const adminPassword = adminPasswordInput.value.trim();
+                 } else {
+                     // If not admin, check user credentials
+                     const users = getUsers();
+                     const user = users[username];
 
-                // Basic hardcoded admin credentials (Replace in a real app!)
-                const ADMIN_USERNAME = 'admin';
-                const ADMIN_PASSWORD = 'adminpassword'; // Use a strong password!
-
-                if (!adminUsername || !adminPassword) {
-                    adminLoginMessage.textContent = 'Please enter admin username and password.';
-                    adminLoginMessage.style.color = 'var(--error)';
-                    return;
-                }
-
-                if (adminUsername === ADMIN_USERNAME && adminPassword === ADMIN_PASSWORD) {
-                    // Admin authentication successful!
-                    localStorage.setItem(ADMIN_AUTH_KEY, 'true'); // Mark admin as authenticated
-                    localStorage.removeItem('userAuthenticated'); // Ensure user authentication is removed
-                    localStorage.removeItem(LOGGED_IN_USERNAME_KEY); // Ensure user username is removed
-                    adminLoginMessage.textContent = 'Admin login successful! Redirecting...';
-                    adminLoginMessage.style.color = 'var(--success)';
-                    // Redirect to admin dashboard
-                    window.location.href = "admin-dashboard.html"; // Redirect to admin dashboard
-                } else {
-                    adminLoginMessage.textContent = 'Invalid admin username or password.';
-                    adminLoginMessage.style.color = 'var(--error)';
-                }
+                     if (user && user.password === password) { // In a real app, compare hashed passwords
+                         // User authentication successful!
+                         localStorage.setItem('userAuthenticated', 'true'); // Mark user as authenticated
+                         localStorage.setItem(LOGGED_IN_USERNAME_KEY, username); // Store the username
+                         localStorage.removeItem(ADMIN_AUTH_KEY); // Ensure admin authentication is removed
+                         loginMessage.textContent = 'Login successful! Redirecting...';
+                         loginMessage.style.color = 'var(--success)';
+                         window.location.href = "dashboard.html"; // Redirect to dashboard
+                     } else {
+                         // Authentication failed for both user and admin
+                         loginMessage.textContent = 'Invalid username or password.';
+                         loginMessage.style.color = 'var(--error)';
+                     }
+                 }
             });
 
 
@@ -337,19 +318,16 @@
              const urlHash = window.location.hash;
              if (urlHash === '#register') {
                  showForm('registerForm');
-             } else if (urlHash === '#admin') {
-                 showForm('adminLoginForm');
              } else {
-                 showForm('loginForm'); // Default to login form
+                 showForm('loginForm'); // Default to login form for both user and admin
              }
 
              // Check if already authenticated and redirect
-             if (localStorage.getItem('userAuthenticated') && localStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
-                  window.location.href = "dashboard.html"; // Redirect user to dashboard if already logged in
-             } else if (localStorage.getItem(ADMIN_AUTH_KEY)) {
-                  window.location.href = "admin-dashboard.html"; // Redirect admin to admin dashboard if already logged in
-             }
-
+              if (localStorage.getItem('userAuthenticated') && localStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
+                   window.location.href = "dashboard.html"; // Redirect user to dashboard if already logged in
+              } else if (localStorage.getItem(ADMIN_AUTH_KEY)) {
+                   window.location.href = "admin-dashboard.html"; // Redirect admin to admin dashboard if already logged in
+              }
 
         });
     </script>
