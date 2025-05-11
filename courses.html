@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Course Catalog - Ukno Club</title> <link rel="stylesheet" href="courses.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+  <title>Courses - Ukno Club</title> <link rel="stylesheet" href="courses.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> </head>
@@ -13,131 +13,33 @@
         <div class="branding">
             <img src="assets/logo.png" alt="Ukno Club" class="logo">
             <h1 id="pageTitle">Course Catalog</h1> </div>
-        <nav class="header-nav"> <a href="dashboard.html">Dashboard</a>
+        <nav class="header-nav">
+            <a href="dashboard.html">Dashboard</a>
             <a href="courses.html">Catalog</a> <a href="notes.html">My Notes</a>
             <a href="feedback.html">Feedback</a>
         </nav>
     </header>
 
     <main class="course-main">
-        <div id="courseIndexContent"> <section class="course-module">
-                <h2>🟦 MODULE 1: Data Analyst Track</h2>
-                <p class="module-goal">Goal: Learn tools to analyze and visualize data using spreadsheets, SQL, and BI tools.</p>
-                <div class="topic-list-grid"> <a href="courses.html?video=stats-fundamentals" class="topic-card">
-                         <h4>Statistics Fundamentals</h4>
-                         <p>Descriptive stats, probability, hypothesis testing</p>
-                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                     </a>
-
-                     <a href="courses.html?video=excel-analysis" class="topic-card">
-                          <h4>Excel for Data Analysis</h4>
-                          <p>Pivot tables, formulas, dashboards</p>
-                          <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                      </a>
-
-                     <a href="courses.html?video=sql-analytics" class="topic-card">
-                         <h4>SQL for Analytics</h4>
-                         <p>Joins, subqueries, aggregation, window functions</p>
-                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                     </a>
-
-                     <a href="courses.html?video=powerbi-full" class="topic-card">
-                          <h4>Power BI Full Course</h4>
-                          <p>Data visualization, DAX, storytelling with data</p>
-                          <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                      </a>
-
-                      <a href="courses.html?video=tableau-full" class="topic-card">
-                           <h4>Tableau Full Course</h4>
-                           <p>Data visualization, dashboards</p>
-                           <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                       </a>
-                </div>
-            </section>
-
-            <section class="course-module">
-                <h2>🟨 MODULE 2: Business Analyst Track</h2>
-                 <p class="module-goal">Goal: Learn tools to interpret and present business insights, focusing on decision-making, reporting, and stakeholder communication.</p>
-                 <div class="topic-list-grid">
-
-                     <a href="courses.html?video=python-analytics" class="topic-card">
-                          <h4>Python for Analysis</h4>
-                          <p>NumPy, Pandas, data cleaning, EDA</p>
-                          <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                      </a>
-
-                     <a href="courses.html?video=r-programming" class="topic-card">
-                         <h4>R Programming for Analytics</h4>
-                         <p>Data wrangling, ggplot2, R Markdown</p>
-                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                     </a>
-
-                     <a href="courses.html?video=spss-basics" class="topic-card">
-                         <h4>SPSS Basics</h4>
-                         <p>Survey data, regression, ANOVA</p>
-                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                     </a>
-
-                     <a href="courses.html?video=managerial-economics" class="topic-card">
-                         <h4>Business Decision Making</h4>
-                         <p>Business case studies, A/B testing, KPIs</p>
-                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                     </a>
-                 </div>
-            </section>
-
-            <section class="course-module">
-                <h2>🟥 MODULE 3: Data Scientist Track</h2>
-                <p class="module-goal">Goal: Learn modeling, prediction, and advanced data processing using ML and AI.</p>
-                 <div class="topic-list-grid">
-
-                     <a href="courses.html?video=ml-basics" class="topic-card">
-                          <h4>Machine Learning Basics</h4>
-                          <p>Supervised/unsupervised learning, regression, classification</p>
-                          <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                      </a>
-
-                     <a href="courses.html?video=deeplearning-nptel" class="topic-card">
-                         <h4>Deep Learning & Neural Networks</h4>
-                         <p>ANN, CNN, RNN basics</p>
-                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                     </a>
-
-                     <a href="courses.html?video=ai-concepts" class="topic-card">
-                         <h4>Artificial Intelligence Concepts</h4>
-                         <p>Search, logic, agents, decision trees</p>
-                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                     </a>
-                 </div>
-            </section>
-
-            <section class="course-module">
-                <h2>🟩 MODULE 4: Big Data & Cloud Tools</h2>
-                 <p class="module-goal">Goal: Learn to work with massive datasets using scalable tools and platforms.</p>
-                 <div class="topic-list-grid">
-
-                      <a href="courses.html?video=bigdata-computing" class="topic-card">
-                          <h4>Big Data Tools (Hadoop & Spark)</h4>
-                          <p>Distributed computing, HDFS, MapReduce</p>
-                          <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                      </a>
-
-                     <a href="courses.html?video=aws-analytics" class="topic-card">
-                         <h4>Cloud Platforms (AWS, GCP, Azure)</h4>
-                         <p>Data pipelines, cloud storage, serverless</p>
-                         <span class="view-video-link"><i class="fas fa-video"></i> Watch Video</span>
-                     </a>
-                 </div>
-            </section>
-             <p class="coming-soon">🚧 More categories and videos coming soon...</p>
+        <div id="courseIndexContent">
+             <p id="loadingMessage" class="no-feedback-message">Loading courses...</p>
         </div>
 
 
-         <div id="videoPlayerContent" class="hidden"> <div class="back-link-container"> <a href="courses.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
+         <div id="videoPlayerContent" class="hidden">
+             <div class="back-link-container">
+                 <a href="courses.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
              </div>
               <h2 id="videoTitle">Loading Video...</h2> <div class="video-container">
                   <div id="youtubePlayer"></div> </div>
-              <p id="resumeMessage" style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-top: 10px; display: none;"></p> <div class="notes-section">
+              <p id="resumeMessage" style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-top: 10px; display: none;"></p> <div id="playlistVideosList" style="margin-top: 20px; display: none;">
+                    <h3>Playlist Videos:</h3>
+                    <ul id="playlistItems">
+                        </ul>
+               </div>
+
+
+              <div class="notes-section">
                   <label for="videoNotes">Take Notes:</label>
                   <textarea id="videoNotes" placeholder="Write your notes here..."></textarea>
               </div>
@@ -154,9 +56,15 @@
           }
 
 
+          // --- localStorage Key for Video Data ---
+          const VIDEO_STORAGE_KEY = 'uknoClubVideoData';
+          const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-';
+          const VIDEO_NOTES_KEY_PREFIX = 'video-notes-';
+
+
           // --- YouTube Player API Script ---
           var tag = document.createElement('script');
-          tag.src = "http://www.youtube.com/iframe_api"; // Correct official API URL
+          tag.src = "https://www.youtube.com/iframe_api"; // Correct official API URL
           var firstScriptTag = document.getElementsByTagName('script')[0];
           firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -164,13 +72,21 @@
           // --- Global variables for YouTube Player ---
           var player;
           let saveProgressTimer = null; // Timer for saving video progress
+          let currentVideoId = null; // To keep track of the currently loaded video topic ID
+
+
+          // --- Helper Function to Load Videos from localStorage ---
+          function loadVideosData() {
+              const videosJson = localStorage.getItem(VIDEO_STORAGE_KEY);
+              return videosJson ? JSON.parse(videosJson) : [];
+          }
 
 
           // --- Function called when the YouTube API is ready ---
           function onYouTubeIframeAPIReady() {
               document.addEventListener('DOMContentLoaded', function() {
                   const urlParams = new URLSearchParams(window.location.search);
-                  const videoId = urlParams.get('video');
+                  currentVideoId = urlParams.get('video'); // Set global currentVideoId
 
                   const courseIndexContent = document.getElementById('courseIndexContent');
                   const videoPlayerContent = document.getElementById('videoPlayerContent');
@@ -178,60 +94,70 @@
                   const videoTitleElement = document.getElementById('videoTitle');
                   const notesTextarea = document.getElementById('videoNotes');
                   const resumeMessageElement = document.getElementById('resumeMessage');
+                  const playlistVideosListDiv = document.getElementById('playlistVideosList');
+                  const playlistItemsUl = document.getElementById('playlistItems');
+                   const loadingMessage = document.getElementById('loadingMessage');
 
 
-                  if (videoId) {
+                  const allVideosData = loadVideosData(); // Load all video data
+
+
+                  if (currentVideoId) {
                       // If a video ID is present, hide the index content and show the video player section
                       courseIndexContent.classList.add('hidden');
                       videoPlayerContent.classList.remove('hidden');
-                       pageTitle.textContent = "Watching Course"; // Update page title
+                      pageTitle.textContent = "Watching Course"; // Update page title
+                       loadingMessage.style.display = 'none'; // Hide loading message
 
-                       // --- Map our internal videoId to a YouTube Video ID and details ---
-                       // IMPORTANT: Populate this map with your actual YouTube video IDs!
-                       const videoMap = {
-                           'stats-fundamentals': { youtubeId: 'r3d9GW1r0lQ', title: 'Statistics Fundamentals' }, // Example, Replace with actual YouTube IDs and titles
-                           'excel-analysis': { youtubeId: 'EXAMPLE_EXCEL_ID', title: 'Excel for Data Analysis' }, // Replace
-                           'sql-analytics': { youtubeId: 'EXAMPLE_SQL_ID', title: 'SQL for Analytics' }, // Replace
-                           'powerbi-full': { youtubeId: 'EXAMPLE_POWERBI_ID', title: 'Power BI Full Course' }, // Replace
-                           'tableau-full': { youtubeId: 'EXAMPLE_TABLEAU_ID', title: 'Tableau Full Course' }, // Replace
-                           'python-analytics': { youtubeId: 'EXAMPLE_PYTHON_ID', title: 'Python for Analysis' }, // Replace
-                           'r-programming': { youtubeId: 'EXAMPLE_R_ID', title: 'R Programming for Analytics' }, // Replace
-                           'spss-basics': { youtubeId: 'EXAMPLE_SPSS_ID', title: 'SPSS Basics' }, // Replace
-                           'managerial-economics': { youtubeId: 'EXAMPLE_MANAGERIAL_ID', title: 'Business Decision Making' }, // Replace
-                           'ml-basics': { youtubeId: 'EXAMPLE_ML_ID', title: 'Machine Learning Basics' }, // Replace
-                           'deeplearning-nptel': { youtubeId: 'EXAMPLE_DEEPLEARNING_ID', title: 'Deep Learning & Neural Networks' }, // Replace
-                           'ai-concepts': { youtubeId: 'EXAMPLE_AI_ID', title: 'Artificial Intelligence Concepts' }, // Replace
-                           'bigdata-computing': { youtubeId: 'EXAMPLE_BIGDATA_ID', title: 'Big Data Tools (Hadoop & Spark)' }, // Replace
-                           'aws-analytics': { youtubeId: 'EXAMPLE_AWS_ID', title: 'Cloud Platforms (AWS Data Analytics)' }, // Replace
-                           // Add all video IDs from your outline here with their actual YouTube IDs and titles
-                       };
-
-                       const videoDetails = videoMap[videoId];
+                       // Find the selected video details
+                       const videoDetails = allVideosData.find(video => video.topicId === currentVideoId);
 
                        if (videoDetails && videoDetails.youtubeId) {
-                           videoTitleElement.textContent = videoDetails.title; // Set the video title
+                           videoTitleElement.textContent = videoDetails.videoTitle; // Set the video title
 
-                           // Create the YouTube Player
-                           player = new YT.Player('youtubePlayer', {
-                               height: '390', // These will be controlled by CSS .video-container
+                           // Determine if it's a single video or playlist and load the player
+                           const playerOptions = {
+                               height: '390',
                                width: '640',
-                               videoId: videoDetails.youtubeId,
                                playerVars: {
-                                   'autoplay': 1, // Optional: Autoplay the video
+                                   'autoplay': 1,
                                    'controls': 1,
                                    'enablejsapi': 1,
-                                   'rel': 0, // Hide related videos
-                                   'showinfo': 0, // Hide video title and uploader info
-                                   'modestbranding': 1 // Show modest branding
+                                   'rel': 0,
+                                   'showinfo': 0,
+                                   'modestbranding': 1,
+                                   'playsinline': 1 // Important for mobile
                                },
                                events: {
                                    'onReady': onPlayerReady,
                                    'onStateChange': onPlayerStateChange
                                }
-                           });
+                           };
+
+                           if (videoDetails.videoType === 'video') {
+                               playerOptions.videoId = videoDetails.youtubeId;
+                           } else if (videoDetails.videoType === 'playlist') {
+                               playerOptions.playerVars.listType = 'playlist';
+                               playerOptions.playerVars.list = videoDetails.youtubeId;
+                               // Optional: Start with a specific video in the playlist
+                               // playerOptions.videoId = 'STARTING_VIDEO_ID_IN_PLAYLIST';
+                               playlistVideosListDiv.style.display = 'block'; // Show playlist list area
+                           } else {
+                                // Handle unknown video type
+                                videoPlayerContent.innerHTML = '<p class="no-feedback-message">Unknown video type.</p>';
+                                pageTitle.textContent = "Video Error";
+                                console.error("Unknown video type:", videoDetails.videoType);
+                                loadingMessage.style.display = 'none';
+                                return; // Stop execution
+                           }
+
+
+                           // Create the YouTube Player
+                           player = new YT.Player('youtubePlayer', playerOptions);
+
 
                            // Load saved notes for this videoId from localStorage
-                           const savedNotes = localStorage.getItem('video-notes-' + videoId);
+                           const savedNotes = localStorage.getItem(VIDEO_NOTES_KEY_PREFIX + currentVideoId);
                            if (savedNotes) {
                                notesTextarea.value = savedNotes;
                            }
@@ -239,40 +165,131 @@
                            // --- Note Saving (Simple auto-save while typing) ---
                            let saveNotesTimer = null;
                            notesTextarea.addEventListener('input', function() {
-                                clearTimeout(saveNotesTimer);
-                                saveNotesTimer = setTimeout(() => {
-                                    localStorage.setItem('video-notes-' + videoId, notesTextarea.value);
-                                    console.log('Notes auto-saved for video:', videoId);
-                                    // Optional: show a small "Notes saved!" message
-                                }, 1000); // Save 1 second after user stops typing
+                                if (currentVideoId) { // Only save if a video is loaded
+                                     clearTimeout(saveNotesTimer);
+                                     saveNotesTimer = setTimeout(() => {
+                                         localStorage.setItem(VIDEO_NOTES_KEY_PREFIX + currentVideoId, notesTextarea.value);
+                                         console.log('Notes auto-saved for video:', currentVideoId);
+                                         // Optional: show a small "Notes saved!" message
+                                     }, 1000); // Save 1 second after user stops typing
+                                }
                            });
 
 
                        } else {
-                           // Handle case where videoId is not found in our map
-                           videoPlayerContent.innerHTML = '<p class="no-feedback-message">Video not found or mapping is incomplete.</p>';
+                           // Handle case where videoId is not found in our data
+                           videoPlayerContent.innerHTML = '<p class="no-feedback-message">Video not found or data is missing.</p>';
                            pageTitle.textContent = "Video Error";
-                           console.error("Video ID not found in mapping:", videoId);
+                           console.error("Video ID not found in loaded data:", currentVideoId);
+                           loadingMessage.style.display = 'none';
                        }
 
 
                    } else {
                        // If no video ID, show the course index
+                       renderCourseIndex(allVideosData); // Render the index from loaded data
                        courseIndexContent.classList.remove('hidden');
                        videoPlayerContent.classList.add('hidden');
                        pageTitle.textContent = "Course Catalog";
+                       loadingMessage.style.display = 'none'; // Hide loading message
                    }
               });
           }
+
+
+           // --- Function to Render the Course Index from Video Data ---
+           function renderCourseIndex(videosData) {
+               const courseIndexContentDiv = document.getElementById('courseIndexContent');
+               courseIndexContentDiv.innerHTML = ''; // Clear current content
+
+               if (videosData.length === 0) {
+                    courseIndexContentDiv.innerHTML = '<p class="no-feedback-message">No courses or videos available yet. Admin needs to add them.</p>';
+                    return;
+               }
+
+               // Group videos by module/track
+               const modules = {};
+               videosData.forEach(video => {
+                   if (!modules[video.videoModule]) {
+                       modules[video.videoModule] = [];
+                   }
+                   modules[video.videoModule].push(video);
+               });
+
+               // Get module titles and symbols (You might want to store these in localStorage too via admin)
+                const moduleTitles = {
+                    'data-analyst': '🟦 MODULE 1: Data Analyst Track',
+                    'business-analyst': '🟨 MODULE 2: Business Analyst Track',
+                    'data-scientist': '🟥 MODULE 3: Data Scientist Track',
+                    'big-data': '🟩 BONUS MODULE: Big Data & Cloud Tools',
+                    // Add other modules here
+                };
+
+               // Render modules and topics
+               for (const moduleKey in modules) {
+                   if (modules.hasOwnProperty(moduleKey)) {
+                       const moduleVideos = modules[moduleKey];
+                       const moduleTitle = moduleTitles[moduleKey] || `❓ MODULE: ${moduleKey}`; // Fallback title
+
+                       const moduleSection = document.createElement('section');
+                       moduleSection.classList.add('course-module');
+
+                       moduleSection.innerHTML = `
+                           <h2>${moduleTitle}</h2>
+                           <p class="module-goal">Goal: Learn ${moduleKey} skills...</p> <div class="topic-list-grid">
+                               </div>
+                       `;
+
+                       const topicListGrid = moduleSection.querySelector('.topic-list-grid');
+
+                       // Sort videos by topic title or another criteria if needed
+                       // moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
+
+                       moduleVideos.forEach(video => {
+                           const topicCardLink = document.createElement('a');
+                           topicCardLink.href = `courses.html?video=${video.topicId}`; // Link to the video player view
+                           topicCardLink.classList.add('topic-card');
+
+                           topicCardLink.innerHTML = `
+                                <h4>${video.videoTitle}</h4>
+                                <p>${video.videoDescription || 'No description available.'}</p>
+                                <span class="view-video-link"><i class="fas fa-video"></i> Watch ${video.videoType === 'playlist' ? 'Playlist' : 'Video'}</span>
+                           `;
+                           topicListGrid.appendChild(topicCardLink);
+                       });
+
+                       courseIndexContentDiv.appendChild(moduleSection);
+                   }
+               }
+
+               // Add the coming soon message at the end
+               const comingSoonMessage = document.createElement('p');
+               comingSoonMessage.classList.add('coming-soon');
+               comingSoonMessage.textContent = '🚧 More categories and videos coming soon...';
+               courseIndexContentDiv.appendChild(comingSoonMessage);
+
+           }
 
 
           // --- YouTube Player API Event Handlers ---
 
           // The API calls this function when the video player is ready.
           function onPlayerReady(event) {
-              const urlParams = new URLSearchParams(window.location.search);
-              const videoId = urlParams.get('video');
-              const savedTime = localStorage.getItem('ukno-video-progress-' + videoId); // Get saved time
+              // If it's a playlist, get playlist videos (Optional)
+              // This might require additional API calls or data stored in localStorage
+              const videoDetails = loadVideosData().find(video => video.topicId === currentVideoId);
+              if (videoDetails && videoDetails.videoType === 'playlist') {
+                   // Example: Display current video title if playlist is loaded
+                   const currentVideoData = event.target.getVideoData();
+                   console.log("Loaded Playlist. Current video:", currentVideoData.title);
+                   // You could update videoTitleElement here with the current playlist video title
+
+                   // You can also get playlist data using event.target.getPlaylist()
+                   // and populate the playlistItemsUl if needed, but this adds complexity.
+              }
+
+
+              const savedTime = localStorage.getItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId); // Get saved time
 
               if (savedTime) {
                    const timeToSeek = parseFloat(savedTime);
@@ -301,35 +318,37 @@
 
           // The API calls this function when the player's state changes.
           function onPlayerStateChange(event) {
-              const urlParams = new URLSearchParams(window.location.search);
-              const videoId = urlParams.get('video');
-
-              if (!videoId) return; // Only save progress if a video is loaded
+              if (!currentVideoId) return; // Only save progress if a video is loaded
 
               // Save video progress when playing
               if (event.data === YT.PlayerState.PLAYING) {
-                  console.log('Video is playing. Starting save timer...');
-                  // Clear any existing timer to avoid multiple timers running
-                  clearInterval(saveProgressTimer);
+                  // console.log('Video is playing. Starting save timer...'); // Avoid excessive logging
+                  clearInterval(saveProgressTimer); // Clear any existing timer
                   saveProgressTimer = setInterval(() => {
                       const currentTime = player.getCurrentTime();
-                      localStorage.setItem('ukno-video-progress-' + videoId, currentTime.toString());
+                      localStorage.setItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId, currentTime.toString());
                       // console.log('Saved progress:', currentTime, 'seconds'); // Avoid excessive logging
                   }, 5000); // Save every 5 seconds
               } else {
-                  console.log('Video is not playing. Stopping save timer...');
+                  // console.log('Video is not playing. Stopping save timer...');
                   clearInterval(saveProgressTimer); // Stop saving when paused, ended, buffered, etc.
 
                   // Optional: Save final progress when paused or ended
                    if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
                        const currentTime = player.getCurrentTime();
-                       localStorage.setItem('ukno-video-progress-' + videoId, currentTime.toString());
+                       localStorage.setItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId, currentTime.toString());
                        console.log('Final progress saved:', currentTime, 'seconds');
 
-                        // If video ended, maybe remove the saved progress so it starts from beginning next time
+                        // --- User Progress Tracking Logic (Step 3 related) ---
                         if (event.data === YT.PlayerState.ENDED) {
-                             localStorage.removeItem('ukno-video-progress-' + videoId);
-                             console.log('Video ended. Removed saved progress.');
+                            console.log('Video ended.');
+                             // Mark this video as completed for the logged-in user
+                             // This will be implemented in Step 3
+                             markVideoAsCompleted(currentVideoId);
+
+                             // Remove saved progress so it starts from beginning next time
+                             localStorage.removeItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId);
+                             console.log('Removed saved progress for ended video.');
                               const resumeMessageElement = document.getElementById('resumeMessage');
                              if (resumeMessageElement) {
                                  resumeMessageElement.style.display = 'none'; // Hide resume message
@@ -338,6 +357,28 @@
                    }
               }
           }
+
+         // --- Placeholder for User Progress Tracking (Step 3) ---
+          function markVideoAsCompleted(videoId) {
+              // This function will be fully implemented in Step 3
+              // It should get the logged-in user's identifier and update their progress in localStorage.
+              const loggedInUsername = localStorage.getItem('loggedInUsername') || localStorage.getItem('adminAuthenticated') ? 'Admin' : 'Guest'; // Get username
+              if (loggedInUsername && loggedInUsername !== 'Guest') {
+                  const userProgressKey = `uknoClubProgress-${loggedInUsername}`;
+                  let progressData = JSON.parse(localStorage.getItem(userProgressKey)) || {};
+
+                   // Mark the video as completed (e.g., set a flag or add to a list)
+                   progressData[videoId] = { completed: true, completedTimestamp: new Date().toISOString() };
+                   // You could also store total duration, watched duration, etc.
+
+                   localStorage.setItem(userProgressKey, JSON.stringify(progressData));
+                   console.log(`Marked video ${videoId} as completed for ${loggedInUsername}.`);
+
+                   // Trigger an update on the dashboard if the user is there (more advanced)
+                   // For now, the dashboard will load the latest progress on refresh.
+              }
+          }
+
 
      </script>
 
