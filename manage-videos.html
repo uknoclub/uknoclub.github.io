@@ -71,6 +71,15 @@
                     </div>
 
                      <div class="form-group">
+                         <label for="videoType">Content Type:</label>
+                         <select id="videoType" required>
+                             <option value="video">Single Video</option>
+                             <option value="playlist">Playlist</option>
+                         </select>
+                    </div>
+
+
+                     <div class="form-group">
                          <label for="videoModule">Module/Track:</label>
                          <select id="videoModule" required>
                               <option value="">--Select Module--</option>
@@ -105,8 +114,9 @@
                 <table class="video-table">
                     <thead>
                         <tr>
-                            <th>Display Name</th> <th>Type</th>
-                            <th>YouTube ID</th> <th>Description</th>
+                            <th>Display Name</th>
+                            <th>Type</th> <th>YouTube ID</th>
+                            <th>Description</th>
                             <th>Module</th>
                             <th>Duration</th>
                             <th>Actions</th>
@@ -126,6 +136,7 @@
              const topicIdInput = document.getElementById('topicId'); // Hidden unique topic ID field (derived from title or generated)
             const videoTitleInput = document.getElementById('videoTitle'); // Display Name text input
             const youtubeLinkInput = document.getElementById('youtubeLink'); // New YouTube Link input
+             const videoTypeSelect = document.getElementById('videoType'); // Added back: Content Type dropdown
             const videoDescriptionInput = document.getElementById('videoDescription');
             const videoModuleSelect = document.getElementById('videoModule');
             const totalDurationInput = document.getElementById('totalDuration');
@@ -206,35 +217,31 @@
                  return hours > 0 ? `${paddedHours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
              }
 
-             // --- Helper to extract YouTube ID and Type from URL ---
-             function getYouTubeIdAndType(url) {
+             // --- Helper to extract YouTube ID from URL (Type is now from dropdown) ---
+             function getYouTubeIdFromUrl(url) {
                  let videoId = null;
-                 let videoType = null;
 
                  const videoMatch = url.match(/(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([a-zA-Z0-9_-]+)(?:&.*)?/);
                  const playlistMatch = url.match(/(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:playlist\?list=|p\/)([a-zA-Z0-9_-]+)(?:&.*)?/);
 
                  if (videoMatch && videoMatch[1]) {
                      videoId = videoMatch[1];
-                     videoType = 'video';
                  } else if (playlistMatch && playlistMatch[1]) {
                      videoId = playlistMatch[1];
-                     videoType = 'playlist';
                  } else {
                      // Basic fallback if no standard match - assume it might be just the ID?
                       // Or handle as an error
                      if (url.length > 5 && !url.includes(' ')) { // Basic check for something that might be an ID
                            videoId = url;
-                           videoType = 'video'; // Default to video if unclear
                            console.warn("Could not parse standard YouTube URL, assuming input is just the ID:", url);
                      } else {
                           console.error("Invalid or unparseable YouTube URL:", url);
                           showMessage("Invalid or unparseable YouTube URL.", 'error');
-                          return { youtubeId: null, videoType: null };
+                          return null;
                      }
                  }
 
-                 return { youtubeId: videoId, videoType: videoType };
+                 return videoId;
              }
 
 
@@ -252,8 +259,7 @@
                          // The 'Actions' buttons use the internal 'id' to find the object.
                         row.innerHTML = `
                             <td data-label="Display Name">${video.videoTitle}</td>
-                            <td data-label="Type">${video.videoType === 'video' ? 'Single' : 'Playlist'}</td>
-                            <td data-label="YouTube ID">${video.youtubeId}</td> <td data-label="Description">${video.videoDescription || '-'}</td>
+                            <td data-label="Type">${video.videoType === 'video' ? 'Single' : 'Playlist'}</td> <td data-label="YouTube ID">${video.youtubeId}</td> <td data-label="Description">${video.videoDescription || '-'}</td>
                             <td data-label="Module">${video.videoModule}</td>
                             <td data-label="Duration">${video.totalDuration !== undefined ? formatSecondsToHHMMSS(video.totalDuration) : '-'}</td>
                             <td data-label="Actions" class="video-actions">
@@ -289,6 +295,7 @@
 
                 const videoTitle = videoTitleInput.value.trim(); // Get display name
                 const youtubeLink = youtubeLinkInput.value.trim(); // Get the full link
+                const videoType = videoTypeSelect.value; // Get video type from dropdown
                 const videoDescription = videoDescriptionInput.value.trim();
                 const videoModule = videoModuleSelect.value;
                 const durationString = totalDurationInput.value.trim();
@@ -304,10 +311,10 @@
                 }
 
 
-                // Parse YouTube link
-                const { youtubeId, videoType } = getYouTubeIdAndType(youtubeLink);
-                 if (!youtubeId || !videoType) {
-                      // Error message already shown by getYouTubeIdAndType
+                // Parse YouTube link to get the ID
+                const youtubeId = getYouTubeIdFromUrl(youtubeLink);
+                 if (!youtubeId) {
+                      // Error message already shown by getYouTubeIdFromUrl
                       return;
                  }
 
@@ -338,7 +345,7 @@
                         videos[videoIndex] = {
                             id: id, // Keep the original internal ID
                             topicId: topicId, // Keep the original topic ID
-                            videoType: videoType, // Use type inferred from link
+                            videoType: videoType, // Use type from dropdown
                             youtubeId: youtubeId, // Use ID extracted from link
                             videoTitle: videoTitle, // Use display name
                             videoDescription: videoDescription,
@@ -370,7 +377,7 @@
                     const newVideo = {
                         id: Date.now().toString() + Math.random().toString(16).slice(2), // Unique internal ID
                         topicId: topicId, // Generated unique topic ID
-                        videoType: videoType, // Use type inferred from link
+                        videoType: videoType, // Use type from dropdown
                         youtubeId: youtubeId, // Use ID extracted from link
                         videoTitle: videoTitle, // Use display name
                         videoDescription: videoDescription,
@@ -399,9 +406,9 @@
                     videoIdInput.value = videoToEdit.id;
                      topicIdInput.value = videoToEdit.topicId; // Store the existing topic ID in the hidden field
                     videoTitleInput.value = videoToEdit.videoTitle; // Populate display name
-                    // Populate YouTube Link field (might be tricky to reconstruct original URL)
-                     // Let's populate with the YouTube ID for simplicity, user can replace if needed
+                    // Populate YouTube Link field (populate with the extracted ID)
                     youtubeLinkInput.value = videoToEdit.youtubeId; // Populate with the extracted ID
+                    videoTypeSelect.value = videoToEdit.videoType; // Set the Content Type dropdown
                     videoDescriptionInput.value = videoToEdit.videoDescription;
                     videoModuleSelect.value = videoToEdit.videoModule;
                      // Populate duration field by formatting seconds back to HH:MM:SS
@@ -412,10 +419,7 @@
                     saveButton.innerHTML = '<i class="fas fa-save"></i> Update Video';
                     cancelEditBtn.style.display = 'inline-block'; // Show cancel button
 
-                    // Disable the YouTube link field during edit if you don't want it changed easily
-                    // Or keep it enabled but the script will parse the new URL on save
-                    // Let's keep it enabled for flexibility, the save logic handles parsing the new input.
-
+                    // No topicIdInput to disable anymore in the simplified form
 
                      showMessage("Editing video...", 'info');
 
@@ -492,6 +496,7 @@
                  topicIdInput.value = ''; // Clear hidden topic ID
                  videoTitleInput.value = '';
                  youtubeLinkInput.value = '';
+                 videoTypeSelect.value = 'video'; // Reset dropdown to default
                  videoDescriptionInput.value = '';
                  videoModuleSelect.value = ''; // Reset dropdown
                  totalDurationInput.value = '';
