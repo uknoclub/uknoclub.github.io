@@ -30,7 +30,7 @@ body {
     padding: 20px;
 }
 
-/* Header Styles (Similar to Dashboard/Notes/Feedback) */
+/* Header Styles (Consistent across course-related pages) */
 .course-header {
     display: flex;
     justify-content: space-between;
@@ -78,12 +78,12 @@ body {
 }
 
 /* Course Module Styles (for the index page) */
-.course-module {
+.course-main .course-module { /* Added .course-main to scope this to the index page layout */
     margin-bottom: 40px;
 }
 
-.course-module h2 {
-    color: var(--text-highlight); /* Highlight color for module titles */
+.course-main .course-module h2 { /* Added .course-main */
+    color: var(--text-highlight);
     margin-bottom: 15px;
     font-size: 1.6rem;
     display: flex;
@@ -91,24 +91,24 @@ body {
     gap: 10px;
 }
 
-.module-goal {
-    color: var(--text-secondary); /* Muted text for goal */
+.course-main .module-goal { /* Added .course-main */
+    color: var(--text-secondary);
     font-size: 1rem;
     margin-bottom: 20px;
 }
 
-.track-list {
+.course-main .track-list { /* Added .course-main */
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
-.track-card {
+.course-main .track-card { /* Added .course-main */
     background: var(--bg-card);
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-decoration: none; /* Remove underline */
+    text-decoration: none;
     color: var(--text-main);
     transition: transform 0.3s ease;
     display: flex;
@@ -116,33 +116,33 @@ body {
     justify-content: space-between;
 }
 
-.track-card:hover {
+.course-main .track-card:hover { /* Added .course-main */
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.track-card h3 {
-    color: var(--link-color); /* Link color for track title */
+.course-main .track-card h3 { /* Added .course-main */
+    color: var(--link-color);
     margin-top: 0;
     margin-bottom: 10px;
     font-size: 1.2rem;
 }
 
-.track-card p {
-    color: var(--text-secondary); /* Muted text for topics list */
+.course-main .track-card p { /* Added .course-main */
+    color: var(--text-secondary);
     font-size: 0.9rem;
     margin-bottom: 15px;
 }
 
-.view-track-link {
+.course-main .view-track-link { /* Added .course-main */
     display: block;
     text-align: right;
-    color: var(--primary); /* Red color for the link */
+    color: var(--primary);
     font-weight: 600;
     font-size: 0.9rem;
 }
 
-.coming-soon {
+.coming-soon { /* This applies to the index page message */
     text-align: center;
     color: var(--text-secondary);
     font-size: 1.2rem;
@@ -150,8 +150,68 @@ body {
 }
 
 
-/* --- Video Player Section Styles (Keep existing) --- */
-/* These styles will apply when courses.html is used as a video player page */
+/* --- Track Page Styles --- */
+.track-content { /* Styles for the main content area on track pages */
+    margin-top: 20px;
+}
+
+.track-overview h2 {
+    color: var(--text-highlight);
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    text-align: center; /* Center the goal */
+}
+
+.track-topics h3 {
+    color: var(--text-highlight);
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    display: flex; /* Align icon and text */
+    align-items: center;
+    gap: 10px;
+}
+
+.topic-item {
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.topic-item h4 {
+    color: var(--primary); /* Primary color for topic title */
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.topic-item p {
+    color: var(--text-secondary); /* Muted text for sub-topics */
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.video-link {
+    display: inline-block; /* Or block if you want each link on new line */
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: 500;
+    margin-right: 20px; /* Space between multiple video links in one topic */
+    transition: color 0.3s ease;
+}
+
+.video-link:hover {
+    color: var(--primary); /* Red on hover */
+    text-decoration: underline;
+}
+
+.video-link i {
+    margin-right: 5px;
+}
+
+
+/* --- Video Player Section Styles --- */
 .video-player-section {
     /* Initially hidden, displayed via JS when videoId parameter is present */
 }
@@ -215,7 +275,7 @@ body {
 /* .progress-tracker { ... } */
 
 
-/* Responsive Adjustments (Keep existing and add for new elements) */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .course-header {
         flex-direction: column;
@@ -240,27 +300,54 @@ body {
      .course-header h1 {
          font-size: 1.5rem;
      }
-      .course-module h2 {
+
+      /* Index page adjustments */
+      .course-main .course-module h2 {
           font-size: 1.4rem;
       }
-       .module-goal {
+       .course-main .module-goal {
            font-size: 0.9rem;
        }
-       .track-list {
-           grid-template-columns: 1fr; /* Stack cards on smaller screens */
+       .course-main .track-list {
+           grid-template-columns: 1fr;
        }
-       .track-card {
+       .course-main .track-card {
            padding: 15px;
        }
-       .track-card h3 {
+       .course-main .track-card h3 {
            font-size: 1.1rem;
        }
-       .track-card p {
+       .course-main .track-card p {
            font-size: 0.8rem;
        }
-        .view-track-link {
+        .course-main .view-track-link {
             font-size: 0.8rem;
         }
+
+
+       /* Track page adjustments */
+       .track-content .track-overview h2 { /* Added .track-content */
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+       }
+        .track-content .track-topics h3 { /* Added .track-content */
+            font-size: 1.3rem;
+        }
+       .track-content .topic-item { /* Added .track-content */
+           padding: 15px;
+       }
+        .track-content .topic-item h4 { /* Added .track-content */
+            font-size: 1rem;
+        }
+         .track-content .topic-item p { /* Added .track-content */
+             font-size: 0.8rem;
+         }
+         .track-content .video-link { /* Added .track-content */
+             font-size: 0.8rem;
+             margin-right: 10px;
+         }
+
+
         .notes-section {
             padding: 15px;
         }
@@ -283,18 +370,45 @@ body {
           font-size: 0.8rem;
           padding: 6px 10px;
       }
-      .course-module h2 {
+
+       /* Index page adjustments */
+        .course-main .course-module h2 {
           font-size: 1.2rem;
-      }
-       .module-goal {
+        }
+       .course-main .module-goal {
            font-size: 0.8rem;
        }
-        .track-card h3 {
+        .course-main .track-card h3 {
             font-size: 1rem;
         }
-         .track-card p {
+         .course-main .track-card p {
              font-size: 0.7rem;
          }
+
+
+        /* Track page adjustments */
+         .track-content .track-overview h2 { /* Added .track-content */
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+         }
+         .track-content .track-topics h3 { /* Added .track-content */
+             font-size: 1.1rem;
+         }
+         .track-content .topic-item { /* Added .track-content */
+             padding: 10px;
+         }
+          .track-content .topic-item h4 { /* Added .track-content */
+              font-size: 0.9rem;
+          }
+           .track-content .topic-item p { /* Added .track-content */
+               font-size: 0.7rem;
+           }
+           .track-content .video-link { /* Added .track-content */
+                font-size: 0.7rem;
+                margin-right: 8px;
+            }
+
+
           .notes-section textarea {
               min-height: 100px;
           }
