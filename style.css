@@ -1,0 +1,369 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: #FFFFFF;
+  overflow: hidden;
+  position: relative;
+}
+
+.background-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: -2;
+}
+
+.background-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('assets/bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.landing-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 0;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 1200px;
+  padding: 40px;
+  box-sizing: border-box;
+  height: calc(100vh - 80px);
+}
+
+/* ===== Enhanced Navigation Buttons ===== */
+.top-right {
+  position: absolute;
+  top: 20px;
+  right: 40px; /* Your perfect positioning */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.top-right .nav-buttons a {
+  display: block;
+  padding: 12px 24px;
+  margin-top: 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-decoration: none;
+  background-color: #F52929;
+  width: 200px;
+  box-sizing: border-box;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border: 2px solid transparent;
+}
+
+/* Interactive States */
+.top-right .nav-buttons a:hover {
+  background-color: #e61e1e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.top-right .nav-buttons a:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Hero Content ===== */
+.hero-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 600px;
+}
+
+.hero-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.ukno-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 60px;
+}
+
+.ukno-info .main-logo {
+  height: auto;
+  width: 300px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.ukno-info .main-logo:hover {
+  transform: scale(1.02);
+}
+
+.ukno-info .tagline {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ukno-info .tagline .learn {
+  font-size: 48px;
+  line-height: 1;
+  font-weight: 600;
+  color: #F52929;
+  margin-bottom: 5px;
+}
+
+.ukno-info .tagline .freely {
+  font-size: 48px;
+  line-height: 1;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/* ===== Social Icons ===== */
+.hero-left .social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.hero-left .social-icons a.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.1));
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.hero-left .social-icons a.icon:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Social icon backgrounds (unchanged) */
+.hero-left .social-icons .icon.youtube { background-image: url('assets/youtube.png'); background-size: 60%; background-repeat: no-repeat; background-position: center; }
+.hero-left .social-icons .icon.instagram { background-image: url('assets/instagram.png'); background-size: 60%; background-repeat: no-repeat; background-position: center; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); }
+.hero-left .social-icons .icon.linkedin { background-image: url('assets/linkedin.png'); background-size: 60%; background-repeat: no-repeat; background-position: center; }
+.hero-left .social-icons .icon.telegram { background-image: url('assets/telegram.png'); background-size: 60%; background-repeat: no-repeat; background-position: center; }
+
+/* ===== Right Content ===== */
+.hero-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.hero-right h1 {
+  font-size: 48px;
+  line-height: 1.2;
+  font-weight: 700;
+  margin-bottom: 20px;
+  white-space: nowrap;
+}
+
+.hero-right p {
+  font-size: 16px;
+  line-height: 1.7;
+  text-align: right;
+  max-width: 500px;
+  transition: opacity 0.3s ease;
+}
+
+.hero-right p:hover {
+  opacity: 0.9;
+}
+
+/* ===== Bottom Feature Bar ===== */
+.feature-icons-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #FFFFFF;
+  padding: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.2;
+  text-transform: capitalize;
+}
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-align: center;
+  white-space: nowrap;
+  transition: transform 0.3s ease;
+}
+
+.feature-icon:hover {
+  transform: translateY(-3px);
+}
+
+.feature-icon img {
+  height: 25px;
+  width: 25px;
+  margin-left: 5px;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    padding: 20px;
+  }
+  
+  .top-right {
+    position: static;
+    flex-direction: row;
+    justify-content: center;
+    margin: 20px 0;
+    width: 100%;
+  }
+  
+  .hero-content {
+    flex-direction: column;
+  }
+  
+  .hero-right {
+    align-items: center;
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .hero-right h1 {
+    white-space: normal;
+  }
+  
+  .feature-icons-bar {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px;
+  }
+}
+/* Add this at the bottom of your existing style.css */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    height: auto;
+    padding: 80px 20px 40px;
+  }
+
+  .top-right {
+    top: 20px;
+    right: 50%;
+    transform: translateX(50%);
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .top-right .nav-buttons a {
+    width: auto;
+    padding: 10px 20px;
+    margin-top: 0;
+  }
+
+  .hero-content {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .hero-left, .hero-right {
+    width: 100%;
+    align-items: center;
+  }
+
+  .ukno-info {
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .ukno-info .tagline {
+    align-items: center;
+  }
+
+  .hero-right {
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .hero-right h1 {
+    font-size: 36px;
+    white-space: normal;
+  }
+
+  .feature-icons-bar {
+    position: relative;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .feature-icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ukno-info .tagline .learn,
+  .ukno-info .tagline .freely {
+    font-size: 36px;
+  }
+
+  .hero-right h1 {
+    font-size: 28px;
+  }
+
+  .feature-icon {
+    font-size: 14px;
+  }
+}
