@@ -294,3 +294,115 @@ body {
         font-size: 10px;
     }
 }
+/* auth.css */
+
+/* ... (keep your existing styles above) ... */
+
+
+/* Adjustments for form group alignment */
+.form-group {
+    margin-bottom: 15px; /* Adjust spacing between form groups */
+    display: flex; /* Make form group a flex container */
+    align-items: center; /* Align items vertically in the center */
+    gap: 15px; /* Add space between the label and the input */
+    width: 100%; /* Ensure form group takes full width */
+}
+
+/* Style for labels within form groups */
+.form-group label {
+    display: block; /* Keep it block for consistent behavior */
+    margin-bottom: 0; /* Remove bottom margin if using flex gap */
+    font-weight: 600;
+    color: #fff; /* Ensure label color is white */
+    flex-basis: 120px; /* Give labels a base width - adjust this value as needed */
+    min-width: 80px; /* Minimum width for labels */
+    text-align: right; /* Align label text to the right */
+}
+
+/* Style for input fields within form groups */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    flex-grow: 1; /* Allow input to grow and fill available space */
+    width: auto; /* Override any fixed width that might be causing issues */
+    /* Keep your existing padding, border, border-radius, font-size, box-sizing */
+    padding: 12px 15px;
+    border: none; /* Or 1px solid ... */
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Adjust password container within the flex form group */
+.form-group.password-container {
+    /* No major changes needed here if .form-group is flex,
+       as flex handles its children's layout. */
+    position: relative; /* Keep relative for icon positioning */
+}
+
+/* Adjust the position of the show password icon within the flex form group */
+.form-group .show-password {
+     position: absolute;
+     right: 15px;
+     top: 50%;
+     transform: translateY(-50%);
+     cursor: pointer;
+     color: #A0A0A0;
+     font-size: 18px;
+     z-index: 10;
+}
+
+
+/* Ensure form actions align correctly */
+.form-actions {
+    margin-top: 20px; /* Space above buttons */
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 15px; /* Space between buttons */
+    width: 100%; /* Ensure container takes full width */
+}
+
+/* Ensure the submit button has proper width/sizing */
+.submit-btn {
+    /* Keep your existing styles */
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #F52929;
+    color: white;
+    box-sizing: border-box;
+    width: auto; /* Ensure it doesn't try to take full width unless intended */
+}
+
+/* ... (keep your existing media queries below) ... */
+
+@media (max-width: 768px) {
+    /* ... (keep your existing responsive styles) ... */
+
+    .form-group {
+        flex-direction: column; /* Stack label and input on small screens */
+        align-items: flex-start; /* Align stacked items to the start */
+        gap: 5px; /* Reduced gap when stacked */
+    }
+
+    .form-group label {
+        text-align: left; /* Align stacked labels to the left */
+        width: auto; /* Allow label width to be determined by content */
+        flex-basis: auto; /* Reset flex basis */
+    }
+
+     .form-group input[type="text"],
+     .form-group input[type="email"],
+     .form-group input[type="password"] {
+         width: 100%; /* Make inputs take full width when stacked */
+     }
+
+     .form-group .show-password {
+         right: 10px; /* Adjust icon position in stacked layout */
+         top: auto; /* Reset top */
+         bottom: 10px; /* Position relative to bottom of input */
+         transform: none; /* Reset transform */
+     }
+}
