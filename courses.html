@@ -55,7 +55,6 @@
                window.location.href = "auth.html#login"; // Redirect to login form
           }
 
-
           // --- localStorage Keys ---
           const VIDEO_STORAGE_KEY = 'uknoClubVideoData'; // From admin interface
           const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-'; // User-specific progress { time: ..., timestamp: ... }
@@ -64,8 +63,9 @@
 
 
           // --- YouTube Player API Script ---
+          // This code loads the IFrame Player API asynchronously.
           var tag = document.createElement('script');
-          tag.src = "https://www.youtube.com/iframe_api"; // Correct official API URL
+          tag.src = "https://www.youtube.com/iframe_api"; // Correct API URL
           var firstScriptTag = document.getElementsByTagName('script')[0];
           firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -87,131 +87,131 @@
               }
           }
 
-
-          // --- Function called when the YouTube API is ready ---
+          // --- Function called when the YouTube API is ready. ---
+          // This function is called automatically by the API script after it loads.
           function onYouTubeIframeAPIReady() {
-              document.addEventListener('DOMContentLoaded', function() {
-                  const urlParams = new URLSearchParams(window.location.search);
-                  currentVideoId = urlParams.get('video'); // Set global currentVideoId
+               // Initialize the player ONLY if a video ID is present in the URL
+               const urlParams = new URLSearchParams(window.location.search);
+               const videoIdInUrl = urlParams.get('video');
 
-                  const courseIndexContent = document.getElementById('courseIndexContent');
-                  const videoPlayerContent = document.getElementById('videoPlayerContent');
-                  const pageTitle = document.getElementById('pageTitle');
-                  const videoTitleElement = document.getElementById('videoTitle');
-                  const notesTextarea = document.getElementById('videoNotes');
-                  const resumeMessageElement = document.getElementById('resumeMessage');
-                  const playlistVideosListDiv = document.getElementById('playlistVideosList');
-                  const playlistItemsUl = document.getElementById('playlistItems');
-                   const loadingMessage = document.getElementById('loadingMessage');
+               if (videoIdInUrl) {
+                   currentVideoId = videoIdInUrl; // Set global variable
 
+                   const allVideosData = loadVideosData(); // Load all video data
+                   const videoDetails = allVideosData.find(video => video.topicId === currentVideoId);
 
-                  const allVideosData = loadVideosData(); // Load all video data
+                   if (videoDetails && videoDetails.youtubeId) {
+                       document.getElementById('videoTitle').textContent = videoDetails.videoTitle; // Set the video title
+                       document.getElementById('loadingMessage').style.display = 'none'; // Hide loading message (if still visible)
 
 
-                  if (currentVideoId) {
-                      // If a video ID is present, hide the index content and show the video player section
-                      courseIndexContent.classList.add('hidden');
-                      videoPlayerContent.classList.remove('hidden');
-                       pageTitle.textContent = "Watching Course"; // Update page title
-                       loadingMessage.style.display = 'none'; // Hide loading message
-
-
-                       // Find the selected video details
-                       const videoDetails = allVideosData.find(video => video.topicId === currentVideoId);
-
-                       if (videoDetails && videoDetails.youtubeId) {
-                           videoTitleElement.textContent = videoDetails.videoTitle; // Set the video title
-
-                           // Determine if it's a single video or playlist and load the player
-                           const playerOptions = {
-                               height: '390',
-                               width: '640',
-                               playerVars: {
-                                   'autoplay': 1, // Optional: Autoplay the video
-                                   'controls': 1,
-                                   'enablejsapi': 1,
-                                   'rel': 0, // Hide related videos
-                                   'showinfo': 0, // Hide video title and uploader info
-                                   'modestbranding': 1,
-                                   'playsinline': 1 // Important for mobile
-                               },
-                               events: {
-                                   'onReady': onPlayerReady,
-                                   'onStateChange': onPlayerStateChange,
-                                    // Optional: Listen for playlist events if needed
-                                    // 'onPlaylistNext': onPlaylistNext,
-                                    // 'onPlaylistLoaded': onPlaylistLoaded
-                               }
-                           };
-
-                           if (videoDetails.videoType === 'video') {
-                               playerOptions.videoId = videoDetails.youtubeId;
-                           } else if (videoDetails.videoType === 'playlist') {
-                               playerOptions.playerVars.listType = 'playlist';
-                               playerOptions.playerVars.list = videoDetails.youtubeId;
-                               // Optional: Start with a specific video in the playlist
-                               // playerOptions.videoId = 'STARTING_VIDEO_ID_IN_PLAYLIST'; // Or get from localStorage progress
-                               playlistVideosListDiv.style.display = 'block'; // Show playlist list area
-                           } else {
-                                // Handle unknown video type
-                                videoPlayerContent.innerHTML = '<p class="no-feedback-message">Unknown video type.</p>';
-                                pageTitle.textContent = "Video Error";
-                                console.error("Unknown video type:", videoDetails.videoType);
-                                loadingMessage.style.display = 'none';
-                                return; // Stop execution
+                       // Determine if it's a single video or playlist and load the player
+                       const playerOptions = {
+                           height: '390',
+                           width: '640',
+                           playerVars: {
+                               'autoplay': 1, // Optional: Autoplay the video
+                               'controls': 1,
+                               'enablejsapi': 1,
+                               'rel': 0, // Hide related videos
+                               'showinfo': 0, // Hide video title and uploader info
+                               'modestbranding': 1,
+                               'playsinline': 1 // Important for mobile
+                           },
+                           events: {
+                               'onReady': onPlayerReady,
+                               'onStateChange': onPlayerStateChange,
+                                // Optional: Listen for playlist events if needed
+                                // 'onPlaylistNext': onPlaylistNext,
+                                // 'onPlaylistLoaded': onPlaylistLoaded
                            }
+                       };
 
-
-                           // Create the YouTube Player
-                           player = new YT.Player('youtubePlayer', playerOptions);
-
-
-                           // Load saved notes for this videoId from localStorage
-                           const savedNotes = localStorage.getItem(VIDEO_NOTES_KEY_PREFIX + currentVideoId);
-                           if (savedNotes) {
-                               notesTextarea.value = savedNotes;
-                           }
-
-                           // --- Note Saving (Simple auto-save while typing) ---
-                           let saveNotesTimer = null;
-                           notesTextarea.addEventListener('input', function() {
-                                if (currentVideoId) { // Only save if a video is loaded
-                                     clearTimeout(saveNotesTimer);
-                                     saveNotesTimer = setTimeout(() => {
-                                         localStorage.setItem(VIDEO_NOTES_KEY_PREFIX + currentVideoId, notesTextarea.value);
-                                         console.log('Notes auto-saved for video:', currentVideoId);
-                                         // Optional: show a small "Notes saved!" message
-                                     }, 1000); // Save 1 second after user stops typing
-                                }
-                           });
-
-
+                       if (videoDetails.videoType === 'video') {
+                           playerOptions.videoId = videoDetails.youtubeId;
+                       } else if (videoDetails.videoType === 'playlist') {
+                           playerOptions.playerVars.listType = 'playlist';
+                           playerOptions.playerVars.list = videoDetails.youtubeId;
+                           // Optional: Start with a specific video in the playlist
+                           // playerOptions.videoId = 'STARTING_VIDEO_ID_IN_PLAYLIST'; // Or get from localStorage progress
+                           document.getElementById('playlistVideosList').style.display = 'block'; // Show playlist list area
                        } else {
-                           // Handle case where videoId is not found in our data
-                           videoPlayerContent.innerHTML = '<p class="no-feedback-message">Video not found or data is missing. Please check Admin > Manage Courses.</p>'; // More specific message
-                           pageTitle.textContent = "Video Error";
-                           console.error("Video ID not found in loaded data:", currentVideoId);
-                           loadingMessage.style.display = 'none';
+                           // Handle unknown video type - This might be redundant if handled in DOMContentLoaded, but good fallback
+                           document.getElementById('videoPlayerContent').innerHTML = '<p class="no-feedback-message">Unknown video type or video data missing.</p>';
+                           document.getElementById('pageTitle').textContent = "Video Error";
+                           console.error("Unknown video type or data missing for ID:", currentVideoId, videoDetails);
+                           document.getElementById('loadingMessage').style.display = 'none';
+                           return; // Stop execution
                        }
 
+                       // Create the YouTube Player
+                       player = new YT.Player('youtubePlayer', playerOptions);
+
+                       // Load saved notes for this videoId from localStorage
+                       const notesTextarea = document.getElementById('videoNotes');
+                       const savedNotes = localStorage.getItem(VIDEO_NOTES_KEY_PREFIX + currentVideoId);
+                       if (savedNotes) {
+                           notesTextarea.value = savedNotes;
+                       }
+
+                       // --- Note Saving (Simple auto-save while typing) ---
+                       let saveNotesTimer = null;
+                       notesTextarea.addEventListener('input', function() {
+                            if (currentVideoId) { // Only save if a video is loaded
+                                 clearTimeout(saveNotesTimer);
+                                 saveNotesTimer = setTimeout(() => {
+                                     localStorage.setItem(VIDEO_NOTES_KEY_PREFIX + currentVideoId, notesTextarea.value);
+                                     console.log('Notes auto-saved for video:', currentVideoId);
+                                     // Optional: show a small "Notes saved!" message
+                                 }, 1000); // Save 1 second after user stops typing
+                            }
+                       });
 
                    } else {
-                       // If no video ID, show the course index
-                        try {
-                           renderCourseIndex(allVideosData); // Render the index from loaded data
-                        } catch (e) {
-                           console.error("Error rendering course index:", e);
-                           // Display a user-friendly error message on the page
-                           const courseIndexContentDiv = document.getElementById('courseIndexContent');
-                           courseIndexContentDiv.innerHTML = '<p class="no-feedback-message">Error loading course index. Please check the console for details.</p>';
-                        }
-                       courseIndexContent.classList.remove('hidden');
-                       videoPlayerContent.classList.add('hidden'); // Ensure video player is hidden
-                       pageTitle.textContent = "Course Catalog";
-                       loadingMessage.style.display = 'none'; // Hide loading message
+                       // Handle case where videoId is in URL but not found in our data
+                       document.getElementById('videoPlayerContent').innerHTML = '<p class="no-feedback-message">Video ID from URL not found in course data. Please check Admin > Manage Courses.</p>';
+                       document.getElementById('pageTitle').textContent = "Video Error";
+                       console.error("Video ID from URL not found in loaded data:", currentVideoId);
+                       document.getElementById('loadingMessage').style.display = 'none';
                    }
-              });
-          }
+               }
+               // If no videoId in URL, DOMContentLoaded handles showing the catalog index
+           }
+
+          // --- Function called when the document is fully loaded and parsed ---
+           document.addEventListener('DOMContentLoaded', function() {
+               const urlParams = new URLSearchParams(window.location.search);
+               const videoIdInUrl = urlParams.get('video');
+
+               const courseIndexContent = document.getElementById('courseIndexContent');
+               const videoPlayerContent = document.getElementById('videoPlayerContent');
+               const pageTitle = document.getElementById('pageTitle');
+                const loadingMessage = document.getElementById('loadingMessage');
+
+
+               if (videoIdInUrl) {
+                   // If a video ID is present, hide the index content and show the video player section
+                   courseIndexContent.classList.add('hidden');
+                   videoPlayerContent.classList.remove('hidden');
+                   pageTitle.textContent = "Watching Course"; // Update page title
+                    // Note: loadingMessage is hidden by onYouTubeIframeAPIReady if video data is found
+                    // or by the error handling block if not found.
+               } else {
+                   // If no video ID, show the course index
+                   const allVideosData = loadVideosData(); // Load all video data
+                    try {
+                       renderCourseIndex(allVideosData); // Render the index from loaded data
+                    } catch (e) {
+                       console.error("Error rendering course index:", e);
+                       // Display a user-friendly error message on the page
+                       courseIndexContent.innerHTML = '<p class="no-feedback-message">Error loading course index. Please check the console for details.</p>';
+                    }
+                   courseIndexContent.classList.remove('hidden');
+                   videoPlayerContent.classList.add('hidden'); // Ensure video player is hidden
+                   pageTitle.textContent = "Course Catalog";
+                   loadingMessage.style.display = 'none'; // Hide loading message
+               }
+           });
 
 
            // --- Function to Render the Course Index from Video Data ---
@@ -282,7 +282,7 @@
                    });
 
                    courseIndexContentDiv.appendChild(moduleSection);
-               } /* Removed the extra closing parenthesis here ) */ );
+               } ); // Corrected: Removed the extra parenthesis here
 
                // Add the coming soon message at the end
                const comingSoonMessage = document.createElement('p');
@@ -297,10 +297,20 @@
 
           // The API calls this function when the video player is ready.
           function onPlayerReady(event) {
+              // This function is called when the player iframe has loaded and the API is ready
+              // We can now safely interact with the player object
+              console.log('YouTube Player is ready');
+
               // If it's a playlist, get playlist videos (Optional)
-              // This might require additional API calls or data stored in localStorage
-              // For now, we just show the playlist div if it's a playlist type video.
-              const videoDetails = loadVideosData().find(video => video.topicId === currentVideoId);
+              const allVideosData = loadVideosData(); // Reload data if needed, or pass it from DOMContentLoaded
+              const videoDetails = allVideosData.find(video => video.topicId === currentVideoId);
+
+              if (videoDetails && videoDetails.videoType === 'playlist') {
+                   console.log("Loaded Playlist:", videoDetails.youtubeId);
+                   // You could use player.getPlaylist() here if you need details about playlist items,
+                   // but this might be complex client-side without fetching from YouTube API directly.
+                   // For now, the default YouTube player controls will manage playlist navigation.
+              }
 
 
               // Load saved progress
