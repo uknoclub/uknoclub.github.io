@@ -1,69 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - Ukno Club</title>
-    <link rel="stylesheet" href="profile.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <script>
-        // Basic Authentication Check - redirect if not logged in
-        const userAuthenticated = localStorage.getItem('userAuthenticated');
-        const adminAuthenticated = localStorage.getItem('adminAuthenticated');
-        if (!userAuthenticated && !adminAuthenticated) {
-            window.location.href = "auth.html#login"; // Redirect to login form
-        }
-    </script>
-</head>
-<body>
-    <div class="profile-container">
-        <header class="profile-header">
-            <div class="branding">
-                <img src="assets/logo.png" alt="Ukno Club" class="logo">
-                <h1>My Profile</h1>
-            </div>
-            <nav class="user-nav">
-                 <a href="dashboard.html">Dashboard</a> <a href="index.html" class="logout-btn" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-            </nav>
-        </header>
-
-        <main class="profile-content">
-            <section class="profile-section">
-                <h2>Account Information</h2>
-
-                <div id="profileDisplay" class="profile-display">
-                    <p><strong>Username:</strong> <span id="displayUsername"></span></p>
-                    <p><strong>Full Name:</strong> <span id="displayFullName"></span></p>
-                    <p><strong>Email:</strong> <span id="displayEmail"></span></p>
-                    <button id="editProfileBtn" class="btn"><i class="fas fa-edit"></i> Edit Profile</button>
-                </div>
-
-                <form id="profileEditForm" class="profile-edit-form hidden">
-                    <div class="form-group">
-                        <label for="editUsername">Username:</label>
-                         <input type="text" id="editUsername" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="editFullName">Full Name:</label>
-                        <input type="text" id="editFullName">
-                    </div>
-                    <div class="form-group">
-                        <label for="editEmail">Email:</label>
-                        <input type="email" id="editEmail">
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" id="saveProfileBtn" class="btn btn-save"><i class="fas fa-save"></i> Save Changes</button>
-                        <button type="button" id="cancelEditBtn" class="btn btn-cancel"><i class="fas fa-times"></i> Cancel</button>
-                    </div>
-                     <p class="message" id="profileMessage"></p> </form>
-            </section>
-        </main>
-    </div>
-
-    <script>
+<script>
         document.addEventListener('DOMContentLoaded', function() {
             const displayUsernameSpan = document.getElementById('displayUsername');
             const displayFullNameSpan = document.getElementById('displayFullName');
@@ -126,6 +61,14 @@
                  }
              }
 
+             // --- Helper function to clear messages ---
+             // This function was causing the ReferenceError if missing or misplaced
+             function clearMessages() {
+                 profileMessage.textContent = '';
+                 profileMessage.style.display = 'none'; // Ensure message area is hidden
+             }
+
+
             // --- Function to Load and Display Current User's Profile ---
             function loadAndDisplayProfile() {
                 const users = getUsers();
@@ -156,15 +99,13 @@
                     profileDisplayDiv.classList.add('hidden');
                     profileEditForm.classList.remove('hidden');
                     editProfileBtn.style.display = 'none';
-                    showMessage("", 'info'); // Clear message area
-                    profileMessage.style.display = 'none';
+                    clearMessages(); // Clear message area when entering edit mode
                 } else {
                     profileEditForm.classList.add('hidden');
                     profileDisplayDiv.classList.remove('hidden');
                     editProfileBtn.style.display = 'inline-block'; // Or 'block' depending on CSS
-                     showMessage("", 'info'); // Clear message area
-                    profileMessage.style.display = 'none';
-                     loadAndDisplayProfile(); // Reload display in case of cancel or save
+                    clearMessages(); // Clear message area when canceling or after saving
+                    loadAndDisplayProfile(); // Reload display to show latest data
                 }
             }
 
@@ -180,7 +121,10 @@
             profileEditForm.addEventListener('submit', function(e) {
                 e.preventDefault(); // Prevent default form submission
 
-                clearMessages(); // Clear previous messages
+                clearMessages(); // Clear previous messages - This was the line causing the error!
+
+                console.log("Attempting to save profile changes..."); // Added log for debugging
+
 
                 const users = getUsers();
                 const currentUser = users[loggedInUsername];
@@ -191,6 +135,11 @@
                     const updatedEmail = editEmailInput.value.trim();
 
                     // Optional: Add validation for email format if desired
+                     if (updatedEmail && !/@.+\..+/.test(updatedEmail)) {
+                         showMessage("Please enter a valid email address.", 'error');
+                         return; // Stop if email is invalid
+                     }
+
 
                     // Update the user object
                     currentUser.fullName = updatedFullName;
@@ -230,5 +179,3 @@
             loadAndDisplayProfile(); // Load and display profile data when the page loads
         });
     </script>
-</body>
-</html>
