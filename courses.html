@@ -60,6 +60,7 @@
           const VIDEO_STORAGE_KEY = 'uknoClubVideoData'; // From admin interface
           const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-'; // User-specific progress { time: ..., timestamp: ... }
           const VIDEO_NOTES_KEY_PREFIX = 'video-notes-'; // Video-specific notes
+          const USER_PROGRESS_KEY_PREFIX = 'uknoClubProgress-'; // User-specific completion { videoId: { completed: true, ... } }
 
 
           // --- YouTube Player API Script ---
@@ -78,7 +79,12 @@
           // --- Helper Function to Load Videos from localStorage ---
           function loadVideosData() {
               const videosJson = localStorage.getItem(VIDEO_STORAGE_KEY);
-              return videosJson ? JSON.parse(videosJson) : [];
+              try {
+                  return videosJson ? JSON.parse(videosJson) : [];
+              } catch (e) {
+                  console.error("Error parsing video data from localStorage:", e);
+                  return []; // Return empty array if parsing fails
+              }
           }
 
 
@@ -109,6 +115,7 @@
                        pageTitle.textContent = "Watching Course"; // Update page title
                        loadingMessage.style.display = 'none'; // Hide loading message
 
+
                        // Find the selected video details
                        const videoDetails = allVideosData.find(video => video.topicId === currentVideoId);
 
@@ -130,7 +137,10 @@
                                },
                                events: {
                                    'onReady': onPlayerReady,
-                                   'onStateChange': onPlayerStateChange
+                                   'onStateChange': onPlayerStateChange,
+                                    // Optional: Listen for playlist events if needed
+                                    // 'onPlaylistNext': onPlaylistNext,
+                                    // 'onPlaylistLoaded': onPlaylistLoaded
                                }
                            };
 
@@ -140,7 +150,7 @@
                                playerOptions.playerVars.listType = 'playlist';
                                playerOptions.playerVars.list = videoDetails.youtubeId;
                                // Optional: Start with a specific video in the playlist
-                               // playerOptions.videoId = 'STARTING_VIDEO_ID_IN_PLAYLIST';
+                               // playerOptions.videoId = 'STARTING_VIDEO_ID_IN_PLAYLIST'; // Or get from localStorage progress
                                playlistVideosListDiv.style.display = 'block'; // Show playlist list area
                            } else {
                                 // Handle unknown video type
@@ -172,12 +182,13 @@
                                          console.log('Notes auto-saved for video:', currentVideoId);
                                          // Optional: show a small "Notes saved!" message
                                      }, 1000); // Save 1 second after user stops typing
+                                }
                            });
 
 
                        } else {
                            // Handle case where videoId is not found in our data
-                           videoPlayerContent.innerHTML = '<p class="no-feedback-message">Video not found or data is missing.</p>';
+                           videoPlayerContent.innerHTML = '<p class="no-feedback-message">Video not found or data is missing. Please check Admin > Manage Courses.</p>'; // More specific message
                            pageTitle.textContent = "Video Error";
                            console.error("Video ID not found in loaded data:", currentVideoId);
                            loadingMessage.style.display = 'none';
@@ -186,7 +197,14 @@
 
                    } else {
                        // If no video ID, show the course index
-                       renderCourseIndex(allVideosData); // Render the index from loaded data
+                        try {
+                           renderCourseIndex(allVideosData); // Render the index from loaded data
+                        } catch (e) {
+                           console.error("Error rendering course index:", e);
+                           // Display a user-friendly error message on the page
+                           const courseIndexContentDiv = document.getElementById('courseIndexContent');
+                           courseIndexContentDiv.innerHTML = '<p class="no-feedback-message">Error loading course index. Please check the console for details.</p>';
+                        }
                        courseIndexContent.classList.remove('hidden');
                        videoPlayerContent.classList.add('hidden'); // Ensure video player is hidden
                        pageTitle.textContent = "Course Catalog";
@@ -202,7 +220,7 @@
                courseIndexContentDiv.innerHTML = ''; // Clear current content
 
                if (videosData.length === 0) {
-                    courseIndexContentDiv.innerHTML = '<p class="no-feedback-message">No courses or videos available yet. Admin needs to add them.</p>';
+                    courseIndexContentDiv.innerHTML = '<p class="no-feedback-message">No courses or videos available yet. Admin needs to add them via "Manage Courses".</p>'; // More specific message
                     return;
                }
 
@@ -226,39 +244,45 @@
 
 
                // Render modules and topics
-               for (const moduleKey in modules) {
-                   if (modules.hasOwnProperty(moduleKey)) {
-                       const moduleVideos = modules[moduleKey];
-                        // Sort videos by topic title or another criteria if needed
-                        // moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
+               const moduleKeys = Object.keys(modules).sort(); // Sort modules alphabetically
 
-                       const moduleSection = document.createElement('section');
-                       moduleSection.classList.add('course-module');
-
-                       moduleSection.innerHTML = `
-                           <h2>${moduleTitles[moduleKey] || `❓ MODULE: ${moduleKey}`}</h2>
-                           <p class="module-goal">Goal: ${moduleKey} skills...</p> <div class="topic-list-grid">
-                               </div>
-                       `;
-
-                       const topicListGrid = moduleSection.querySelector('.topic-list-grid');
-
-                       moduleVideos.forEach(video => {
-                           const topicCardLink = document.createElement('a');
-                           topicCardLink.href = `courses.html?video=${video.topicId}`; // Link to the video player view
-                           topicCardLink.classList.add('topic-card');
-
-                           topicCardLink.innerHTML = `
-                                <h4>${video.videoTitle}</h4>
-                                <p>${video.videoDescription || 'No description available.'}</p>
-                                <span class="view-video-link"><i class="fas fa-video"></i> Watch ${video.videoType === 'playlist' ? 'Playlist' : 'Video'}</span>
-                           `;
-                           topicListGrid.appendChild(topicCardLink);
-                       });
-
-                       courseIndexContentDiv.appendChild(moduleSection);
-                   }
+               if (moduleKeys.length === 0) {
+                    courseIndexContentDiv.innerHTML = '<p class="no-feedback-message">No course modules defined in data. Admin needs to add videos with valid modules.</p>';
+                    return;
                }
+
+
+               moduleKeys.forEach(moduleKey => {
+                   const moduleVideos = modules[moduleKey];
+                    // Sort videos by topic title or another criteria if needed
+                    // moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
+
+                   const moduleSection = document.createElement('section');
+                   moduleSection.classList.add('course-module');
+
+                   moduleSection.innerHTML = `
+                       <h2>${moduleTitles[moduleKey] || `❓ MODULE: ${moduleKey}`}</h2>
+                       <p class="module-goal">Goal: ${moduleKey} skills...</p> <div class="topic-list-grid">
+                           </div>
+                   `;
+
+                   const topicListGrid = moduleSection.querySelector('.topic-list-grid');
+
+                   moduleVideos.forEach(video => {
+                       const topicCardLink = document.createElement('a');
+                       topicCardLink.href = `courses.html?video=${video.topicId}`; // Link to the video player view
+                       topicCardLink.classList.add('topic-card');
+
+                       topicCardLink.innerHTML = `
+                            <h4>${video.videoTitle}</h4>
+                            <p>${video.videoDescription || 'No description available.'}</p>
+                            <span class="view-video-link"><i class="fas fa-video"></i> Watch ${video.videoType === 'playlist' ? 'Playlist' : 'Video'}</span>
+                       `;
+                       topicListGrid.appendChild(topicCardLink);
+                   });
+
+                   courseIndexContentDiv.appendChild(moduleSection);
+               } /* Removed the extra closing parenthesis here ) */ );
 
                // Add the coming soon message at the end
                const comingSoonMessage = document.createElement('p');
@@ -321,7 +345,7 @@
           function onPlayerStateChange(event) {
               if (!currentVideoId) return; // Only save progress if a video is loaded
 
-              // Save video progress (time and timestamp) when playing or paused/ended
+              // Save video progress (time and timestamp) when playing, paused, or ended
               if (event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
                    const currentTime = player.getCurrentTime();
                    const now = new Date().toISOString(); // Get current timestamp in ISO format
@@ -334,7 +358,7 @@
                    localStorage.setItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId, JSON.stringify(progressData));
                    // console.log('Progress updated:', currentTime, 'seconds at', now); // Avoid excessive logging
 
-                    // --- User Progress Tracking Logic (Step 3 related) ---
+                    // --- User Progress Tracking Logic ---
                     if (event.data === YT.PlayerState.ENDED) {
                         console.log('Video ended.');
                          // Mark this video as completed for the logged-in user
@@ -350,11 +374,12 @@
                     }
               } else {
                   // Stop timer if video is not playing, paused, or ended (e.g., buffering)
-                   clearInterval(saveProgressTimer);
+                   // This clearInterval was removed in a previous step, let's add it back to be safe
+                   // clearInterval(saveProgressTimer); // Removed for now as saving happens on pause/end too
               }
           }
 
-         // --- User Progress Tracking Logic (Step 3 Implementation) ---
+         // --- User Progress Tracking Logic ---
           function markVideoAsCompleted(videoId) {
               const loggedInUsername = localStorage.getItem('loggedInUsername') || (localStorage.getItem('adminAuthenticated') ? 'Admin' : null); // Get username, null if guest
                if (!loggedInUsername || loggedInUsername === 'Guest') {
