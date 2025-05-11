@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - Ukno Club</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="branding">
+                <img src="assets/logo.png" alt="Ukno Club" class="logo">
+                <h1>Welcome back, <span class="username">User</span>!</h1>
+            </div>
+            <nav class="user-nav">
+                <a href="profile.html" class="profile-link">Profile</a>
+                <a href="index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <!-- Learning Progress -->
+            <section class="progress-section">
+                <h2><i class="fas fa-chart-line"></i> My Learning Progress</h2>
+                <div class="progress-cards">
+                    <div class="progress-card">
+                        <h3>Data Analytics</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%"></div>
+                        </div>
+                        <span class="progress-percent">50% Complete</span>
+                        <div class="next-topic">Next: Power BI Fundamentals</div>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Python Programming</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                        <span class="progress-percent">100% Complete</span>
+                        <div class="next-topic">Course Completed!</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Continue Learning -->
+            <section class="continue-section">
+                <h2><i class="fas fa-play-circle"></i> Continue Learning</h2>
+                <a href="course-video.html" class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="assets/data-analysis-thumb.jpg" alt="Video Thumbnail">
+                        <div class="video-progress">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <div class="play-btn"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Data Cleaning with Python</h3>
+                        <p class="video-desc">Learn how to clean messy datasets using Pandas</p>
+                        <div class="video-meta">
+                            <span><i class="far fa-clock"></i> 22 mins remaining</span>
+                            <span><i class="far fa-calendar"></i> Last viewed 2 days ago</span>
+                        </div>
+                    </div>
+                </a>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="actions-section">
+                <h2><i class="fas fa-bolt"></i> Quick Access</h2>
+                <div class="action-grid">
+                    <a href="courses.html" class="action-card">
+                        <i class="fas fa-book-open"></i>
+                        <span>Browse Courses</span>
+                    </a>
+                    <a href="notes.html" class="action-card">
+                        <i class="fas fa-book"></i>
+                        <span>My Notes</span>
+                    </a>
+                    <a href="feedback.html" class="action-card">
+                        <i class="fas fa-comment-alt"></i>
+                        <span>Feedback</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
