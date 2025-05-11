@@ -1,3 +1,4 @@
+/* about.css */
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
@@ -5,17 +6,19 @@ body {
     background-size: cover;
     color: #ffffff;
     height: 100vh;
-    overflow: auto;
-  }
-  
-  .about-container {
+    overflow-y: auto; /* Allow vertical scrolling for content */
+     overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+.about-container {
     display: flex;
-    height: 100%;
+    min-height: 100vh; /* Use min-height to ensure it covers viewport even if content is short */
     width: 100%;
     background-color: rgba(37, 40, 53, 0.7);
-  }
-  
-  .left-pane {
+    box-sizing: border-box; /* Include padding in width/height */
+}
+
+.left-pane {
     flex: 0.6;
     display: flex;
     flex-direction: column;
@@ -23,9 +26,10 @@ body {
     justify-content: center;
     padding: 40px;
     position: relative;
-  }
-  
-  .home-button {
+    box-sizing: border-box; /* Include padding in width/height */
+}
+
+.home-button {
     position: absolute;
     top: 20px;
     left: 20px;
@@ -39,51 +43,60 @@ body {
     transition: all 0.3s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     border: 2px solid transparent;
-  }
-  
-  .home-button:hover {
+}
+
+.home-button:hover {
     background-color: #e61e1e;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .logo {
+}
+
+.logo {
     width: 280px;
     margin-bottom: 20px;
     transition: transform 0.3s ease;
-  }
-  
-  .logo:hover {
+}
+
+.logo:hover {
     transform: scale(1.02);
-  }
-  
-  .tagline {
+}
+
+.tagline {
     font-size: 36px;
     text-align: center;
     margin-bottom: 40px;
-  }
-  
-  .learn {
+}
+
+.learn {
     color: #F52929;
     font-weight: 600;
     display: block;
-  }
-  
-  .freely {
+}
+
+.freely {
     color: #FFFFFF;
     font-weight: 600;
     display: block;
-  }
-  
-  .left-bottom {
+}
+
+.left-bottom {
     position: absolute;
     bottom: 40px;
+    left: 40px; /* Align to the left */
+    right: 40px; /* Align to the right for responsiveness */
     display: flex;
     align-items: center;
     gap: 15px;
-  }
-  
-  .qr-code {
+}
+
+.qr-code-container { /* Container for QR code and text */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.qr-code {
     width: 80px;
     height: 80px;
     background-color: #fff;
@@ -93,117 +106,228 @@ body {
     align-items: center;
     padding: 5px;
     transition: transform 0.3s ease;
-  }
-  
-  .qr-code:hover {
+    cursor: pointer; /* Indicate it's clickable */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+}
+
+.qr-code:hover {
     transform: scale(1.05);
-  }
-  
-  .qr-code img {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.qr-code img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     border-radius: 5px;
-  }
-  
-  .support-text {
-    width: 200px;
+}
+
+.support-text {
+    flex: 1; /* Allow text to take available space */
+    min-width: 150px; /* Minimum width before wrapping */
     font-size: 14px;
     line-height: 21px;
     color: #fff;
-  }
-  
-  .right-pane {
+}
+
+.right-pane {
     flex: 1;
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     padding: 40px;
-    overflow-y: auto;
-  }
-  
-  .right-content {
+    overflow-y: auto; /* Allow scrolling for content */
+    box-sizing: border-box; /* Include padding in width/height */
+}
+
+.right-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    max-width: 80%;
+    max-width: 800px; /* Set a max-width for content */
     margin-top: 40px;
     gap: 20px;
-  }
-  
-  .section-title {
+}
+
+.section-title {
     font-weight: 700;
     font-size: 16px;
     line-height: 24px;
     color: #F52929;
-  }
-  
-  .section-content {
+}
+
+.section-content {
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
     color: #FFFFFF;
-  }
-  
-  @media (max-width: 768px) {
-    .about-container {
-      flex-direction: column;
-    }
-    .left-pane, .right-pane {
-      flex: 1;
-      padding: 20px;
-    }
-    .left-bottom {
-      position: static;
-      margin-top: 30px;
-    }
-  }
-  /* Add this at the bottom of your existing about.css */
+}
+
+/* --- Modal Styles --- */
+.modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8); /* Black background with opacity */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+.modal-content {
+    background-color: #252835; /* Dark background */
+    margin: auto; /* Auto margin for centering */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    max-width: 90%; /* Max width */
+    max-height: 90%; /* Max height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Needed for absolute positioning of close button */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #fff;
+    text-decoration: none;
+}
+
+.modal-qr-image {
+    max-width: 300px; /* Max size for the large QR code */
+    max-height: 300px;
+    width: 100%; /* Responsive width */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.modal-caption {
+    font-size: 18px;
+    color: #FFC700; /* Highlight color */
+    font-weight: 600;
+}
+
+
+/* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
     .about-container {
-      flex-direction: column;
-      height: auto;
-      min-height: 100vh;
+        flex-direction: column;
+        min-height: auto; /* Allow height to adjust based on content */
     }
-  
-    .left-pane {
-      padding: 80px 20px 40px;
-      text-align: center;
+    .left-pane, .right-pane {
+        flex: none; /* Remove flex-grow */
+        width: 100%; /* Full width */
+        padding: 20px;
     }
-  
-    .home-button {
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-  
-    .logo {
-      width: 220px;
-    }
-  
-    .tagline {
-      font-size: 28px;
-    }
-  
+     .left-pane {
+        padding-top: 80px; /* Add space for the home button */
+     }
+
     .left-bottom {
-      position: static;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 30px;
-      gap: 20px;
+        position: static; /* Remove absolute positioning */
+        margin-top: 30px;
+        padding: 0 20px; /* Add horizontal padding */
+        justify-content: center; /* Center items horizontally */
+        text-align: center; /* Center text within the container */
+        flex-direction: column; /* Stack items vertically */
     }
-  
-    .support-text {
-      text-align: center;
-      width: 100%;
+     .qr-code-container {
+         flex-direction: column; /* Stack QR code and text vertically */
+         align-items: center; /* Center items */
+     }
+     .support-text {
+         width: 100%; /* Allow text to take full width */
+         min-width: auto; /* Remove min-width restriction */
+         text-align: center; /* Center text */
+     }
+
+
+    .home-button {
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
     }
-  
+
+    .logo {
+        width: 220px;
+    }
+
+    .tagline {
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+
+
     .right-pane {
-      padding: 30px 20px;
+        padding: 30px 20px;
+        overflow-y: auto;
     }
-  
+
     .right-content {
-      max-width: 100%;
-      margin-top: 0;
+        max-width: 100%; /* Allow content to take full width */
+        margin-top: 0;
+        align-items: center; /* Center text content */
+        text-align: center; /* Center text */
     }
-  }
+
+     .section-title, .section-content {
+         text-align: center; /* Center section text */
+     }
+
+     /* Modal adjustments for mobile */
+     .modal-content {
+         padding: 20px;
+     }
+     .modal-qr-image {
+         max-width: 200px;
+         max-height: 200px;
+     }
+      .modal-caption {
+         font-size: 16px;
+      }
+       .close-button {
+           top: 5px;
+           right: 10px;
+           font-size: 24px;
+       }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        width: 180px;
+    }
+    .tagline {
+        font-size: 24px;
+    }
+    .home-button {
+         padding: 10px 20px;
+         font-size: 14px;
+    }
+     .qr-code {
+         width: 60px;
+         height: 60px;
+     }
+     .support-text {
+         font-size: 12px;
+     }
+      .section-title, .section-content {
+         font-size: 14px;
+     }
+}
