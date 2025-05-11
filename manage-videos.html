@@ -19,6 +19,25 @@
          #totalDuration {
              width: 120px; /* Adjust as needed */
          }
+         /* Adjustments for simplified form layout */
+         .video-form {
+             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly wider columns */
+         }
+         .form-group label {
+             font-size: 0.95rem;
+         }
+         .form-group input[type="text"],
+         .form-group select {
+             padding: 12px; /* Slightly larger padding */
+             font-size: 1rem;
+         }
+         .form-actions {
+             grid-column: 1 / -1; /* Span across all columns */
+             display: flex;
+             justify-content: flex-end;
+             gap: 15px; /* Increased gap */
+             margin-top: 20px;
+         }
      </style>
 </head>
 <body>
@@ -37,49 +56,19 @@
             <section class="video-form-section">
                 <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Add New Video</h2>
                 <form id="videoForm" class="video-form">
-                    <input type="hidden" id="videoId"> <div class="form-group">
-                        <label for="topicId">Topic ID (Unique):</label>
-                        <input type="text" id="topicId" required placeholder="e.g., stats-fundamentals">
+                    <input type="hidden" id="videoId">
+                     <input type="hidden" id="topicId">
+
+
+                    <div class="form-group">
+                         <label for="videoTitle">Display Name (e.g., Statistics Fundamentals):</label>
+                         <input type="text" id="videoTitle" required placeholder="Enter the video/topic name">
                     </div>
 
                     <div class="form-group">
-                         <label for="videoType">Content Type:</label>
-                         <select id="videoType" required>
-                             <option value="video">Single Video</option>
-                             <option value="playlist">Playlist</option>
-                         </select>
+                         <label for="youtubeLink">YouTube Link (Video or Playlist URL):</label>
+                         <input type="text" id="youtubeLink" required placeholder="Paste the full YouTube URL here">
                     </div>
-
-                    <div class="form-group">
-                         <label for="youtubeId">YouTube Video/Playlist ID:</label>
-                         <input type="text" id="youtubeId" required placeholder="e.g., Ys_J-GfFwT8 or PL... ">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="videoTitle">Video/Topic Title:</label>
-                        <select id="videoTitle" required>
-                             <option value="">--Select Topic--</option>
-                             <option value="Statistics Fundamentals">Statistics Fundamentals</option>
-                             <option value="Excel for Data Analysis">Excel for Data Analysis</option>
-                             <option value="SQL for Analytics">SQL for Analytics</option>
-                             <option value="Power BI Full Course">Power BI Full Course</option>
-                             <option value="Tableau Full Course">Tableau Full Course</option>
-                             <option value="Python for Analysis">Python for Analysis</option>
-                              <option value="R Programming for Analytics">R Programming for Analytics</option>
-                              <option value="SPSS Basics">SPSS Basics</option>
-                              <option value="Business Decision Making">Business Decision Making</option>
-                              <option value="Machine Learning Basics">Machine Learning Basics</option>
-                               <option value="Deep Learning & Neural Networks">Deep Learning & Neural Networks</option>
-                               <option value="Artificial Intelligence Concepts">Artificial Intelligence Concepts</option>
-                               <option value="Big Data Tools (Hadoop & Spark)">Big Data Tools (Hadoop & Spark)</option>
-                                <option value="Cloud Platforms (AWS, GCP, Azure)">Cloud Platforms (AWS, GCP, Azure)</option>
-                                </select>
-                    </div>
-
-                     <div class="form-group">
-                         <label for="videoDescription">Short Description:</label>
-                         <input type="text" id="videoDescription" placeholder="e.g., Descriptive stats, probability...">
-                     </div>
 
                      <div class="form-group">
                          <label for="videoModule">Module/Track:</label>
@@ -93,9 +82,16 @@
                      </div>
 
                      <div class="form-group">
+                         <label for="videoDescription">Short Description:</label>
+                         <input type="text" id="videoDescription" placeholder="e.g., Descriptive stats, probability...">
+                     </div>
+
+
+                     <div class="form-group">
                           <label for="totalDuration">Total Duration (HH:MM:SS):</label>
                           <input type="text" id="totalDuration" placeholder="e.g., 01:30:45">
-                      </div>
+                     </div>
+
 
                     <div class="form-actions">
                         <button type="submit" class="add-button"><i class="fas fa-save"></i> Save Video</button>
@@ -109,17 +105,15 @@
                 <table class="video-table">
                     <thead>
                         <tr>
-                            <th>Topic ID</th>
-                            <th>Type</th>
-                            <th>YouTube ID</th>
-                            <th>Title</th>
-                            <th>Description</th>
+                            <th>Display Name</th> <th>Type</th>
+                            <th>YouTube ID</th> <th>Description</th>
                             <th>Module</th>
-                            <th>Duration</th> <th>Actions</th>
+                            <th>Duration</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="videosTableBody">
-                        <tr><td colspan="8" class="no-videos-message">Loading videos...</td></tr> </tbody>
+                        <tr><td colspan="7" class="no-videos-message">Loading videos...</td></tr> </tbody>
                 </table>
             </section>
         </main>
@@ -128,23 +122,22 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const videoForm = document.getElementById('videoForm');
-            const videoIdInput = document.getElementById('videoId'); // Hidden ID field
-            const topicIdInput = document.getElementById('topicId');
-            const videoTypeSelect = document.getElementById('videoType');
-            const youtubeIdInput = document.getElementById('youtubeId');
-            const videoTitleSelect = document.getElementById('videoTitle'); // Changed to select
-            const videoDescriptionInput = document.getElementById('videoDescription'); // Corrected typo
+            const videoIdInput = document.getElementById('videoId'); // Hidden internal ID field
+             const topicIdInput = document.getElementById('topicId'); // Hidden unique topic ID field (derived from title or generated)
+            const videoTitleInput = document.getElementById('videoTitle'); // Display Name text input
+            const youtubeLinkInput = document.getElementById('youtubeLink'); // New YouTube Link input
+            const videoDescriptionInput = document.getElementById('videoDescription');
             const videoModuleSelect = document.getElementById('videoModule');
-            const totalDurationInput = document.getElementById('totalDuration'); // Duration input
-            const saveButton = videoForm.querySelector('.add-button'); // Save button
-            const cancelEditBtn = document.getElementById('cancelEditBtn'); // Cancel button
-            const formTitle = document.getElementById('formTitle'); // Form title element
-            const videosTableBody = document.getElementById('videosTableBody'); // Table body
-            const adminLogoutBtn = document.getElementById('adminLogoutBtn'); // Logout button
-             const formMessageArea = document.getElementById('formMessage'); // Message area
+            const totalDurationInput = document.getElementById('totalDuration');
+            const saveButton = videoForm.querySelector('.add-button');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+            const formTitle = document.getElementById('formTitle');
+            const videosTableBody = document.getElementById('videosTableBody');
+            const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+            const formMessageArea = document.getElementById('formMessage');
 
 
-            // --- localStorage Key ---
+            // --- localStorage Keys ---
             const VIDEO_STORAGE_KEY = 'uknoClubVideoData';
              const USER_PROGRESS_KEY_PREFIX = 'uknoClubProgress-'; // For deleting associated progress
              const VIDEO_NOTES_KEY_PREFIX = 'video-notes-'; // For deleting associated notes
@@ -213,6 +206,37 @@
                  return hours > 0 ? `${paddedHours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
              }
 
+             // --- Helper to extract YouTube ID and Type from URL ---
+             function getYouTubeIdAndType(url) {
+                 let videoId = null;
+                 let videoType = null;
+
+                 const videoMatch = url.match(/(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([a-zA-Z0-9_-]+)(?:&.*)?/);
+                 const playlistMatch = url.match(/(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:playlist\?list=|p\/)([a-zA-Z0-9_-]+)(?:&.*)?/);
+
+                 if (videoMatch && videoMatch[1]) {
+                     videoId = videoMatch[1];
+                     videoType = 'video';
+                 } else if (playlistMatch && playlistMatch[1]) {
+                     videoId = playlistMatch[1];
+                     videoType = 'playlist';
+                 } else {
+                     // Basic fallback if no standard match - assume it might be just the ID?
+                      // Or handle as an error
+                     if (url.length > 5 && !url.includes(' ')) { // Basic check for something that might be an ID
+                           videoId = url;
+                           videoType = 'video'; // Default to video if unclear
+                           console.warn("Could not parse standard YouTube URL, assuming input is just the ID:", url);
+                     } else {
+                          console.error("Invalid or unparseable YouTube URL:", url);
+                          showMessage("Invalid or unparseable YouTube URL.", 'error');
+                          return { youtubeId: null, videoType: null };
+                     }
+                 }
+
+                 return { youtubeId: videoId, videoType: videoType };
+             }
+
 
             // --- Function to Render Video Table ---
             function renderVideoTable() {
@@ -220,17 +244,19 @@
                 videosTableBody.innerHTML = ''; // Clear current table
 
                 if (videos.length === 0) {
-                    videosTableBody.innerHTML = '<tr><td colspan="8" class="no-videos-message">No videos added yet.</td></tr>'; // Updated colspan
+                    videosTableBody.innerHTML = '<tr><td colspan="7" class="no-videos-message">No videos added yet.</td></tr>'; // Updated colspan
                 } else {
                     videos.forEach(video => {
                         const row = document.createElement('tr');
+                         // Note: We are not displaying the internal 'id' or 'topicId' in the table by default for simplicity
+                         // The 'Actions' buttons use the internal 'id' to find the object.
                         row.innerHTML = `
-                            <td data-label="Topic ID">${video.topicId}</td>
-                            <td data-label="Type">${video.videoType === 'video' ? 'Single' : 'Playlist'}</td> <td data-label="YouTube ID">${video.youtubeId}</td>
-                            <td data-label="Title">${video.videoTitle}</td>
-                            <td data-label="Description">${video.videoDescription || '-'}</td>
+                            <td data-label="Display Name">${video.videoTitle}</td>
+                            <td data-label="Type">${video.videoType === 'video' ? 'Single' : 'Playlist'}</td>
+                            <td data-label="YouTube ID">${video.youtubeId}</td> <td data-label="Description">${video.videoDescription || '-'}</td>
                             <td data-label="Module">${video.videoModule}</td>
-                            <td data-label="Duration">${video.totalDuration !== undefined ? formatSecondsToHHMMSS(video.totalDuration) : '-'}</td> <td data-label="Actions" class="video-actions">
+                            <td data-label="Duration">${video.totalDuration !== undefined ? formatSecondsToHHMMSS(video.totalDuration) : '-'}</td>
+                            <td data-label="Actions" class="video-actions">
                                 <button class="edit-video-btn" data-id="${video.id}"><i class="fas fa-edit"></i> Edit</button>
                                 <button class="delete-video-btn" data-id="${video.id}"><i class="fas fa-trash-alt"></i> Delete</button>
                             </td>
@@ -258,24 +284,33 @@
             videoForm.addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                const id = videoIdInput.value; // Check if we are editing (ID exists)
-                const topicId = topicIdInput.value.trim();
-                const videoType = videoTypeSelect.value;
-                const youtubeId = youtubeIdInput.value.trim();
-                const videoTitle = videoTitleSelect.value; // Get value from select
+                const id = videoIdInput.value; // Check if we are editing (internal ID exists)
+                 const existingTopicId = topicIdInput.value; // Get existing topic ID if editing
+
+                const videoTitle = videoTitleInput.value.trim(); // Get display name
+                const youtubeLink = youtubeLinkInput.value.trim(); // Get the full link
                 const videoDescription = videoDescriptionInput.value.trim();
                 const videoModule = videoModuleSelect.value;
-                 const durationString = totalDurationInput.value.trim(); // Get duration string
+                const durationString = totalDurationInput.value.trim();
 
-                // Basic validation
-                 if (!topicId || !youtubeId || !videoTitle || !videoModule) {
-                     showMessage("Please fill all required fields.", 'error');
+                // Basic validation for required fields
+                 if (!videoTitle || !youtubeLink || !videoModule) {
+                     showMessage("Please fill Display Name, YouTube Link, and Module.", 'error');
                      return;
                  }
-                 if (videoTitle === "") { // Validate dropdown selection
-                     showMessage("Please select a Topic Title.", 'error');
+                if (videoModule === "") {
+                     showMessage("Please select a Module.", 'error');
                      return;
+                }
+
+
+                // Parse YouTube link
+                const { youtubeId, videoType } = getYouTubeIdAndType(youtubeLink);
+                 if (!youtubeId || !videoType) {
+                      // Error message already shown by getYouTubeIdAndType
+                      return;
                  }
+
 
                 // Parse and validate duration
                  const parsedDuration = parseDurationToSeconds(durationString);
@@ -290,22 +325,22 @@
                 if (id) { // Editing existing video
                     const videoIndex = videos.findIndex(v => v.id === id);
                     if (videoIndex > -1) {
-                        // Check if the updated topicId creates a duplicate unique ID (only if topicId changed)
-                        if (videos[videoIndex].topicId !== topicId) {
-                             const duplicateTopic = videos.find(v => v.topicId === topicId);
-                              if (duplicateTopic) {
-                                   showMessage("Error: Topic ID must be unique.", 'error');
-                                   return;
-                              }
-                        }
+                         // When editing, the topicId should remain the same
+                         const topicId = existingTopicId; // Use the existing topic ID
+
+
+                         // Optional: If you wanted to allow changing the topic ID on edit,
+                         // you'd need to validate uniqueness here *and* update all user progress/notes
+                         // associated with the OLD topic ID to the NEW topic ID (complex!).
+                         // For simplification, we keep the topic ID fixed on edit.
 
 
                         videos[videoIndex] = {
-                            id: id, // Keep the original ID
-                            topicId: topicId,
-                            videoType: videoType,
-                            youtubeId: youtubeId,
-                            videoTitle: videoTitle, // Save selected title
+                            id: id, // Keep the original internal ID
+                            topicId: topicId, // Keep the original topic ID
+                            videoType: videoType, // Use type inferred from link
+                            youtubeId: youtubeId, // Use ID extracted from link
+                            videoTitle: videoTitle, // Use display name
                             videoDescription: videoDescription,
                             videoModule: videoModule,
                             totalDuration: parsedDuration // Save parsed duration (in seconds)
@@ -315,19 +350,29 @@
                          showMessage("Error: Video not found for editing.", 'error');
                     }
                 } else { // Adding new video
-                     // Check if the topicId already exists
+                     // Generate a unique topic ID for a new entry
+                      // A simple slug from the title + random string might be better than just random
+                      const generatedTopicId = videoTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                      // Add a random suffix to ensure uniqueness, especially for identical titles
+                      const topicId = generatedTopicId + '-' + Math.random().toString(36).substring(2, 8);
+
+
+                     // Check if this generated topicId already exists (unlikely with random suffix, but good practice)
                      const duplicateTopic = videos.find(v => v.topicId === topicId);
                      if (duplicateTopic) {
-                          showMessage("Error: Topic ID must be unique.", 'error');
-                          return;
+                         // If somehow duplicated, try generating a new one or show error
+                         console.warn("Generated topic ID already exists, trying again or manual intervention might be needed.");
+                         // For simplicity here, we'll just add it, relying on the random suffix for uniqueness.
+                         // A more robust app would re-generate or prompt the user.
                      }
 
+
                     const newVideo = {
-                        id: Date.now().toString() + Math.random().toString(16).slice(2), // Simple unique ID
-                        topicId: topicId,
-                        videoType: videoType,
-                        youtubeId: youtubeId,
-                        videoTitle: videoTitle, // Save selected title
+                        id: Date.now().toString() + Math.random().toString(16).slice(2), // Unique internal ID
+                        topicId: topicId, // Generated unique topic ID
+                        videoType: videoType, // Use type inferred from link
+                        youtubeId: youtubeId, // Use ID extracted from link
+                        videoTitle: videoTitle, // Use display name
                         videoDescription: videoDescription,
                         videoModule: videoModule,
                          totalDuration: parsedDuration // Save parsed duration (in seconds)
@@ -352,10 +397,11 @@
                 if (videoToEdit) {
                     // Populate the form with video data
                     videoIdInput.value = videoToEdit.id;
-                    topicIdInput.value = videoToEdit.topicId;
-                    videoTypeSelect.value = videoToEdit.videoType;
-                    youtubeIdInput.value = videoToEdit.youtubeId;
-                    videoTitleSelect.value = videoToEdit.videoTitle; // Set selected title
+                     topicIdInput.value = videoToEdit.topicId; // Store the existing topic ID in the hidden field
+                    videoTitleInput.value = videoToEdit.videoTitle; // Populate display name
+                    // Populate YouTube Link field (might be tricky to reconstruct original URL)
+                     // Let's populate with the YouTube ID for simplicity, user can replace if needed
+                    youtubeLinkInput.value = videoToEdit.youtubeId; // Populate with the extracted ID
                     videoDescriptionInput.value = videoToEdit.videoDescription;
                     videoModuleSelect.value = videoToEdit.videoModule;
                      // Populate duration field by formatting seconds back to HH:MM:SS
@@ -366,9 +412,10 @@
                     saveButton.innerHTML = '<i class="fas fa-save"></i> Update Video';
                     cancelEditBtn.style.display = 'inline-block'; // Show cancel button
 
-                    // Disable editing Topic ID while editing to maintain uniqueness constraint easily
-                    // Unless you want to allow changing it and handle cascading updates (complex)
-                     topicIdInput.disabled = true;
+                    // Disable the YouTube link field during edit if you don't want it changed easily
+                    // Or keep it enabled but the script will parse the new URL on save
+                    // Let's keep it enabled for flexibility, the save logic handles parsing the new input.
+
 
                      showMessage("Editing video...", 'info');
 
@@ -388,7 +435,7 @@
                     const videoIdToDelete = this.getAttribute('data-id');
                     let videos = loadVideos();
 
-                    // Find the topicId of the video to delete
+                    // Find the topicId of the video to delete (needed to clean up notes/progress)
                      const videoToDelete = videos.find(v => v.id === videoIdToDelete);
                      const topicIdToDelete = videoToDelete ? videoToDelete.topicId : null;
 
@@ -440,12 +487,21 @@
 
             // --- Function to Reset the Form ---
             function resetForm() {
-                videoForm.reset(); // Clear all form fields
-                videoIdInput.value = ''; // Ensure hidden ID is cleared
-                formTitle.innerHTML = '<i class="fas fa-plus-circle"></i> Add New Video'; // Reset form title
-                saveButton.innerHTML = '<i class="fas fa-save"></i> Save Video'; // Reset button text
-                cancelEditBtn.style.display = 'none'; // Hide cancel button
-                topicIdInput.disabled = false; // Re-enable topic ID field
+                // Clear specific fields manually for more control
+                 videoIdInput.value = '';
+                 topicIdInput.value = ''; // Clear hidden topic ID
+                 videoTitleInput.value = '';
+                 youtubeLinkInput.value = '';
+                 videoDescriptionInput.value = '';
+                 videoModuleSelect.value = ''; // Reset dropdown
+                 totalDurationInput.value = '';
+
+                formTitle.innerHTML = '<i class="fas fa-plus-circle"></i> Add New Video';
+                saveButton.innerHTML = '<i class="fas fa-save"></i> Save Video';
+                cancelEditBtn.style.display = 'none';
+                // No topicIdInput to disable anymore in the simplified form
+
+
                  showMessage("", 'info'); // Clear message area
                  formMessageArea.style.display = 'none'; // Ensure message area is hidden on reset
             }
