@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Ukno Club</title>
+    <link rel="stylesheet" href="profile.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <script>
+        // Basic Authentication Check - redirect if not logged in
+        const userAuthenticated = localStorage.getItem('userAuthenticated');
+        const adminAuthenticated = localStorage.getItem('adminAuthenticated');
+        if (!userAuthenticated && !adminAuthenticated) {
+            window.location.href = "auth.html#login"; // Redirect to login form
+        }
+    </script>
+</head>
+<body>
+    <div class="profile-container">
+        <header class="profile-header">
+            <div class="branding">
+                <img src="assets/logo.png" alt="Ukno Club" class="logo">
+                <h1>My Profile</h1>
+            </div>
+            <nav class="user-nav">
+                 <a href="dashboard.html">Dashboard</a> <a href="index.html" class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </header>
+
+        <main class="profile-content">
+            <section class="profile-section">
+                <h2>Account Information</h2>
+
+                <div id="profileDisplay" class="profile-display">
+                    <p><strong>Username:</strong> <span id="displayUsername"></span></p>
+                    <p><strong>Full Name:</strong> <span id="displayFullName"></span></p>
+                    <p><strong>Email:</strong> <span id="displayEmail"></span></p>
+                    <button id="editProfileBtn" class="btn"><i class="fas fa-edit"></i> Edit Profile</button>
+                </div>
+
+                <form id="profileEditForm" class="profile-edit-form hidden">
+                    <div class="form-group">
+                        <label for="editUsername">Username:</label>
+                         <input type="text" id="editUsername" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFullName">Full Name:</label>
+                        <input type="text" id="editFullName">
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email:</label>
+                        <input type="email" id="editEmail">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="saveProfileBtn" class="btn btn-save"><i class="fas fa-save"></i> Save Changes</button>
+                        <button type="button" id="cancelEditBtn" class="btn btn-cancel"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
+                     <p class="message" id="profileMessage"></p> </form>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const displayUsernameSpan = document.getElementById('displayUsername');
+            const displayFullNameSpan = document.getElementById('displayFullName');
+            const displayEmailSpan = document.getElementById('displayEmail');
+
+            const profileDisplayDiv = document.getElementById('profileDisplay');
+            const profileEditForm = document.getElementById('profileEditForm');
+
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const saveProfileBtn = document.getElementById('saveProfileBtn');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+            const editUsernameInput = document.getElementById('editUsername');
+            const editFullNameInput = document.getElementById('editFullName');
+            const editEmailInput = document.getElementById('editEmail');
+
+            const profileMessage = document.getElementById('profileMessage');
+            const logoutBtn = document.getElementById('logoutBtn'); // Get the logout button
+
+            // --- localStorage Key (Consistent with auth.html) ---
+            const USERS_STORAGE_KEY = 'uknoClubUsers';
+
+            // --- Get logged-in username ---
+             const loggedInUsername = localStorage.getItem('loggedInUsername') || (localStorage.getItem('adminAuthenticated') ? 'Admin' : null);
+
+             // Redirect if somehow loggedInUsername is missing despite authentication check
+              if (!loggedInUsername) {
+                   window.location.href = "auth.html#login";
+                   return; // Stop script execution
+              }
+
+
+            // --- Helper function to get user data from localStorage ---
+             function getUsers() {
+                 const usersJson = localStorage.getItem(USERS_STORAGE_KEY);
+                 try {
+                     return usersJson ? JSON.parse(usersJson) : {};
+                 } catch (e) {
+                     console.error("Error parsing users data from localStorage:", e);
+                     return {}; // Return empty object if parsing fails
+                 }
+             }
+
+            // --- Helper function to save user data to localStorage ---
+             function saveUsers(usersObject) {
+                 localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usersObject));
+             }
+
+             // --- Helper function to show messages ---
+             function showMessage(message, type = 'info') {
+                 profileMessage.textContent = message;
+                 profileMessage.style.color = type === 'success' ? 'var(--success)' : (type === 'error' ? 'var(--error)' : 'var(--text-secondary)');
+                 profileMessage.style.display = 'block';
+
+                 // Hide message after a few seconds for non-error messages
+                 if (type !== 'error') {
+                     setTimeout(() => {
+                         profileMessage.style.display = 'none';
+                     }, 5000); // Hide after 5 seconds
+                 }
+             }
+
+            // --- Function to Load and Display Current User's Profile ---
+            function loadAndDisplayProfile() {
+                const users = getUsers();
+                const currentUser = users[loggedInUsername]; // Get data for the logged-in user
+
+                if (currentUser) {
+                    // Populate display fields
+                    displayUsernameSpan.textContent = loggedInUsername; // Username is always the key
+                    displayFullNameSpan.textContent = currentUser.fullName || 'Not provided'; // Use saved data or default
+                    displayEmailSpan.textContent = currentUser.email || 'Not provided'; // Use saved data or default
+
+                    // Populate edit form fields (initial state)
+                    editUsernameInput.value = loggedInUsername; // Username input is disabled
+                    editFullNameInput.value = currentUser.fullName || '';
+                    editEmailInput.value = currentUser.email || '';
+
+                } else {
+                    // This case should ideally not happen if authentication worked, but handle it
+                    console.error("Current user data not found in localStorage.");
+                    profileDisplayDiv.innerHTML = '<p class="error-message">Error loading profile data.</p>';
+                    editProfileBtn.style.display = 'none'; // Hide edit button
+                }
+            }
+
+            // --- Toggle between Display and Edit Mode ---
+            function toggleEditMode(isEditing) {
+                if (isEditing) {
+                    profileDisplayDiv.classList.add('hidden');
+                    profileEditForm.classList.remove('hidden');
+                    editProfileBtn.style.display = 'none';
+                    showMessage("", 'info'); // Clear message area
+                    profileMessage.style.display = 'none';
+                } else {
+                    profileEditForm.classList.add('hidden');
+                    profileDisplayDiv.classList.remove('hidden');
+                    editProfileBtn.style.display = 'inline-block'; // Or 'block' depending on CSS
+                     showMessage("", 'info'); // Clear message area
+                    profileMessage.style.display = 'none';
+                     loadAndDisplayProfile(); // Reload display in case of cancel or save
+                }
+            }
+
+            // --- Event Listeners ---
+            editProfileBtn.addEventListener('click', function() {
+                toggleEditMode(true); // Switch to edit mode
+            });
+
+            cancelEditBtn.addEventListener('click', function() {
+                toggleEditMode(false); // Switch back to display mode
+            });
+
+            profileEditForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                clearMessages(); // Clear previous messages
+
+                const users = getUsers();
+                const currentUser = users[loggedInUsername];
+
+                if (currentUser) {
+                    // Get updated values from the form
+                    const updatedFullName = editFullNameInput.value.trim();
+                    const updatedEmail = editEmailInput.value.trim();
+
+                    // Optional: Add validation for email format if desired
+
+                    // Update the user object
+                    currentUser.fullName = updatedFullName;
+                    currentUser.email = updatedEmail;
+                    // Do NOT update password here (should be a separate process)
+
+                    // Save the updated users object back to localStorage
+                    saveUsers(users);
+
+                    showMessage("Profile updated successfully!", 'success');
+
+                    // Switch back to display mode after a delay
+                    setTimeout(() => {
+                        toggleEditMode(false);
+                    }, 1000); // Switch after 1 second
+                } else {
+                    showMessage("Error: Could not save profile data.", 'error');
+                }
+            });
+
+            // --- Logout Functionality ---
+             if (logoutBtn) {
+                 logoutBtn.addEventListener('click', function(e) {
+                     e.preventDefault(); // Prevent default link behavior
+                     // Clear all relevant auth/user info from localStorage
+                     localStorage.removeItem('userAuthenticated');
+                     localStorage.removeItem('adminAuthenticated');
+                     localStorage.removeItem('loggedInUsername');
+                     // Add other user-specific localStorage items to clear here if necessary
+
+                     window.location.href = "index.html"; // Redirect to landing page after logout
+                 });
+             }
+
+
+            // --- Initial Load ---
+            loadAndDisplayProfile(); // Load and display profile data when the page loads
+        });
+    </script>
+</body>
+</html>

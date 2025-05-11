@@ -1,0 +1,232 @@
+/* Basic styling for the profile page */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background); /* Use consistent variables */
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-container {
+    width: 100%;
+    max-width: 960px; /* Adjust max width as needed */
+    margin: 0 auto;
+    padding: 20px;
+    flex-grow: 1;
+}
+
+/* Header styles (can reuse or adapt from dashboard.css) */
+.profile-header {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.profile-header .branding {
+    display: flex;
+    align-items: center;
+}
+
+.profile-header .logo {
+    height: 40px; /* Adjust logo size */
+    margin-right: 15px;
+}
+
+.profile-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.profile-header .user-nav a {
+    color: var(--text-light);
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.profile-header .user-nav a:hover {
+    color: var(--accent-color); /* Use accent color on hover */
+}
+
+.profile-header .logout-btn i {
+    margin-right: 5px;
+}
+
+
+/* Profile Content */
+.profile-content {
+    background-color: var(--card-background); /* Use card background */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+}
+
+.profile-section h2 {
+    color: var(--section-title);
+    margin-top: 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+/* Display Mode Styles */
+.profile-display p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.profile-display p strong {
+    color: var(--text-primary);
+    display: inline-block; /* Keep strong bold */
+    width: 120px; /* Give labels a fixed width for alignment */
+}
+
+.profile-display .btn {
+     margin-top: 20px;
+}
+
+
+/* Edit Form Styles */
+.profile-edit-form .form-group {
+    margin-bottom: 20px;
+}
+
+.profile-edit-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.profile-edit-form input[type="text"],
+.profile-edit-form input[type="email"] {
+    width: calc(100% - 24px); /* Adjust for padding */
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: var(--background); /* Match background */
+    color: var(--text-primary);
+}
+
+.profile-edit-form input[type="text"]:disabled {
+    background-color: var(--disabled-background); /* Style for disabled input */
+    cursor: not-allowed;
+}
+
+
+.profile-edit-form .form-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px; /* Space between buttons */
+    justify-content: flex-end; /* Align buttons to the right */
+}
+
+.profile-edit-form .message {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: 600;
+}
+
+
+/* Buttons (reusing btn class, maybe define in a common file later) */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+}
+
+.btn i {
+    font-size: 1rem;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Specific button styles */
+#editProfileBtn {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+.btn-save {
+    background-color: var(--success);
+    color: var(--text-light);
+}
+
+.btn-cancel {
+    background-color: var(--secondary-color); /* Or a neutral color */
+    color: var(--text-light);
+}
+
+
+/* Helper class to hide elements */
+.hidden {
+    display: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 15px;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .profile-header .user-nav {
+        margin-top: 10px;
+    }
+
+    .profile-header .user-nav a {
+        margin-left: 0;
+        margin-right: 15px;
+    }
+
+    .profile-content {
+        padding: 20px;
+    }
+
+    .profile-display p strong {
+        display: block; /* Stack label and value on smaller screens */
+        width: auto;
+        margin-bottom: 5px;
+    }
+
+    .profile-edit-form input[type="text"],
+    .profile-edit-form input[type="email"] {
+        width: calc(100% - 20px); /* Adjust padding for smaller screens */
+        padding: 10px;
+    }
+     .profile-edit-form .form-actions {
+        flex-direction: column; /* Stack buttons */
+        align-items: flex-end; /* Align stacked buttons to the right */
+     }
+      .profile-edit-form .form-actions .btn {
+         width: auto; /* Auto width for stacked buttons */
+      }
+
+}
