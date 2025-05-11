@@ -56,10 +56,10 @@
           }
 
 
-          // --- localStorage Key for Video Data ---
-          const VIDEO_STORAGE_KEY = 'uknoClubVideoData';
-          const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-';
-          const VIDEO_NOTES_KEY_PREFIX = 'video-notes-';
+          // --- localStorage Keys ---
+          const VIDEO_STORAGE_KEY = 'uknoClubVideoData'; // From admin interface
+          const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-'; // User-specific progress { time: ..., timestamp: ... }
+          const VIDEO_NOTES_KEY_PREFIX = 'video-notes-'; // Video-specific notes
 
 
           // --- YouTube Player API Script ---
@@ -106,7 +106,7 @@
                       // If a video ID is present, hide the index content and show the video player section
                       courseIndexContent.classList.add('hidden');
                       videoPlayerContent.classList.remove('hidden');
-                      pageTitle.textContent = "Watching Course"; // Update page title
+                       pageTitle.textContent = "Watching Course"; // Update page title
                        loadingMessage.style.display = 'none'; // Hide loading message
 
                        // Find the selected video details
@@ -120,11 +120,11 @@
                                height: '390',
                                width: '640',
                                playerVars: {
-                                   'autoplay': 1,
+                                   'autoplay': 1, // Optional: Autoplay the video
                                    'controls': 1,
                                    'enablejsapi': 1,
-                                   'rel': 0,
-                                   'showinfo': 0,
+                                   'rel': 0, // Hide related videos
+                                   'showinfo': 0, // Hide video title and uploader info
                                    'modestbranding': 1,
                                    'playsinline': 1 // Important for mobile
                                },
@@ -172,7 +172,6 @@
                                          console.log('Notes auto-saved for video:', currentVideoId);
                                          // Optional: show a small "Notes saved!" message
                                      }, 1000); // Save 1 second after user stops typing
-                                }
                            });
 
 
@@ -189,7 +188,7 @@
                        // If no video ID, show the course index
                        renderCourseIndex(allVideosData); // Render the index from loaded data
                        courseIndexContent.classList.remove('hidden');
-                       videoPlayerContent.classList.add('hidden');
+                       videoPlayerContent.classList.add('hidden'); // Ensure video player is hidden
                        pageTitle.textContent = "Course Catalog";
                        loadingMessage.style.display = 'none'; // Hide loading message
                    }
@@ -222,28 +221,27 @@
                     'business-analyst': '🟨 MODULE 2: Business Analyst Track',
                     'data-scientist': '🟥 MODULE 3: Data Scientist Track',
                     'big-data': '🟩 BONUS MODULE: Big Data & Cloud Tools',
-                    // Add other modules here
+                    // Add other modules here matching the 'value' in the admin select
                 };
+
 
                // Render modules and topics
                for (const moduleKey in modules) {
                    if (modules.hasOwnProperty(moduleKey)) {
                        const moduleVideos = modules[moduleKey];
-                       const moduleTitle = moduleTitles[moduleKey] || `❓ MODULE: ${moduleKey}`; // Fallback title
+                        // Sort videos by topic title or another criteria if needed
+                        // moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
 
                        const moduleSection = document.createElement('section');
                        moduleSection.classList.add('course-module');
 
                        moduleSection.innerHTML = `
-                           <h2>${moduleTitle}</h2>
-                           <p class="module-goal">Goal: Learn ${moduleKey} skills...</p> <div class="topic-list-grid">
+                           <h2>${moduleTitles[moduleKey] || `❓ MODULE: ${moduleKey}`}</h2>
+                           <p class="module-goal">Goal: ${moduleKey} skills...</p> <div class="topic-list-grid">
                                </div>
                        `;
 
                        const topicListGrid = moduleSection.querySelector('.topic-list-grid');
-
-                       // Sort videos by topic title or another criteria if needed
-                       // moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
 
                        moduleVideos.forEach(video => {
                            const topicCardLink = document.createElement('a');
@@ -277,39 +275,42 @@
           function onPlayerReady(event) {
               // If it's a playlist, get playlist videos (Optional)
               // This might require additional API calls or data stored in localStorage
+              // For now, we just show the playlist div if it's a playlist type video.
               const videoDetails = loadVideosData().find(video => video.topicId === currentVideoId);
-              if (videoDetails && videoDetails.videoType === 'playlist') {
-                   // Example: Display current video title if playlist is loaded
-                   const currentVideoData = event.target.getVideoData();
-                   console.log("Loaded Playlist. Current video:", currentVideoData.title);
-                   // You could update videoTitleElement here with the current playlist video title
-
-                   // You can also get playlist data using event.target.getPlaylist()
-                   // and populate the playlistItemsUl if needed, but this adds complexity.
-              }
 
 
-              const savedTime = localStorage.getItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId); // Get saved time
+              // Load saved progress
+              const savedProgress = localStorage.getItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId);
 
-              if (savedTime) {
-                   const timeToSeek = parseFloat(savedTime);
-                   // Ensure timeToSeek is a valid number before seeking
-                  if (!isNaN(timeToSeek) && timeToSeek > 0) {
-                      event.target.seekTo(timeToSeek); // Resume video
-                      console.log('Resuming video to:', timeToSeek, 'seconds');
-                       const resumeMessageElement = document.getElementById('resumeMessage');
-                       if (resumeMessageElement) {
-                           // Convert seconds to minutes and seconds for display
-                           const minutes = Math.floor(timeToSeek / 60);
-                           const seconds = Math.floor(timeToSeek % 60);
-                           resumeMessageElement.textContent = `Resuming from ${minutes}m ${seconds}s`;
-                           resumeMessageElement.style.display = 'block';
-                           // Hide message after a few seconds
-                           setTimeout(() => {
-                               resumeMessageElement.style.display = 'none';
-                           }, 5000);
+              if (savedProgress) {
+                   try {
+                       const progressData = JSON.parse(savedProgress); // Parse the saved object
+                       const timeToSeek = parseFloat(progressData.time); // Get time from the object
+
+                       // Ensure timeToSeek is a valid number before seeking
+                       if (!isNaN(timeToSeek) && timeToSeek > 0) {
+                           event.target.seekTo(timeToSeek); // Resume video
+                           console.log('Resuming video to:', timeToSeek, 'seconds');
+                            const resumeMessageElement = document.getElementById('resumeMessage');
+                            if (resumeMessageElement) {
+                                // Convert seconds to minutes and seconds for display
+                                const minutes = Math.floor(timeToSeek / 60);
+                                const seconds = Math.floor(timeToSeek % 60);
+                                 // Also display the last viewed date if timestamp is available
+                                const timestamp = progressData.timestamp ? new Date(progressData.timestamp).toLocaleString() : 'unknown date';
+                                resumeMessageElement.textContent = `Resuming from ${minutes}m ${seconds}s (Last viewed: ${timestamp})`;
+                                resumeMessageElement.style.display = 'block';
+                                // Hide message after a few seconds
+                                setTimeout(() => {
+                                    resumeMessageElement.style.display = 'none';
+                                }, 8000); // Show a bit longer
+                            }
                        }
-                  }
+                   } catch (e) {
+                       console.error("Failed to parse saved progress data:", e);
+                       // Potentially clear invalid localStorage data
+                       localStorage.removeItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId);
+                   }
               }
 
               // Optional: Start playing automatically if not resuming (autoplay playerVar handles this)
@@ -320,63 +321,64 @@
           function onPlayerStateChange(event) {
               if (!currentVideoId) return; // Only save progress if a video is loaded
 
-              // Save video progress when playing
-              if (event.data === YT.PlayerState.PLAYING) {
-                  // console.log('Video is playing. Starting save timer...'); // Avoid excessive logging
-                  clearInterval(saveProgressTimer); // Clear any existing timer
-                  saveProgressTimer = setInterval(() => {
-                      const currentTime = player.getCurrentTime();
-                      localStorage.setItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId, currentTime.toString());
-                      // console.log('Saved progress:', currentTime, 'seconds'); // Avoid excessive logging
-                  }, 5000); // Save every 5 seconds
+              // Save video progress (time and timestamp) when playing or paused/ended
+              if (event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+                   const currentTime = player.getCurrentTime();
+                   const now = new Date().toISOString(); // Get current timestamp in ISO format
+
+                    const progressData = {
+                        time: currentTime,
+                        timestamp: now
+                    };
+
+                   localStorage.setItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId, JSON.stringify(progressData));
+                   // console.log('Progress updated:', currentTime, 'seconds at', now); // Avoid excessive logging
+
+                    // --- User Progress Tracking Logic (Step 3 related) ---
+                    if (event.data === YT.PlayerState.ENDED) {
+                        console.log('Video ended.');
+                         // Mark this video as completed for the logged-in user
+                         markVideoAsCompleted(currentVideoId);
+
+                         // Remove saved progress so it starts from beginning next time
+                         localStorage.removeItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId);
+                         console.log('Removed saved progress for ended video.');
+                          const resumeMessageElement = document.getElementById('resumeMessage');
+                         if (resumeMessageElement) {
+                             resumeMessageElement.style.display = 'none'; // Hide resume message
+                         }
+                    }
               } else {
-                  // console.log('Video is not playing. Stopping save timer...');
-                  clearInterval(saveProgressTimer); // Stop saving when paused, ended, buffered, etc.
-
-                  // Optional: Save final progress when paused or ended
-                   if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
-                       const currentTime = player.getCurrentTime();
-                       localStorage.setItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId, currentTime.toString());
-                       console.log('Final progress saved:', currentTime, 'seconds');
-
-                        // --- User Progress Tracking Logic (Step 3 related) ---
-                        if (event.data === YT.PlayerState.ENDED) {
-                            console.log('Video ended.');
-                             // Mark this video as completed for the logged-in user
-                             // This will be implemented in Step 3
-                             markVideoAsCompleted(currentVideoId);
-
-                             // Remove saved progress so it starts from beginning next time
-                             localStorage.removeItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoId);
-                             console.log('Removed saved progress for ended video.');
-                              const resumeMessageElement = document.getElementById('resumeMessage');
-                             if (resumeMessageElement) {
-                                 resumeMessageElement.style.display = 'none'; // Hide resume message
-                             }
-                        }
-                   }
+                  // Stop timer if video is not playing, paused, or ended (e.g., buffering)
+                   clearInterval(saveProgressTimer);
               }
           }
 
-         // --- Placeholder for User Progress Tracking (Step 3) ---
+         // --- User Progress Tracking Logic (Step 3 Implementation) ---
           function markVideoAsCompleted(videoId) {
-              // This function will be fully implemented in Step 3
-              // It should get the logged-in user's identifier and update their progress in localStorage.
-              const loggedInUsername = localStorage.getItem('loggedInUsername') || localStorage.getItem('adminAuthenticated') ? 'Admin' : 'Guest'; // Get username
-              if (loggedInUsername && loggedInUsername !== 'Guest') {
-                  const userProgressKey = `uknoClubProgress-${loggedInUsername}`;
-                  let progressData = JSON.parse(localStorage.getItem(userProgressKey)) || {};
+              const loggedInUsername = localStorage.getItem('loggedInUsername') || (localStorage.getItem('adminAuthenticated') ? 'Admin' : null); // Get username, null if guest
+               if (!loggedInUsername || loggedInUsername === 'Guest') {
+                   console.log("Cannot mark video as completed: User not logged in.");
+                   return; // Don't track progress for guests
+               }
 
-                   // Mark the video as completed (e.g., set a flag or add to a list)
-                   progressData[videoId] = { completed: true, completedTimestamp: new Date().toISOString() };
-                   // You could also store total duration, watched duration, etc.
+              const userProgressKey = USER_PROGRESS_KEY_PREFIX + loggedInUsername;
+              let progressData = JSON.parse(localStorage.getItem(userProgressKey)) || {};
 
-                   localStorage.setItem(userProgressKey, JSON.stringify(progressData));
-                   console.log(`Marked video ${videoId} as completed for ${loggedInUsername}.`);
+               // Check if the video is already marked as completed to avoid unnecessary saves
+               if (!progressData[videoId] || !progressData[videoId].completed) {
+                    // Mark the video as completed
+                    progressData[videoId] = { completed: true, completedTimestamp: new Date().toISOString() };
 
-                   // Trigger an update on the dashboard if the user is there (more advanced)
-                   // For now, the dashboard will load the latest progress on refresh.
-              }
+                    localStorage.setItem(userProgressKey, JSON.stringify(progressData));
+                    console.log(`Marked video ${videoId} as completed for ${loggedInUsername}.`);
+
+                    // Optional: Trigger a dashboard progress update if the user is viewing it
+                    // This is complex for a pure frontend app, usually handled by state management or backend.
+                    // For now, the dashboard will update on refresh.
+               } else {
+                   console.log(`Video ${videoId} already marked as completed for ${loggedInUsername}.`);
+               }
           }
 
 

@@ -15,7 +15,6 @@
         // This is a very basic check; a real app needs server-side authentication
         const userAuthenticated = localStorage.getItem('userAuthenticated');
         const adminAuthenticated = localStorage.getItem('adminAuthenticated');
-
         if (!userAuthenticated && !adminAuthenticated) {
              window.location.href = "auth.html";
         }
@@ -28,8 +27,7 @@
                 <img src="assets/logo.png" alt="Ukno Club" class="logo">
                 <h1>Welcome back, <span class="username" id="loggedInUsername">User</span>!</h1> </div>
             <nav class="user-nav">
-                <a href="profile.html" class="profile-link">Profile</a> <a href="index.html" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                <a href="profile.html" class="profile-link">Profile</a> <a href="index.html" class="logout-btn" id="logoutBtn"> <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </nav>
         </header>
@@ -37,38 +35,16 @@
         <main class="dashboard-content">
             <section class="progress-section">
                 <h2><i class="fas fa-chart-line"></i> My Learning Progress</h2>
-                <div class="progress-cards">
-                    <div class="progress-card">
-                        <h3>Data Analytics</h3>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 50%"></div>
-                        </div>
-                        <span class="progress-percent">50% Complete</span>
-                        <div class="next-topic">Next: Power BI Fundamentals</div>
-                    </div>
-                    <div class="progress-card">
-                        <h3>Python Programming</h3>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 100%"></div>
-                        </div>
-                        <span class="progress-percent">100% Complete</span>
-                        <div class="next-topic">Course Completed!</div>
-                    </div>
-                     </div>
+                <div class="progress-cards" id="learningProgressCards">
+                    <p class="no-progress-message">Loading progress...</p>
+                </div>
             </section>
 
             <section class="continue-section">
                 <h2><i class="fas fa-play-circle"></i> Continue Learning</h2>
-                <a href="course-video.html" class="video-card"> <div class="video-thumbnail">
-                        <img src="assets/data-analysis-thumb.jpg" alt="Video Thumbnail"> <div class="video-progress">
-                            <div class="progress-fill" style="width: 45%"></div> </div>
-                        <div class="play-btn"><i class="fas fa-play"></i></div>
-                    </div>
-                    <div class="video-info">
-                        <h3>Data Cleaning with Python</h3> <p class="video-desc">Learn how to clean messy datasets using Pandas</p> <div class="video-meta">
-                            <span><i class="far fa-clock"></i> 22 mins remaining</span> <span><i class="far fa-calendar"></i> Last viewed 2 days ago</span> </div>
-                    </div>
-                </a>
+                <div id="continueLearningContent">
+                     <p class="no-progress-message">Start a course to see your progress here!</p>
+                </div>
                  </section>
 
             <section class="actions-section">
@@ -89,36 +65,247 @@
     </div>
 
     <script>
-        // Display logged-in username
-        const usernameSpan = document.getElementById('loggedInUsername');
-        const loggedInUsername = localStorage.getItem('loggedInUsername'); // Get username from localStorage
-        if (usernameSpan && loggedInUsername) {
-            usernameSpan.textContent = loggedInUsername;
-        } else if (usernameSpan && localStorage.getItem('adminAuthenticated')) {
-            // Fallback for admin if somehow they land here without a username
-            usernameSpan.textContent = 'Admin';
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const usernameSpan = document.getElementById('loggedInUsername');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const learningProgressCardsDiv = document.getElementById('learningProgressCards');
+            const continueLearningContentDiv = document.getElementById('continueLearningContent');
+
+            // --- localStorage Keys ---
+            const VIDEO_STORAGE_KEY = 'uknoClubVideoData'; // From admin interface
+            const USER_PROGRESS_KEY_PREFIX = 'uknoClubProgress-'; // User-specific progress { videoId: { completed: true, ... } }
+             const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-'; // Individual video progress { time: ..., timestamp: ... }
 
 
-        // Logout functionality
-        document.getElementById('logoutBtn').addEventListener('click', function(e) {
-            e.preventDefault(); // Prevent default link behavior
-            // Clear all relevant auth/user info from localStorage
-            localStorage.removeItem('userAuthenticated');
-            localStorage.removeItem('adminAuthenticated');
-            localStorage.removeItem('loggedInUsername');
-            // Add other user-specific localStorage items to clear here if necessary
+            // Get logged-in username (or 'Admin' if admin)
+            const loggedInUsername = localStorage.getItem('loggedInUsername') || (localStorage.getItem('adminAuthenticated') ? 'Admin' : 'Guest');
 
-            window.location.href = "index.html"; // Redirect to landing page after logout
+
+            // --- Display Logged-in Username ---
+            if (usernameSpan && loggedInUsername && loggedInUsername !== 'Guest') {
+                usernameSpan.textContent = loggedInUsername;
+            } else if (usernameSpan) {
+                 usernameSpan.textContent = 'Guest'; // Fallback
+            }
+
+
+            // --- Logout Functionality ---
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default link behavior
+                    // Clear all relevant auth/user info from localStorage
+                    localStorage.removeItem('userAuthenticated');
+                    localStorage.removeItem('adminAuthenticated');
+                    localStorage.removeItem('loggedInUsername');
+                    // Add other user-specific localStorage items to clear here if necessary
+
+                    window.location.href = "index.html"; // Redirect to landing page after logout
+                });
+            }
+
+            // --- Function to Load All Video Data ---
+            function loadAllVideosData() {
+                 const videosJson = localStorage.getItem(VIDEO_STORAGE_KEY);
+                 return videosJson ? JSON.parse(videosJson) : [];
+            }
+
+             // --- Function to Load User Progress Data ---
+             function loadUserProgress() {
+                 if (loggedInUsername && loggedInUsername !== 'Guest') {
+                     const progressJson = localStorage.getItem(USER_PROGRESS_KEY_PREFIX + loggedInUsername);
+                     return progressJson ? JSON.parse(progressJson) : {};
+                 }
+                 return {}; // Return empty object if no user or guest
+             }
+
+            // --- Function to Calculate and Display Learning Progress ---
+            function displayLearningProgress() {
+                const allVideos = loadAllVideosData();
+                const userProgress = loadUserProgress();
+                learningProgressCardsDiv.innerHTML = ''; // Clear current cards
+
+                if (allVideos.length === 0) {
+                     learningProgressCardsDiv.innerHTML = '<p class="no-progress-message">No course data available. Please check back later.</p>';
+                     return;
+                }
+
+                // Group videos by module/track
+                const modules = {};
+                allVideos.forEach(video => {
+                    if (!modules[video.videoModule]) {
+                        modules[video.videoModule] = [];
+                    }
+                    modules[video.videoModule].push(video);
+                });
+
+                 // Get module titles and symbols (should be consistent with courses.html)
+                 const moduleTitles = {
+                     'data-analyst': 'Data Analyst Track',
+                     'business-analyst': 'Business Analyst Track',
+                     'data-scientist': 'Data Scientist Track',
+                     'big-data': 'Big Data & Cloud Tools',
+                     // Add other modules here
+                 };
+                 const moduleSymbols = {
+                     'data-analyst': '🟦',
+                     'business-analyst': '🟨',
+                     'data-scientist': '🟥',
+                     'big-data': '🟩',
+                     // Add other modules here
+                 };
+
+
+                // Calculate and display progress for each module
+                const moduleKeys = Object.keys(modules).sort(); // Sort modules alphabetically
+
+                if (moduleKeys.length === 0) {
+                     learningProgressCardsDiv.innerHTML = '<p class="no-progress-message">No course modules defined yet.</p>';
+                     return;
+                }
+
+
+                moduleKeys.forEach(moduleKey => {
+                    const moduleVideos = modules[moduleKey];
+                    const totalVideosInModule = moduleVideos.length;
+                    let completedVideosInModule = 0;
+
+                    moduleVideos.forEach(video => {
+                        if (userProgress[video.topicId] && userProgress[video.topicId].completed) {
+                            completedVideosInModule++;
+                        }
+                    });
+
+                    const completionPercentage = totalVideosInModule > 0
+                        ? Math.round((completedVideosInModule / totalVideosInModule) * 100)
+                        : 0;
+
+                    const moduleTitle = moduleTitles[moduleKey] || `${moduleKey} Track`;
+                     const moduleSymbol = moduleSymbols[moduleKey] || ' ';
+
+                    const progressCard = document.createElement('div');
+                    progressCard.classList.add('progress-card');
+                    progressCard.innerHTML = `
+                        <h3>${moduleSymbol} ${moduleTitle}</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${completionPercentage}%"></div>
+                        </div>
+                        <span class="progress-percent">${completionPercentage}% Complete</span>
+                        <div class="next-topic">${completionPercentage === 100 ? 'Module Completed!' : `${completedVideosInModule} of ${totalVideosInModule} videos completed`}</div>
+                    `;
+                    learningProgressCardsDiv.appendChild(progressCard);
+                });
+            }
+
+             // --- Helper to format seconds into MM:SS ---
+             function formatTime(seconds) {
+                 if (isNaN(seconds) || seconds < 0) return '00:00';
+                 const minutes = Math.floor(seconds / 60);
+                 const remainingSeconds = Math.floor(seconds % 60);
+                 const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                 const paddedSeconds = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds;
+                 return `${paddedMinutes}:${paddedSeconds}`;
+             }
+
+
+             // --- Function to Display Continue Learning Section ---
+             function displayContinueLearning() {
+                  continueLearningContentDiv.innerHTML = ''; // Clear current content
+
+                  const allVideos = loadAllVideosData();
+                  let mostRecentlyWatchedVideo = null;
+                  let latestTimestamp = null;
+                  let lastSavedTime = 0;
+
+
+                 // Find the video with the most recent saved progress timestamp
+                  allVideos.forEach(video => {
+                      const savedProgressJson = localStorage.getItem(VIDEO_PROGRESS_KEY_PREFIX + video.topicId);
+                       if (savedProgressJson) {
+                           try {
+                               const progressData = JSON.parse(savedProgressJson);
+                               // Check if there's a timestamp and a saved time (time > 0)
+                               if (progressData.timestamp && progressData.time !== undefined && parseFloat(progressData.time) > 0) {
+                                    const currentTimestamp = new Date(progressData.timestamp);
+                                    // Find the latest timestamp among videos with saved progress > 0
+                                    if (latestTimestamp === null || currentTimestamp > latestTimestamp) {
+                                        latestTimestamp = currentTimestamp;
+                                        mostRecentlyWatchedVideo = video;
+                                        lastSavedTime = parseFloat(progressData.time);
+                                    }
+                               }
+                           } catch (e) {
+                               console.error(`Failed to parse progress for video ${video.topicId}:`, e);
+                               // Potentially clear invalid data
+                               localStorage.removeItem(VIDEO_PROGRESS_KEY_PREFIX + video.topicId);
+                           }
+                       }
+                  });
+
+
+                  if (mostRecentlyWatchedVideo) {
+                       // Found the most recently watched video
+                       const continueCard = document.createElement('a');
+                       continueCard.classList.add('video-card');
+                       // Link to the video player page for this video
+                       continueCard.href = `courses.html?video=${mostRecentlyWatchedVideo.topicId}`;
+
+                        // Calculate time remaining using saved time and total duration
+                        const totalDurationSeconds = mostRecentlyWatchedVideo.totalDuration; // Use total duration from admin data
+                        let remainingText = 'Duration N/A';
+                        let progressPercent = 0;
+
+                       if (totalDurationSeconds !== undefined && !isNaN(totalDurationSeconds) && totalDurationSeconds > 0) {
+                           const remainingDuration = totalDurationSeconds - lastSavedTime;
+                            // Ensure remaining duration is not negative
+                            const displayRemainingSeconds = Math.max(0, remainingDuration);
+                            remainingText = `${formatTime(displayRemainingSeconds)} remaining`;
+
+                            // Calculate progress percentage
+                            progressPercent = Math.round((lastSavedTime / totalDurationSeconds) * 100);
+                             // Ensure progress doesn't exceed 100%
+                             progressPercent = Math.min(100, Math.max(0, progressPercent));
+                       }
+
+
+                         // Display the last viewed date/time
+                         const lastViewedDate = latestTimestamp ? latestTimestamp.toLocaleString() : 'unknown date';
+
+
+                       continueCard.innerHTML = `
+                           <div class="video-thumbnail">
+                               <img src="assets/placeholder-thumb.jpg" alt="Video Thumbnail">
+                               <div class="video-progress">
+                                    <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                                </div>
+                               <div class="play-btn"><i class="fas fa-play"></i></div>
+                           </div>
+                           <div class="video-info">
+                               <h3>${mostRecentlyWatchedVideo.videoTitle}</h3>
+                               <p class="video-desc">${mostRecentlyWatchedVideo.videoDescription || 'No description available.'}</p>
+                               <div class="video-meta">
+                                   <span><i class="far fa-clock"></i> ${remainingText}</span>
+                                   <span><i class="far fa-calendar"></i> Last viewed: ${lastViewedDate}</span>
+                               </div>
+                           </div>
+                       `;
+                       continueLearningContentDiv.appendChild(continueCard);
+
+                  } else {
+                       // No video progress found, show the default message
+                      continueLearningContentContentDiv.innerHTML = '<p class="no-progress-message">Start a course to see your progress here!</p>';
+                  }
+
+             }
+
+
+            // --- Initial Load and Display ---
+             displayLearningProgress(); // Display progress cards
+             displayContinueLearning(); // Display continue learning section
+
         });
 
-        // Basic check to redirect admin if they end up on user dashboard
-        if (localStorage.getItem('adminAuthenticated') && !localStorage.getItem('userAuthenticated')) {
-             // Maybe redirect admins back to their dashboard if they land here?
-             // window.location.href = "admin-dashboard.html";
-             // Or maybe just show the user dashboard interface to them? Depends on design.
-             // For now, they just see the user dashboard content.
-        }
+         // Basic check to redirect admin if they end up on user dashboard
+         // Removed the explicit redirect to admin dashboard. Admin just sees user dashboard.
     </script>
 </body>
 </html>
