@@ -14,6 +14,12 @@
             window.location.href = "auth.html"; // Redirect to auth page if not admin
         }
     </script>
+     <style>
+         /* Optional: Adjust input width if HH:MM:SS needs more space */
+         #totalDuration {
+             width: 120px; /* Adjust as needed */
+         }
+     </style>
 </head>
 <body>
     <div class="manage-videos-container">
@@ -51,7 +57,23 @@
 
                     <div class="form-group">
                         <label for="videoTitle">Video/Topic Title:</label>
-                        <input type="text" id="videoTitle" required placeholder="e.g., Statistics Fundamentals">
+                        <select id="videoTitle" required>
+                             <option value="">--Select Topic--</option>
+                             <option value="Statistics Fundamentals">Statistics Fundamentals</option>
+                             <option value="Excel for Data Analysis">Excel for Data Analysis</option>
+                             <option value="SQL for Analytics">SQL for Analytics</option>
+                             <option value="Power BI Full Course">Power BI Full Course</option>
+                             <option value="Tableau Full Course">Tableau Full Course</option>
+                             <option value="Python for Analysis">Python for Analysis</option>
+                              <option value="R Programming for Analytics">R Programming for Analytics</option>
+                              <option value="SPSS Basics">SPSS Basics</option>
+                              <option value="Business Decision Making">Business Decision Making</option>
+                              <option value="Machine Learning Basics">Machine Learning Basics</option>
+                               <option value="Deep Learning & Neural Networks">Deep Learning & Neural Networks</option>
+                               <option value="Artificial Intelligence Concepts">Artificial Intelligence Concepts</option>
+                               <option value="Big Data Tools (Hadoop & Spark)">Big Data Tools (Hadoop & Spark)</option>
+                                <option value="Cloud Platforms (AWS, GCP, Azure)">Cloud Platforms (AWS, GCP, Azure)</option>
+                                </select>
                     </div>
 
                      <div class="form-group">
@@ -71,8 +93,8 @@
                      </div>
 
                      <div class="form-group">
-                          <label for="totalDuration">Total Duration (in seconds):</label>
-                          <input type="number" id="totalDuration" placeholder="e.g., 1800">
+                          <label for="totalDuration">Total Duration (HH:MM:SS):</label>
+                          <input type="text" id="totalDuration" placeholder="e.g., 01:30:45">
                       </div>
 
                     <div class="form-actions">
@@ -93,7 +115,7 @@
                             <th>Title</th>
                             <th>Description</th>
                             <th>Module</th>
-                            <th>Duration (s)</th> <th>Actions</th>
+                            <th>Duration</th> <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="videosTableBody">
@@ -110,10 +132,10 @@
             const topicIdInput = document.getElementById('topicId');
             const videoTypeSelect = document.getElementById('videoType');
             const youtubeIdInput = document.getElementById('youtubeId');
-            const videoTitleInput = document.getElementById('videoTitle');
-            const videoDescriptionInput = document.getElementById('videoDescription');
+            const videoTitleSelect = document.getElementById('videoTitle'); // Changed to select
+            const videoDescriptionInput = document.getElementById('videoDescription'); // Corrected typo
             const videoModuleSelect = document.getElementById('videoModule');
-            const totalDurationInput = document.getElementById('totalDuration'); // New input field
+            const totalDurationInput = document.getElementById('totalDuration'); // Duration input
             const saveButton = videoForm.querySelector('.add-button'); // Save button
             const cancelEditBtn = document.getElementById('cancelEditBtn'); // Cancel button
             const formTitle = document.getElementById('formTitle'); // Form title element
@@ -124,11 +146,20 @@
 
             // --- localStorage Key ---
             const VIDEO_STORAGE_KEY = 'uknoClubVideoData';
+             const USER_PROGRESS_KEY_PREFIX = 'uknoClubProgress-'; // For deleting associated progress
+             const VIDEO_NOTES_KEY_PREFIX = 'video-notes-'; // For deleting associated notes
+             const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-'; // For deleting associated progress time
+
 
             // --- Helper Function to Load Videos from localStorage ---
             function loadVideos() {
                 const videosJson = localStorage.getItem(VIDEO_STORAGE_KEY);
-                return videosJson ? JSON.parse(videosJson) : [];
+                try {
+                    return videosJson ? JSON.parse(videosJson) : [];
+                } catch (e) {
+                    console.error("Error parsing video data from localStorage:", e);
+                    return []; // Return empty array if parsing fails
+                }
             }
 
             // --- Helper Function to Save Videos to localStorage ---
@@ -150,6 +181,38 @@
                  }
              }
 
+             // --- Helper to parse HH:MM:SS to seconds ---
+             function parseDurationToSeconds(durationString) {
+                 if (!durationString) return 0;
+                 const parts = durationString.split(':').map(Number);
+                 if (parts.some(isNaN)) return 0; // Return 0 if any part is not a number
+
+                 let seconds = 0;
+                 if (parts.length === 1) { // SS
+                     seconds = parts[0];
+                 } else if (parts.length === 2) { // MM:SS
+                     seconds = parts[0] * 60 + parts[1];
+                 } else if (parts.length === 3) { // HH:MM:SS
+                     seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+                 }
+                 return seconds;
+             }
+
+             // --- Helper to format seconds into HH:MM:SS ---
+             function formatSecondsToHHMMSS(totalSeconds) {
+                 if (isNaN(totalSeconds) || totalSeconds < 0) return '00:00:00';
+                 const hours = Math.floor(totalSeconds / 3600);
+                 const minutes = Math.floor((totalSeconds % 3600) / 60);
+                 const seconds = Math.floor(totalSeconds % 60);
+
+                 const paddedHours = hours < 10 ? '0' + hours : hours;
+                 const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                 const paddedSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+                 // Only include hours if there are any
+                 return hours > 0 ? `${paddedHours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
+             }
+
 
             // --- Function to Render Video Table ---
             function renderVideoTable() {
@@ -163,12 +226,11 @@
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td data-label="Topic ID">${video.topicId}</td>
-                            <td data-label="Type">${video.videoType === 'video' ? 'Single Video' : 'Playlist'}</td>
-                            <td data-label="YouTube ID">${video.youtubeId}</td>
+                            <td data-label="Type">${video.videoType === 'video' ? 'Single' : 'Playlist'}</td> <td data-label="YouTube ID">${video.youtubeId}</td>
                             <td data-label="Title">${video.videoTitle}</td>
                             <td data-label="Description">${video.videoDescription || '-'}</td>
                             <td data-label="Module">${video.videoModule}</td>
-                            <td data-label="Duration (s)">${video.totalDuration !== undefined ? video.totalDuration : '-'}</td> <td data-label="Actions" class="video-actions">
+                            <td data-label="Duration">${video.totalDuration !== undefined ? formatSecondsToHHMMSS(video.totalDuration) : '-'}</td> <td data-label="Actions" class="video-actions">
                                 <button class="edit-video-btn" data-id="${video.id}"><i class="fas fa-edit"></i> Edit</button>
                                 <button class="delete-video-btn" data-id="${video.id}"><i class="fas fa-trash-alt"></i> Delete</button>
                             </td>
@@ -200,20 +262,25 @@
                 const topicId = topicIdInput.value.trim();
                 const videoType = videoTypeSelect.value;
                 const youtubeId = youtubeIdInput.value.trim();
-                const videoTitle = videoTitleInput.value.trim();
+                const videoTitle = videoTitleSelect.value; // Get value from select
                 const videoDescription = videoDescriptionInput.value.trim();
                 const videoModule = videoModuleSelect.value;
-                 const totalDuration = totalDurationInput.value.trim(); // Get duration
+                 const durationString = totalDurationInput.value.trim(); // Get duration string
 
                 // Basic validation
                  if (!topicId || !youtubeId || !videoTitle || !videoModule) {
                      showMessage("Please fill all required fields.", 'error');
                      return;
                  }
-                // Validate duration is a non-negative number if entered
-                 const parsedDuration = totalDuration === '' ? undefined : parseInt(totalDuration, 10);
-                 if (totalDuration !== '' && (isNaN(parsedDuration) || parsedDuration < 0)) {
-                     showMessage("Total Duration must be a non-negative number.", 'error');
+                 if (videoTitle === "") { // Validate dropdown selection
+                     showMessage("Please select a Topic Title.", 'error');
+                     return;
+                 }
+
+                // Parse and validate duration
+                 const parsedDuration = parseDurationToSeconds(durationString);
+                 if (durationString !== '' && parsedDuration === 0 && durationString !== '0' && durationString !== '0:00' && durationString !== '00:00' && durationString !== '0:00:00' && durationString !== '00:00:00') {
+                     showMessage("Invalid duration format (use HH:MM:SS, MM:SS, or SS) or value.", 'error');
                      return;
                  }
 
@@ -238,10 +305,10 @@
                             topicId: topicId,
                             videoType: videoType,
                             youtubeId: youtubeId,
-                            videoTitle: videoTitle,
+                            videoTitle: videoTitle, // Save selected title
                             videoDescription: videoDescription,
                             videoModule: videoModule,
-                            totalDuration: parsedDuration // Save parsed duration
+                            totalDuration: parsedDuration // Save parsed duration (in seconds)
                         };
                         showMessage("Video updated successfully!", 'success');
                     } else {
@@ -260,10 +327,10 @@
                         topicId: topicId,
                         videoType: videoType,
                         youtubeId: youtubeId,
-                        videoTitle: videoTitle,
+                        videoTitle: videoTitle, // Save selected title
                         videoDescription: videoDescription,
                         videoModule: videoModule,
-                         totalDuration: parsedDuration // Save parsed duration
+                         totalDuration: parsedDuration // Save parsed duration (in seconds)
                     };
                     videos.push(newVideo);
                     showMessage("Video added successfully!", 'success');
@@ -288,10 +355,11 @@
                     topicIdInput.value = videoToEdit.topicId;
                     videoTypeSelect.value = videoToEdit.videoType;
                     youtubeIdInput.value = videoToEdit.youtubeId;
-                    videoTitleInput.value = videoToEdit.videoTitle;
+                    videoTitleSelect.value = videoToEdit.videoTitle; // Set selected title
                     videoDescriptionInput.value = videoToEdit.videoDescription;
                     videoModuleSelect.value = videoToEdit.videoModule;
-                     totalDurationInput.value = videoToEdit.totalDuration !== undefined ? videoToEdit.totalDuration : ''; // Populate duration
+                     // Populate duration field by formatting seconds back to HH:MM:SS
+                     totalDurationInput.value = videoToEdit.totalDuration !== undefined ? formatSecondsToHHMMSS(videoToEdit.totalDuration) : '';
 
                     // Change form title and button text
                     formTitle.innerHTML = '<i class="fas fa-edit"></i> Edit Video';
@@ -320,6 +388,11 @@
                     const videoIdToDelete = this.getAttribute('data-id');
                     let videos = loadVideos();
 
+                    // Find the topicId of the video to delete
+                     const videoToDelete = videos.find(v => v.id === videoIdToDelete);
+                     const topicIdToDelete = videoToDelete ? videoToDelete.topicId : null;
+
+
                     // Filter out the video to delete
                     videos = videos.filter(v => v.id !== videoIdToDelete);
 
@@ -331,9 +404,36 @@
                      // --- Important: Also remove associated user progress and notes! ---
                      // This is crucial for data consistency. Iterate through all users' progress and notes.
                      // In a real app, the backend would handle this database-level deletion.
-                     console.warn("Frontend Delete: Remember to also delete associated user progress and notes for this video ID in a real application.");
-                     // You would need to iterate through localStorage keys for progress (uknoClubProgress-*)
-                     // and notes (video-notes-*) and remove entries related to videoIdToDelete's topicId.
+                      console.warn(`Frontend Delete: Attempting to remove associated user progress and notes for topic ID: ${topicIdToDelete}`);
+
+                      // Remove notes for this topic
+                     if (topicIdToDelete) {
+                         localStorage.removeItem(VIDEO_NOTES_KEY_PREFIX + topicIdToDelete);
+                         console.log(`Removed notes for ${topicIdToDelete}`);
+                     }
+
+                      // Remove progress for this topic from all users (frontend approximation)
+                     for (let i = 0; i < localStorage.length; i++) {
+                         const key = localStorage.key(i);
+                         if (key.startsWith(USER_PROGRESS_KEY_PREFIX)) {
+                              try {
+                                  const userProgress = JSON.parse(localStorage.getItem(key));
+                                  if (userProgress && userProgress[topicIdToDelete]) {
+                                      delete userProgress[topicIdToDelete]; // Remove entry for this topic
+                                       localStorage.setItem(key, JSON.stringify(userProgress)); // Save updated progress
+                                       console.log(`Removed progress for ${topicIdToDelete} from user ${key.replace(USER_PROGRESS_KEY_PREFIX, '')}`);
+                                  }
+                              } catch (e) {
+                                  console.error(`Error parsing user progress for key ${key}:`, e);
+                              }
+                         }
+                     }
+                     // Also remove any individual video progress time if user was watching it
+                      if (topicIdToDelete) {
+                          localStorage.removeItem(VIDEO_PROGRESS_KEY_PREFIX + topicIdToDelete);
+                           console.log(`Removed individual video progress time for ${topicIdToDelete}`);
+                      }
+
                 }
             }
 
