@@ -456,5 +456,35 @@
          // Basic check to redirect admin if they end up on user dashboard
          // Removed the explicit redirect to admin dashboard. Admin just sees user dashboard.
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Authentication Check ---
+        const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
+        const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
+        const adminAuthLocal = localStorage.getItem('adminAuthenticated') === 'true'; // Assuming 'adminAuthenticated' is the key for admin
+
+        // If neither user nor admin authentication flag is found, redirect to login page
+        if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
+            console.log("User is not authenticated on dashboard.html, redirecting to auth.html");
+            // Use replace to prevent history stack issues
+            window.location.replace("auth.html#login"); // Redirect to login form on auth page
+        } else {
+            console.log("User is authenticated on dashboard.html, loading dashboard content.");
+            // User is authenticated, proceed to load dashboard content
+            // Any dashboard-specific JS logic would go here
+             // Example: Display logged-in username (assuming it's stored)
+             const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
+             if (loggedInUsername) {
+                 console.log("Logged in as:", loggedInUsername);
+                  // You could update an element on the dashboard to show the username
+                  // document.getElementById('welcomeMessage').textContent = `Welcome, ${loggedInUsername}!`;
+             }
+        }
+
+        // --- Rest of your dashboard.html JavaScript would go here ---
+        // For example, fetching and displaying user progress, etc.
+
+    });
+</script>
 </body>
 </html>
