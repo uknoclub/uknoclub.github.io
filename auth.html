@@ -200,28 +200,24 @@
 
 
             // --- Registration ---
-            registerBtn.addEventListener('click', function() {
-                clearMessages();
+            // --- Registration (Now connecting to backend API) ---
+            registerBtn.addEventListener('click', async function(e) { // Added 'async' keyword
+                e.preventDefault(); // Prevent default form submission
+
+                clearMessages(); // Clear previous messages
+
                 const username = registerUsernameInput.value.trim();
                 const fullName = registerFullNameInput.value.trim();
                 const email = registerEmailInput.value.trim();
                 const password = registerPasswordInput.value.trim();
                 const confirmPassword = confirmPasswordInput.value.trim();
 
-                // Basic validation
+                // Basic frontend validation (backend will also validate)
                 if (!username || !password || !confirmPassword) {
                     registerMessage.textContent = 'Please fill all required fields (Username, Password, Confirm Password).';
                     registerMessage.style.color = 'var(--error)';
                     return;
                 }
-
-                // Simple email format validation (optional but good practice)
-                if (email && !/@.+\..+/.test(email)) {
-                    registerMessage.textContent = 'Please enter a valid email address.';
-                    registerMessage.style.color = 'var(--error)';
-                    return;
-                }
-
 
                 if (password !== confirmPassword) {
                     registerMessage.textContent = 'Passwords do not match.';
@@ -229,41 +225,68 @@
                     return;
                 }
 
-                // Check if username already exists
-                const users = getUsers();
-                if (users[username]) {
-                    registerMessage.textContent = 'Username already exists.';
-                    registerMessage.style.color = 'var(--error)';
-                    return;
-                }
-
-                // Store new user data including new fields
-                users[username] = {
-                    password: password, // In a real app, hash the password!
-                    fullName: fullName,
-                    email: email
+                // Prepare the data to send to the backend
+                const userData = {
+                    username: username,
+                    password: password,
+                    fullName: fullName, // Send fullName
+                    email: email // Send email
                 };
 
-                saveUsers(users); // Save updated users object
+                try {
+                    // Send a POST request to the backend registration endpoint
+                    const response = await fetch('http://127.0.0.1:5000/register', { // Use await here
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json' // Tell the backend we are sending JSON
+                        },
+                        body: JSON.stringify(userData) // Convert the JavaScript object to a JSON string
+                    });
 
-                registerMessage.textContent = 'Registration successful! You can now login.';
-                registerMessage.style.color = 'var(--success)';
-                // Optionally clear registration form or switch to login form
-                registerForm.reset(); // Clear the form
-                 // Clear password visibility state
-                 registerPasswordInput.type = 'password';
-                 toggleRegisterPasswordIcon.classList.remove('fa-eye-slash');
-                 toggleRegisterPasswordIcon.classList.add('fa-eye');
-                 confirmPasswordInput.type = 'password';
-                 toggleConfirmPasswordIcon.classList.remove('fa-eye-slash');
-                 toggleConfirmPasswordIcon.classList.add('fa-eye');
+                    // Parse the JSON response from the backend
+                    const result = await response.json(); // Use await here
+
+                    // Handle the response based on the HTTP status code
+                    if (response.ok) { // response.ok is true for status codes 200-299 (like 201 Created)
+                        registerMessage.textContent = result.message || 'Registration successful!';
+                        registerMessage.style.color = 'var(--success)';
+
+                        // Clear the form fields on success
+                        registerForm.reset();
+                         // Clear password visibility state
+                         registerPasswordInput.type = 'password';
+                         if (toggleRegisterPasswordIcon) { // Check if icon exists before manipulating
+                             toggleRegisterPasswordIcon.classList.remove('fa-eye-slash');
+                             toggleRegisterPasswordIcon.classList.add('fa-eye');
+                         }
+                         confirmPasswordInput.type = 'password';
+                          if (toggleConfirmPasswordIcon) { // Check if icon exists before manipulating
+                             toggleConfirmPasswordIcon.classList.remove('fa-eye-slash');
+                             toggleConfirmPasswordIcon.classList.add('fa-eye');
+                         }
 
 
-                // Automatically switch to login form after a delay
-                setTimeout(() => {
-                    showForm('loginForm'); // Switch to login form
-                }, 2000); // Switch after 2 seconds
+                        // Automatically switch to login form after a delay
+                        setTimeout(() => {
+                            showForm('loginForm'); // Switch to login form
+                        }, 2000); // Switch after 2 seconds
+
+                    } else {
+                        // Handle errors (e.g., username already exists, validation errors from backend)
+                        registerMessage.textContent = result.message || 'Registration failed.';
+                        registerMessage.style.color = 'var(--error)';
+                         // You might want to inspect result.message to show specific backend errors
+                    }
+
+                } catch (error) {
+                    // Handle network errors or issues sending the request
+                    console.error('Error during registration fetch:', error);
+                    registerMessage.textContent = 'An error occurred. Please try again later.';
+                    registerMessage.style.color = 'var(--error)';
+                }
             });
+
+            // ... (rest of your auth.html script below, including the Login and Initial display logic) ...
 
 
             // --- Login (Handles both User and Admin) ---
