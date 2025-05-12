@@ -101,12 +101,13 @@
             const toggleRegisterPasswordIcon = document.getElementById('toggleRegisterPassword');
             const toggleConfirmPasswordIcon = document.getElementById('toggleConfirmPassword');
 
-            // --- localStorage Keys (Still used by old login logic) ---
-            const USERS_STORAGE_KEY = 'uknoClubUsers';
-            const ADMIN_AUTH_KEY = 'adminAuthenticated';
-            const LOGGED_IN_USERNAME_KEY = 'loggedInUsername';
+            // --- localStorage Keys (Used by initial redirect check) ---
+            // Note: These are temporary and ideally replaced by checking a backend token
+            const USERS_STORAGE_KEY = 'uknoClubUsers'; // This localStorage key is no longer used by new register/login
+            const ADMIN_AUTH_KEY = 'adminAuthenticated'; // Used by initial redirect check
+            const LOGGED_IN_USERNAME_KEY = 'loggedInUsername'; // Used by initial redirect check
 
-            // --- Helper function to get user data from localStorage (Still used by old login logic) ---
+            // --- Helper function to get user data from localStorage (Legacy, not used by new logic) ---
             function getUsers() {
                 const usersJson = localStorage.getItem(USERS_STORAGE_KEY);
                 try {
@@ -117,7 +118,7 @@
                 }
             }
 
-            // --- Helper function to save user data to localStorage (Still used by old login logic) ---
+            // --- Helper function to save user data to localStorage (Legacy, not used by new logic) ---
             function saveUsers(usersObject) {
                 localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usersObject));
             }
@@ -183,9 +184,8 @@
                 toggleConfirmPasswordIcon.addEventListener('click', () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPasswordIcon));
              }
 
-            // --- Registration (Now connecting to backend API) ---
+            // --- Registration (Connected to backend API) ---
             // Listen for the 'submit' event on the form, not the button click
-            // This handles pressing Enter in the form as well
             registerForm.addEventListener('submit', async function(e) { // Listen to form submit
                 e.preventDefault(); // Prevent default form submission
 
@@ -273,10 +273,9 @@
             });
 
 
-             // --- Login (Still using localStorage - WILL BE UPDATED NEXT) ---
-             // Listen for the 'submit' event on the form, not the button click
-            // --- Login (Now connecting to backend API) ---
-             loginForm.addEventListener('submit', async function(e) { // Added 'async' keyword
+             // --- Login (Connected to backend API) ---
+             // Listen for the 'submit' event on the form
+            loginForm.addEventListener('submit', async function(e) { // Listen to form submit
                  e.preventDefault(); // Prevent default form submission
 
                  clearMessages(); // Clear previous messages
@@ -301,7 +300,7 @@
 
                  try {
                      // Send a POST request to the backend login endpoint
-                     const response = await fetch('http://127.0.0.1:5000/login', { // Use await here
+                     const response = await fetch('http://127.0.0.1:5000/login', {
                          method: 'POST',
                          headers: {
                              'Content-Type': 'application/json' // Tell the backend we are sending JSON
@@ -310,7 +309,7 @@
                      });
 
                      // Parse the JSON response from the backend
-                     const result = await response.json(); // Use await here
+                     const result = await response.json();
 
                      // Handle the response based on the HTTP status code
                      if (response.ok) { // response.ok is true for status codes 200-299 (like 200 OK)
@@ -320,26 +319,28 @@
                          // Check if the backend response indicates admin or regular user
                          if (result.is_admin) {
                              // Admin login successful
-                             // In a real app, backend would issue an admin token
-                             // For now, store admin status in localStorage (for simplicity, though a token is better)
+                             // Store admin status in localStorage (for simplicity)
                              localStorage.setItem(ADMIN_AUTH_KEY, 'true');
                              // Clear any potential user login state
                              localStorage.removeItem('userAuthenticated');
                              localStorage.removeItem(LOGGED_IN_USERNAME_KEY);
+                             sessionStorage.removeItem('userAuthenticated'); // Also clear session storage
+                             sessionStorage.removeItem(LOGGED_IN_USERNAME_KEY);
 
-                             // Redirect to admin dashboard
-                             window.location.href = "admin-dashboard.html";
+                             // Redirect to admin dashboard - Use replace to prevent history stack issues
+                              setTimeout(() => { // Use a small timeout to allow message to be seen
+                                  window.location.replace("admin-dashboard.html");
+                              }, 50);
+
 
                          } else {
                              // Regular user login successful
-                             // In a real app, backend would issue a user token and maybe user ID
-                             // For now, store user auth state and username in localStorage/sessionStorage
-                             // Use localStorage for "Remember Me", sessionStorage for session-only
+                             // Store user auth state and username in localStorage/sessionStorage
                              if (rememberMe) {
                                  localStorage.setItem('userAuthenticated', 'true');
                                  localStorage.setItem(LOGGED_IN_USERNAME_KEY, result.username); // Use username from backend response
-                                 localStorage.removeItem('sessionAuthenticated'); // Ensure session storage is clear
-                                 localStorage.removeItem('sessionLoggedInUsername');
+                                 sessionStorage.removeItem('userAuthenticated'); // Ensure session storage is clear
+                                 sessionStorage.removeItem(LOGGED_IN_USERNAME_KEY);
                              } else {
                                  sessionStorage.setItem('userAuthenticated', 'true');
                                  sessionStorage.setItem(LOGGED_IN_USERNAME_KEY, result.username); // Use username from backend response
@@ -349,12 +350,13 @@
                              // Clear any potential admin login state
                              localStorage.removeItem(ADMIN_AUTH_KEY);
 
-
-                             // Redirect to user dashboard
-                             window.location.href = "dashboard.html";
+                             // Redirect to user dashboard - Use replace to prevent history stack issues
+                             setTimeout(() => { // Use a small timeout to allow message to be seen
+                                  window.location.replace("dashboard.html");
+                             }, 50);
                          }
 
-                         // Clear the form fields on success (now works because loginForm is a <form>)
+                         // Clear the form fields on success
                          loginForm.reset();
                          // Clear password visibility state
                          loginPasswordInput.type = 'password';
@@ -366,7 +368,6 @@
 
                      } else {
                          // Handle errors (e.g., invalid credentials from backend - 401 status)
-                         // The backend should send a 'message' key in its JSON error response
                          loginMessage.textContent = result.message || 'Login failed.';
                          loginMessage.style.color = 'var(--error)';
                          // Console log the error response for debugging
@@ -381,45 +382,41 @@
                  }
              });
 
-             // --- Note: The initial authentication check and redirect logic below
-             //    still uses localStorage/sessionStorage. We will need to update this
-             //    in a future step to check for a valid backend token instead. ---
 
-             // --- Initial form display ---
-             // Check URL hash to determine which form to show on load
-             const urlHash = window.location.hash;
-             if (urlHash === '#register') {
-                 showForm('registerForm');
-             } else {
-                 showForm('loginForm'); // Default to login form
-             }
+             // --- Initial authentication check and redirect ---
+             // This runs when the page loads to see if the user is already authenticated
+              console.log("Checking authentication status on auth.html load...");
+              const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
+              const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
+              const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
 
-             // Check if already authenticated and redirect (Uses localStorage/sessionStorage)
-              // Check if already authenticated and redirect (Uses localStorage/sessionStorage)
-          console.log("Checking authentication status on auth.html load...");
-          const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
-          const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
-          const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
-
-          console.log("localStorage userAuthenticated:", userAuthLocal);
-          console.log("sessionStorage userAuthenticated:", userAuthSession);
-          console.log("localStorage ADMIN_AUTH_KEY:", adminAuthLocal);
+              console.log("localStorage userAuthenticated:", userAuthLocal);
+              console.log("sessionStorage userAuthenticated:", userAuthSession);
+              console.log("localStorage ADMIN_AUTH_KEY:", adminAuthLocal);
 
 
-          if (userAuthLocal || userAuthSession || adminAuthLocal) {
-               console.log("User is authenticated, redirecting...");
-               // Determine where to redirect based on stored state
-               if (adminAuthLocal) {
-                   console.log("Redirecting to admin dashboard...");
-                   window.location.href = "admin-dashboard.html"; // Redirect admin
-               } else if (userAuthLocal || userAuthSession) {
-                    console.log("Redirecting to user dashboard...");
-                    window.location.href = "dashboard.html"; // Redirect regular user
-               }
-               // If neither admin nor user state, stay on auth page - this part won't be reached if the if is true
-          } else {
-               console.log("User is not authenticated, staying on auth.html");
-          }
+              if (userAuthLocal || userAuthSession || adminAuthLocal) {
+                   console.log("User is authenticated, redirecting...");
+                   // Determine where to redirect based on stored state
+                   if (adminAuthLocal) {
+                       console.log("Redirecting to admin dashboard...");
+                       window.location.replace("admin-dashboard.html"); // Use replace
+                   } else if (userAuthLocal || userAuthSession) {
+                        console.log("Redirecting to user dashboard...");
+                        window.location.replace("dashboard.html"); // Use replace
+                   }
+                   // If neither admin nor user state, stay on auth page - this part won't be reached if the if is true
+              } else {
+                   console.log("User is not authenticated, staying on auth.html");
+                   // --- Initial form display only if NOT authenticated ---
+                   // Check URL hash to determine which form to show on load
+                   const urlHash = window.location.hash;
+                   if (urlHash === '#register') {
+                       showForm('registerForm');
+                   } else {
+                       showForm('loginForm'); // Default to login form
+                   }
+              }
 
 
         });
