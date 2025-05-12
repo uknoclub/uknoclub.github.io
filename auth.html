@@ -395,15 +395,31 @@
              }
 
              // Check if already authenticated and redirect (Uses localStorage/sessionStorage)
-              if (localStorage.getItem('userAuthenticated') === 'true' || sessionStorage.getItem('userAuthenticated') === 'true' || localStorage.getItem(ADMIN_AUTH_KEY) === 'true') {
-                   // Determine where to redirect based on stored state
-                   if (localStorage.getItem(ADMIN_AUTH_KEY) === 'true') {
-                       window.location.href = "admin-dashboard.html"; // Redirect admin
-                   } else if (localStorage.getItem('userAuthenticated') === 'true' || sessionStorage.getItem('userAuthenticated') === 'true') {
-                        window.location.href = "dashboard.html"; // Redirect regular user
-                   }
-                   // If neither admin nor user state, stay on auth page
-              }
+              // Check if already authenticated and redirect (Uses localStorage/sessionStorage)
+          console.log("Checking authentication status on auth.html load...");
+          const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
+          const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
+          const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
+
+          console.log("localStorage userAuthenticated:", userAuthLocal);
+          console.log("sessionStorage userAuthenticated:", userAuthSession);
+          console.log("localStorage ADMIN_AUTH_KEY:", adminAuthLocal);
+
+
+          if (userAuthLocal || userAuthSession || adminAuthLocal) {
+               console.log("User is authenticated, redirecting...");
+               // Determine where to redirect based on stored state
+               if (adminAuthLocal) {
+                   console.log("Redirecting to admin dashboard...");
+                   window.location.href = "admin-dashboard.html"; // Redirect admin
+               } else if (userAuthLocal || userAuthSession) {
+                    console.log("Redirecting to user dashboard...");
+                    window.location.href = "dashboard.html"; // Redirect regular user
+               }
+               // If neither admin nor user state, stay on auth page - this part won't be reached if the if is true
+          } else {
+               console.log("User is not authenticated, staying on auth.html");
+          }
 
 
         });
