@@ -31,7 +31,7 @@
 
                  <div class="form-container">
 
-                     <div id="loginForm" class="form">
+                     <form id="loginForm" class="form">
                         <h2>Login</h2> <div class="form-group">
                             <label for="loginUsername">Username:</label>
                             <input type="text" id="loginUsername" required>
@@ -47,11 +47,8 @@
                             </label>
                             <a href="#" class="forgot-password">Forgot Password?</a>
                         </div>
-                        <button id="loginBtn" class="submit-btn">Login</button>
-                         <p class="error-message" id="loginMessage"></p>
-                    </div>
-
-                    <div id="registerForm" class="form hidden">
+                        <button id="loginBtn" class="submit-btn" type="submit">Login</button> <p class="error-message" id="loginMessage"></p>
+                    </form> <form id="registerForm" class="form hidden">
                         <h2>Register</h2>
                         <div class="form-group">
                             <label for="registerUsername">Username:</label>
@@ -75,22 +72,16 @@
                             <input type="password" id="confirmPassword" required>
                              <i class="fas fa-eye show-password" id="toggleConfirmPassword"></i>
                         </div>
-                        <button id="registerBtn" class="submit-btn">Register</button>
-                         <p class="error-message" id="registerMessage"></p>
+                        <button id="registerBtn" class="submit-btn" type="submit">Register</button> <p class="error-message" id="registerMessage"></p>
                          <p class="privacy-note">By registering, you agree to our Privacy Policy.</p>
-                    </div>
-
-                     </div> </div> </div> </div> <script>
+                    </form> </div> </div> </div> </div> <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Form divs
+            // Form elements (now correctly reference <form> elements)
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
-            // Removed: const adminLoginForm = document.getElementById('adminLoginForm');
 
-
-            // Toggle buttons (Now only Login and Register)
+            // Toggle buttons (Only User Login and Register)
             const toggleButtons = document.querySelectorAll('.toggle-buttons button');
-
 
             // Login form elements
             const loginUsernameInput = document.getElementById('loginUsername');
@@ -110,16 +101,12 @@
             const toggleRegisterPasswordIcon = document.getElementById('toggleRegisterPassword');
             const toggleConfirmPasswordIcon = document.getElementById('toggleConfirmPassword');
 
-            // Removed Admin login form elements references
-
-
-            // --- localStorage Keys ---
+            // --- localStorage Keys (Still used by old login logic) ---
             const USERS_STORAGE_KEY = 'uknoClubUsers';
             const ADMIN_AUTH_KEY = 'adminAuthenticated';
             const LOGGED_IN_USERNAME_KEY = 'loggedInUsername';
 
-
-            // --- Helper function to get user data from localStorage ---
+            // --- Helper function to get user data from localStorage (Still used by old login logic) ---
             function getUsers() {
                 const usersJson = localStorage.getItem(USERS_STORAGE_KEY);
                 try {
@@ -130,7 +117,7 @@
                 }
             }
 
-            // --- Helper function to save user data to localStorage ---
+            // --- Helper function to save user data to localStorage (Still used by old login logic) ---
             function saveUsers(usersObject) {
                 localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usersObject));
             }
@@ -139,10 +126,9 @@
             function clearMessages() {
                 loginMessage.textContent = '';
                 registerMessage.textContent = '';
-                 // Removed adminLoginMessage.textContent = '';
             }
 
-            // --- Toggle Forms Function (Now only toggles between login and register) ---
+            // --- Toggle Forms Function ---
             function showForm(formId) {
                 const forms = document.querySelectorAll('.auth-form-container .form');
                 forms.forEach(form => {
@@ -153,55 +139,54 @@
                     }
                 });
 
-                 // Set active class on toggle buttons
-                 toggleButtons.forEach(button => {
-                     if (button.getAttribute('data-form') === formId) {
-                         button.classList.add('active');
-                     } else {
-                         button.classList.remove('active');
-                     }
-                 });
+                // Set active class on toggle buttons
+                toggleButtons.forEach(button => {
+                    if (button.getAttribute('data-form') === formId) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
 
                 clearMessages(); // Clear messages when switching forms
             }
 
             // --- Event Listeners for Toggle Buttons ---
-             toggleButtons.forEach(button => {
-                 button.addEventListener('click', function() {
-                     const targetFormId = this.getAttribute('data-form');
-                     showForm(targetFormId);
-                 });
-             });
-
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetFormId = this.getAttribute('data-form');
+                    showForm(targetFormId);
+                });
+            });
 
             // --- Show/Hide Password Functionality ---
-             function togglePasswordVisibility(passwordInput, toggleIcon) {
-                 if (passwordInput.type === 'password') {
-                     passwordInput.type = 'text';
-                     toggleIcon.classList.remove('fa-eye');
-                     toggleIcon.classList.add('fa-eye-slash');
-                 } else {
-                     passwordInput.type = 'password';
-                     toggleIcon.classList.remove('fa-eye-slash');
-                     toggleIcon.classList.add('fa-eye');
-                 }
+            function togglePasswordVisibility(passwordInput, toggleIcon) {
+                if (!passwordInput || !toggleIcon) return; // Added safety check
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            }
+
+            if (toggleLoginPasswordIcon) {
+                toggleLoginPasswordIcon.addEventListener('click', () => togglePasswordVisibility(loginPasswordInput, toggleLoginPasswordIcon));
+            }
+            if (toggleRegisterPasswordIcon) {
+                toggleRegisterPasswordIcon.addEventListener('click', () => togglePasswordVisibility(registerPasswordInput, toggleRegisterPasswordIcon));
+            }
+             if (toggleConfirmPasswordIcon) {
+                toggleConfirmPasswordIcon.addEventListener('click', () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPasswordIcon));
              }
 
-             if (toggleLoginPasswordIcon) {
-                 toggleLoginPasswordIcon.addEventListener('click', () => togglePasswordVisibility(loginPasswordInput, toggleLoginPasswordIcon));
-             }
-             if (toggleRegisterPasswordIcon) {
-                 toggleRegisterPasswordIcon.addEventListener('click', () => togglePasswordVisibility(registerPasswordInput, toggleRegisterPasswordIcon));
-             }
-              if (toggleConfirmPasswordIcon) {
-                 toggleConfirmPasswordIcon.addEventListener('click', () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPasswordIcon));
-             }
-             // Removed admin password toggle listener
-
-
-            // --- Registration ---
             // --- Registration (Now connecting to backend API) ---
-            registerBtn.addEventListener('click', async function(e) { // Added 'async' keyword
+            // Listen for the 'submit' event on the form, not the button click
+            // This handles pressing Enter in the form as well
+            registerForm.addEventListener('submit', async function(e) { // Listen to form submit
                 e.preventDefault(); // Prevent default form submission
 
                 clearMessages(); // Clear previous messages
@@ -235,7 +220,7 @@
 
                 try {
                     // Send a POST request to the backend registration endpoint
-                    const response = await fetch('http://127.0.0.1:5000/register', { // Use await here
+                    const response = await fetch('http://127.0.0.1:5000/register', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json' // Tell the backend we are sending JSON
@@ -244,27 +229,26 @@
                     });
 
                     // Parse the JSON response from the backend
-                    const result = await response.json(); // Use await here
+                    const result = await response.json();
 
                     // Handle the response based on the HTTP status code
                     if (response.ok) { // response.ok is true for status codes 200-299 (like 201 Created)
                         registerMessage.textContent = result.message || 'Registration successful!';
                         registerMessage.style.color = 'var(--success)';
 
-                        // Clear the form fields on success
+                        // Clear the form fields on success (now works because registerForm is a <form>)
                         registerForm.reset();
                          // Clear password visibility state
                          registerPasswordInput.type = 'password';
-                         if (toggleRegisterPasswordIcon) { // Check if icon exists before manipulating
+                         if (toggleRegisterPasswordIcon) {
                              toggleRegisterPasswordIcon.classList.remove('fa-eye-slash');
                              toggleRegisterPasswordIcon.classList.add('fa-eye');
                          }
                          confirmPasswordInput.type = 'password';
-                          if (toggleConfirmPasswordIcon) { // Check if icon exists before manipulating
+                          if (toggleConfirmPasswordIcon) {
                              toggleConfirmPasswordIcon.classList.remove('fa-eye-slash');
                              toggleConfirmPasswordIcon.classList.add('fa-eye');
                          }
-
 
                         // Automatically switch to login form after a delay
                         setTimeout(() => {
@@ -273,9 +257,11 @@
 
                     } else {
                         // Handle errors (e.g., username already exists, validation errors from backend)
+                        // The backend should send a 'message' key in its JSON error response
                         registerMessage.textContent = result.message || 'Registration failed.';
                         registerMessage.style.color = 'var(--error)';
-                         // You might want to inspect result.message to show specific backend errors
+                        // Console log the error response for debugging
+                        console.error('Backend registration error:', result);
                     }
 
                 } catch (error) {
@@ -286,24 +272,25 @@
                 }
             });
 
-            // ... (rest of your auth.html script below, including the Login and Initial display logic) ...
 
+             // --- Login (Still using localStorage - WILL BE UPDATED NEXT) ---
+             // Listen for the 'submit' event on the form, not the button click
+            loginForm.addEventListener('submit', function(e) { // Listen to form submit
+                 e.preventDefault(); // Prevent default form submission
 
-            // --- Login (Handles both User and Admin) ---
-            loginBtn.addEventListener('click', function() {
-                clearMessages();
-                const username = loginUsernameInput.value.trim();
-                const password = loginPasswordInput.value.trim();
+                 clearMessages();
+                 const username = loginUsernameInput.value.trim();
+                 const password = loginPasswordInput.value.trim();
 
-                if (!username || !password) {
-                    loginMessage.textContent = 'Please enter username and password.';
-                    loginMessage.style.color = 'var(--error)';
-                    return;
-                }
+                 if (!username || !password) {
+                     loginMessage.textContent = 'Please enter username and password.';
+                     loginMessage.style.color = 'var(--error)';
+                     return;
+                 }
 
-                // Check if it's admin credentials first
+                 // Check if it's admin credentials first (localStorage check)
                  const ADMIN_USERNAME = 'admin';
-                 const ADMIN_PASSWORD = 'adminpassword'; // Use a strong password!
+                 const ADMIN_PASSWORD = 'adminpassword'; // Your hardcoded admin password
 
                  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
                      // Admin authentication successful!
@@ -315,11 +302,11 @@
                      window.location.href = "admin-dashboard.html"; // Redirect to admin dashboard
 
                  } else {
-                     // If not admin, check user credentials
-                     const users = getUsers();
+                     // If not admin, check user credentials (localStorage check)
+                     const users = getUsers(); // Get users from localStorage
                      const user = users[username];
 
-                     if (user && user.password === password) { // In a real app, compare hashed passwords
+                     if (user && user.password === password) { // In a real app, compare hashed passwords! (This will use backend hashing soon)
                          // User authentication successful!
                          localStorage.setItem('userAuthenticated', 'true'); // Mark user as authenticated
                          localStorage.setItem(LOGGED_IN_USERNAME_KEY, username); // Store the username
@@ -345,7 +332,7 @@
                  showForm('loginForm'); // Default to login form for both user and admin
              }
 
-             // Check if already authenticated and redirect
+             // Check if already authenticated and redirect (Still uses localStorage)
               if (localStorage.getItem('userAuthenticated') && localStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
                    window.location.href = "dashboard.html"; // Redirect user to dashboard if already logged in
               } else if (localStorage.getItem(ADMIN_AUTH_KEY)) {
