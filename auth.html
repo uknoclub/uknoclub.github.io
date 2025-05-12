@@ -275,12 +275,15 @@
 
              // --- Login (Still using localStorage - WILL BE UPDATED NEXT) ---
              // Listen for the 'submit' event on the form, not the button click
-            loginForm.addEventListener('submit', function(e) { // Listen to form submit
+            // --- Login (Now connecting to backend API) ---
+             loginForm.addEventListener('submit', async function(e) { // Added 'async' keyword
                  e.preventDefault(); // Prevent default form submission
 
-                 clearMessages();
+                 clearMessages(); // Clear previous messages
+
                  const username = loginUsernameInput.value.trim();
                  const password = loginPasswordInput.value.trim();
+                 const rememberMe = document.getElementById('rememberMe').checked; // Get the remember me state
 
                  if (!username || !password) {
                      loginMessage.textContent = 'Please enter username and password.';
@@ -288,40 +291,99 @@
                      return;
                  }
 
-                 // Check if it's admin credentials first (localStorage check)
-                 const ADMIN_USERNAME = 'admin';
-                 const ADMIN_PASSWORD = 'adminpassword'; // Your hardcoded admin password
+                 // Prepare the data to send to the backend
+                 const loginData = {
+                     username: username,
+                     password: password
+                     // You might send rememberMe state here if backend handles it
+                     // rememberMe: rememberMe
+                 };
 
-                 if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                     // Admin authentication successful!
-                     localStorage.setItem(ADMIN_AUTH_KEY, 'true'); // Mark admin as authenticated
-                     localStorage.removeItem('userAuthenticated'); // Ensure user authentication is removed
-                     localStorage.removeItem(LOGGED_IN_USERNAME_KEY); // Ensure user username is removed
-                     loginMessage.textContent = 'Admin login successful! Redirecting...'; // Use login message area
-                     loginMessage.style.color = 'var(--success)';
-                     window.location.href = "admin-dashboard.html"; // Redirect to admin dashboard
+                 try {
+                     // Send a POST request to the backend login endpoint
+                     const response = await fetch('http://127.0.0.1:5000/login', { // Use await here
+                         method: 'POST',
+                         headers: {
+                             'Content-Type': 'application/json' // Tell the backend we are sending JSON
+                         },
+                         body: JSON.stringify(loginData) // Convert the JavaScript object to a JSON string
+                     });
 
-                 } else {
-                     // If not admin, check user credentials (localStorage check)
-                     const users = getUsers(); // Get users from localStorage
-                     const user = users[username];
+                     // Parse the JSON response from the backend
+                     const result = await response.json(); // Use await here
 
-                     if (user && user.password === password) { // In a real app, compare hashed passwords! (This will use backend hashing soon)
-                         // User authentication successful!
-                         localStorage.setItem('userAuthenticated', 'true'); // Mark user as authenticated
-                         localStorage.setItem(LOGGED_IN_USERNAME_KEY, username); // Store the username
-                         localStorage.removeItem(ADMIN_AUTH_KEY); // Ensure admin authentication is removed
-                         loginMessage.textContent = 'Login successful! Redirecting...';
+                     // Handle the response based on the HTTP status code
+                     if (response.ok) { // response.ok is true for status codes 200-299 (like 200 OK)
+                         loginMessage.textContent = result.message || 'Login successful!';
                          loginMessage.style.color = 'var(--success)';
-                         window.location.href = "dashboard.html"; // Redirect to dashboard
-                     } else {
-                         // Authentication failed for both user and admin
-                         loginMessage.textContent = 'Invalid username or password.';
-                         loginMessage.style.color = 'var(--error)';
-                     }
-                 }
-            });
 
+                         // Check if the backend response indicates admin or regular user
+                         if (result.is_admin) {
+                             // Admin login successful
+                             // In a real app, backend would issue an admin token
+                             // For now, store admin status in localStorage (for simplicity, though a token is better)
+                             localStorage.setItem(ADMIN_AUTH_KEY, 'true');
+                             // Clear any potential user login state
+                             localStorage.removeItem('userAuthenticated');
+                             localStorage.removeItem(LOGGED_IN_USERNAME_KEY);
+
+                             // Redirect to admin dashboard
+                             window.location.href = "admin-dashboard.html";
+
+                         } else {
+                             // Regular user login successful
+                             // In a real app, backend would issue a user token and maybe user ID
+                             // For now, store user auth state and username in localStorage/sessionStorage
+                             // Use localStorage for "Remember Me", sessionStorage for session-only
+                             if (rememberMe) {
+                                 localStorage.setItem('userAuthenticated', 'true');
+                                 localStorage.setItem(LOGGED_IN_USERNAME_KEY, result.username); // Use username from backend response
+                                 localStorage.removeItem('sessionAuthenticated'); // Ensure session storage is clear
+                                 localStorage.removeItem('sessionLoggedInUsername');
+                             } else {
+                                 sessionStorage.setItem('userAuthenticated', 'true');
+                                 sessionStorage.setItem(LOGGED_IN_USERNAME_KEY, result.username); // Use username from backend response
+                                  localStorage.removeItem('userAuthenticated'); // Ensure local storage is clear
+                                  localStorage.removeItem(LOGGED_IN_USERNAME_KEY);
+                             }
+                             // Clear any potential admin login state
+                             localStorage.removeItem(ADMIN_AUTH_KEY);
+
+
+                             // Redirect to user dashboard
+                             window.location.href = "dashboard.html";
+                         }
+
+                         // Clear the form fields on success (now works because loginForm is a <form>)
+                         loginForm.reset();
+                         // Clear password visibility state
+                         loginPasswordInput.type = 'password';
+                         if (toggleLoginPasswordIcon) {
+                             toggleLoginPasswordIcon.classList.remove('fa-eye-slash');
+                             toggleLoginPasswordIcon.classList.add('fa-eye');
+                         }
+
+
+                     } else {
+                         // Handle errors (e.g., invalid credentials from backend - 401 status)
+                         // The backend should send a 'message' key in its JSON error response
+                         loginMessage.textContent = result.message || 'Login failed.';
+                         loginMessage.style.color = 'var(--error)';
+                         // Console log the error response for debugging
+                         console.error('Backend login error:', result);
+                     }
+
+                 } catch (error) {
+                     // Handle network errors or issues sending the request
+                     console.error('Error during login fetch:', error);
+                     loginMessage.textContent = 'An error occurred. Please try again later.';
+                     loginMessage.style.color = 'var(--error)';
+                 }
+             });
+
+             // --- Note: The initial authentication check and redirect logic below
+             //    still uses localStorage/sessionStorage. We will need to update this
+             //    in a future step to check for a valid backend token instead. ---
 
              // --- Initial form display ---
              // Check URL hash to determine which form to show on load
@@ -329,15 +391,20 @@
              if (urlHash === '#register') {
                  showForm('registerForm');
              } else {
-                 showForm('loginForm'); // Default to login form for both user and admin
+                 showForm('loginForm'); // Default to login form
              }
 
-             // Check if already authenticated and redirect (Still uses localStorage)
-              if (localStorage.getItem('userAuthenticated') && localStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
-                   window.location.href = "dashboard.html"; // Redirect user to dashboard if already logged in
-              } else if (localStorage.getItem(ADMIN_AUTH_KEY)) {
-                   window.location.href = "admin-dashboard.html"; // Redirect admin to admin dashboard if already logged in
+             // Check if already authenticated and redirect (Uses localStorage/sessionStorage)
+              if (localStorage.getItem('userAuthenticated') === 'true' || sessionStorage.getItem('userAuthenticated') === 'true' || localStorage.getItem(ADMIN_AUTH_KEY) === 'true') {
+                   // Determine where to redirect based on stored state
+                   if (localStorage.getItem(ADMIN_AUTH_KEY) === 'true') {
+                       window.location.href = "admin-dashboard.html"; // Redirect admin
+                   } else if (localStorage.getItem('userAuthenticated') === 'true' || sessionStorage.getItem('userAuthenticated') === 'true') {
+                        window.location.href = "dashboard.html"; // Redirect regular user
+                   }
+                   // If neither admin nor user state, stay on auth page
               }
+
 
         });
     </script>
