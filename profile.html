@@ -244,5 +244,37 @@
             loadAndDisplayProfile(); // Load and display profile data when the page loads
         });
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Authentication Check for Protected Page ---
+        const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
+        const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
+        const adminAuthLocal = localStorage.getItem('adminAuthenticated') === 'true'; // Assuming 'adminAuthenticated' is the key for admin
+
+        // If neither user nor admin authentication flag is found, redirect to login page
+        if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
+            console.log("User is not authenticated on profile.html, redirecting to auth.html");
+            // Use replace to prevent history stack issues
+            window.location.replace("auth.html#login"); // Redirect to login form on auth page
+            // Stop further script execution on this page if not authenticated
+            return;
+        } else {
+             console.log("User is authenticated on profile.html, loading content.");
+             // User is authenticated, proceed to load profile content.
+             // You can add code here to fetch and display user-specific profile data.
+
+              // Example: Display logged-in username on the profile page if you have an element for it
+              // const profileUsernameSpan = document.getElementById('profileUsername'); // Assuming you have an element with this ID
+              // const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
+              // if (profileUsernameSpan && loggedInUsername) {
+              //      profileUsernameSpan.textContent = loggedInUsername;
+              // }
+        }
+
+        // --- Rest of your profile.html JavaScript would go here ---
+        // (e.g., logic to load/edit profile details, change password, etc.)
+
+    });
+</script>
 </body>
 </html>
