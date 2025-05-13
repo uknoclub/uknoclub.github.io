@@ -41,21 +41,19 @@
                  </div>
              </section>
 
-
             <section class="continue-section">
                 <h2><i class="fas fa-play-circle"></i> Continue Learning</h2>
                  <div id="continueLearningContent">
-                     <p class="no-progress-message">Start a course to see your progress here!</p>
+                     <p class="no-progress-message">Looking for video to continue...</p>
                  </div>
             </section>
 
-             <section class="progress-section">
+            <section class="progress-section">
                  <h2><i class="fas fa-chart-line"></i> My Learning Progress</h2>
                  <div class="progress-cards" id="learningProgressCards">
                      <p class="no-progress-message">Loading progress...</p>
                  </div>
              </section>
-
 
             <section class="actions-section">
                 <h2><i class="fas fa-bolt"></i> Quick Access</h2>
@@ -88,411 +86,348 @@
                 const dataScienceRoadmapDiv = document.getElementById('dataScienceRoadmap');
 
 
-                // --- localStorage/sessionStorage Keys ---
+                // --- localStorage/sessionStorage Keys (Consistent with auth.html & profile.html) ---
                 const ADMIN_AUTH_KEY = 'adminAuthenticated';
                 const LOGGED_IN_USERNAME_KEY = 'loggedInUsername';
 
-                // --- localStorage Keys (Currently used for data loading - WILL BE UPDATED TO USE BACKEND API) ---
-                const VIDEO_STORAGE_KEY = 'uknoClubVideoData';
-                const USER_PROGRESS_KEY_PREFIX = 'uknoClubProgress-';
-                const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-';
-
 
                 // --- Authentication Check ---
-                console.log("Checking authentication status on dashboard.html load...");
+                // This runs when the page loads to ensure the user is authenticated
                 const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
                 const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
                 const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
 
+                console.log("--- Dashboard.html Auth Check ---");
+                console.log("localStorage userAuthenticated:", localStorage.getItem('userAuthenticated'), "->", userAuthLocal);
+                console.log("sessionStorage userAuthenticated:", sessionStorage.getItem('userAuthenticated'), "->", userAuthSession);
+                console.log("localStorage adminAuthenticated:", localStorage.getItem(ADMIN_AUTH_KEY), "->", adminAuthLocal);
+
+
                 if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
-                    console.log("User is not authenticated on dashboard.html, redirecting to auth.html");
-                    window.location.replace("auth.html#login");
-                    return;
+                    console.log("Dashboard: User is NOT authenticated. Redirecting to auth.html");
+                    window.location.replace("auth.html#login"); // Use replace
+                    return; // Stop script execution if not authenticated
                 } else {
-                    console.log("User is authenticated on dashboard.html, loading dashboard content.");
-                    let loggedInUsername = 'User';
-                     if (adminAuthLocal) {
-                         loggedInUsername = 'Admin';
-                     } else if (localStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
-                         loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY);
-                     } else if (sessionStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
-                         loggedInUsername = sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
-                     }
+                    console.log("Dashboard: User IS authenticated. Loading dashboard content.");
 
-                    if (usernameSpan && loggedInUsername) {
-                        usernameSpan.textContent = loggedInUsername;
-                    }
+                    // --- Get the logged-in username ---
+                    const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
 
-                    // --- Determine "Welcome" vs "Welcome back" ---
-                    const userProgressCheck = loadUserProgress(); // Load progress from localStorage (temporary)
-                    const hasProgress = Object.keys(userProgressCheck).length > 0;
-
-                    if (welcomeMessagePrefixSpan) {
-                        if (hasProgress) {
-                            welcomeMessagePrefixSpan.textContent = 'Welcome back';
-                        } else {
-                            welcomeMessagePrefixSpan.textContent = 'Welcome';
-                        }
-                    }
-                }
-
-                // --- Logout Functionality ---
-                if (logoutBtn) {
-                    logoutBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        console.log("Logging out...");
-                        localStorage.removeItem('userAuthenticated');
-                        sessionStorage.removeItem('userAuthenticated');
-                        localStorage.removeItem('adminAuthenticated');
-                        localStorage.removeItem('loggedInUsername');
-                        sessionStorage.removeItem('loggedInUsername');
-                        window.location.replace("index.html");
-                    });
-                }
-
-                // --- NOTE: The functions below currently load data from localStorage. ---
-                // --- We will update these in a future step to fetch data from the backend API. ---
-                // --- You may see errors related to these if localStorage is empty/missing data. ---
-
-
-                // --- Function to Load All Video Data (Currently from localStorage) ---
-                function loadAllVideosData() {
-                    const videosJson = localStorage.getItem(VIDEO_STORAGE_KEY);
-                    try {
-                        return videosJson ? JSON.parse(videosJson) : [];
-                    } catch (e) {
-                        console.error("Error parsing video data from localStorage:", e);
-                        return [];
-                    }
-                }
-
-                // --- Function to Load User Progress Data (Currently from localStorage) ---
-                function loadUserProgress() {
-                    const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
-                    if (loggedInUsername && loggedInUsername !== 'Guest') {
-                        const progressJson = localStorage.getItem(USER_PROGRESS_KEY_PREFIX + loggedInUsername);
-                        try {
-                             return progressJson ? JSON.parse(progressJson) : {};
-                        } catch (e) {
-                             console.error("Error parsing user progress from localStorage:", e);
-                             return {};
-                        }
-                    }
-                    return {};
-                }
-
-                // --- Helper to format seconds into MM:SS ---
-                 function formatTime(seconds) {
-                     if (isNaN(seconds) || seconds < 0) return '00:00';
-                     const minutes = Math.floor(seconds / 60);
-                     const remainingSeconds = Math.floor(seconds % 60);
-                     const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
-                     const paddedSeconds = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds;
-                     return `${paddedMinutes}:${paddedSeconds}`;
-                 }
-
-                 // --- Helper to format seconds into HH:MM:SS ---
-                 function formatTimeToHHMMSS(totalSeconds) {
-                    if (isNaN(totalSeconds) || totalSeconds < 0) return '00:00:00';
-                    const hours = Math.floor(totalSeconds / 3600);
-                    const minutes = Math.floor((totalSeconds % 3600) / 60);
-                    const seconds = Math.floor(totalSeconds % 60);
-
-                    const paddedHours = hours < 10 ? '0' + hours : hours;
-                    const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
-                    const paddedSeconds = seconds < 10 ? '0' + seconds : seconds;
-
-                    return hours > 0 ? `${paddedHours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
-                 }
-
-
-                // --- Function to Calculate and Display Learning Progress (Currently from localStorage) ---
-                function displayLearningProgress() {
-                    const allVideos = loadAllVideosData();
-                    const userProgress = loadUserProgress();
-                    learningProgressCardsDiv.innerHTML = '';
-
-                    if (allVideos.length === 0) {
-                         learningProgressCardsDiv.innerHTML = '<p class="no-progress-message">No course data available. Please check back later.</p>';
-                         return;
-                    }
-
-                    const modules = {};
-                    allVideos.forEach(video => {
-                        if (!modules[video.videoModule]) {
-                            modules[video.videoModule] = [];
-                        }
-                        modules[video.videoModule].push(video);
-                    });
-
-                    const moduleTitles = {
-                        'data-analyst': 'Data Analyst Track',
-                        'business-analyst': 'Business Analyst Track',
-                        'data-scientist': 'Data Scientist Track',
-                        'big-data': 'Big Data & Cloud Tools',
-                    };
-                    const moduleSymbols = {
-                        'data-analyst': '🟦',
-                        'business-analyst': '🟨',
-                        'data-scientist': '🟥',
-                        'big-data': '🟩',
-                    };
-
-                    const moduleKeys = Object.keys(modules).sort();
-
-                    if (moduleKeys.length === 0) {
-                         learningProgressCardsDiv.innerHTML = '<p class="no-progress-message">No course modules defined yet.</p>';
-                         return;
-                    }
-
-                    moduleKeys.forEach(moduleKey => {
-                        const moduleVideos = modules[moduleKey];
-                        const totalVideosInModule = moduleVideos.length;
-                        let completedVideosInModule = 0;
-
-                        moduleVideos.forEach(video => {
-                            if (userProgress[video.topicId] && userProgress[video.topicId].completed) {
-                                completedVideosInModule++;
-                            }
-                        });
-
-                        const completionPercentage = totalVideosInModule > 0
-                            ? Math.round((completedVideosInModule / totalVideosInModule) * 100)
-                            : 0;
-
-                        const moduleTitle = moduleTitles[moduleKey] || `${moduleKey} Track`;
-                         const moduleSymbol = moduleSymbols[moduleKey] || ' ';
-
-                        const progressCard = document.createElement('div');
-                        progressCard.classList.add('progress-card');
-                        progressCard.innerHTML = `
-                            <h3>${moduleSymbol} ${moduleTitle}</h3>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${completionPercentage}%"></div>
-                            </div>
-                            <span class="progress-percent">${completionPercentage}% Complete</span>
-                            <div class="next-topic">${completedVideosInModule} of ${totalVideosInModule} videos completed</div>
-                        `;
-                        learningProgressCardsDiv.appendChild(progressCard);
-                    });
-                }
-
-                // --- Function to Display Continue Learning Section (Currently from localStorage) ---
-                 function displayContinueLearning() {
-                     continueLearningContentDiv.innerHTML = '';
-
-                     const allVideos = loadAllVideosData();
-                     let mostRecentlyWatchedVideo = null;
-                     let latestTimestamp = null;
-                     let lastSavedTime = 0;
-
-                     const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
-                     if (!loggedInUsername || loggedInUsername === 'Guest') {
-                          continueLearningContentDiv.innerHTML = '<p class="no-progress-message">Log in to track your progress.</p>';
-                         return;
-                     }
-
-                     allVideos.forEach(video => {
-                          const userVideoProgressKey = VIDEO_PROGRESS_KEY_PREFIX + loggedInUsername + '-' + video.topicId;
-                          const savedProgressJson = localStorage.getItem(userVideoProgressKey);
-
-                          if (savedProgressJson) {
-                             try {
-                                 const progressData = JSON.parse(savedProgressJson);
-                                  const userProgress = loadUserProgress();
-                                  const isCompleted = userProgress[video.topicId] && userProgress[video.topicId].completed;
-
-                                 if (!isCompleted && progressData.timestamp && progressData.time !== undefined && parseFloat(progressData.time) > 0) {
-                                      const currentTimestamp = new Date(progressData.timestamp);
-                                      if (latestTimestamp === null || currentTimestamp > latestTimestamp) {
-                                           latestTimestamp = currentTimestamp;
-                                           mostRecentlyWatchedVideo = video;
-                                           lastSavedTime = parseFloat(progressData.time);
-                                      }
-                                 }
-                             } catch (e) {
-                                 console.error(`Failed to parse progress for video ${video.topicId} for user ${loggedInUsername}:`, e);
-                                 localStorage.removeItem(userVideoProgressKey);
-                             }
-                          }
-                      });
-
-                     if (mostRecentlyWatchedVideo) {
-                          const continueCard = document.createElement('a');
-                          continueCard.classList.add('video-card');
-                          continueCard.href = `courses.html?video=${mostRecentlyWatchedVideo.topicId}`;
-
-                          const totalDurationSeconds = mostRecentlyWatchedVideo.totalDuration;
-                          let remainingText = 'Duration N/A';
-                          let progressPercent = 0;
-
-                         if (totalDurationSeconds !== undefined && !isNaN(totalDurationSeconds) && totalDurationSeconds > 0) {
-                             const remainingDuration = totalDurationSeconds - lastSavedTime;
-                              const displayRemainingSeconds = Math.max(0, remainingDuration);
-                              remainingText = `${formatTime(displayRemainingSeconds)} remaining`;
-                              progressPercent = Math.round((lastSavedTime / totalDurationSeconds) * 100);
-                              progressPercent = Math.min(100, Math.max(0, progressPercent));
+                    if (!loggedInUsername || loggedInUsername === 'Guest') {
+                        console.error("Logged-in username not found in storage despite authentication flags.");
+                         // Handle error, maybe redirect to auth or show error message
+                         if (usernameSpan) usernameSpan.textContent = "Error loading user";
+                         // Consider logging out automatically: window.location.replace("auth.html#login");
+                         // return; // Stop further execution if username is missing
+                    } else {
+                        // Display Logged-in Username if found
+                         if (usernameSpan) {
+                             usernameSpan.textContent = loggedInUsername;
                          }
 
-                           const lastViewedDate = latestTimestamp ? latestTimestamp.toLocaleString() : 'unknown date';
-
-                          continueCard.innerHTML = `
-                               <div class="video-info">
-                                   <h3>${mostRecentlyWatchedVideo.videoTitle}</h3>
-                                   <p class="video-desc">${mostRecentlyWatchedVideo.videoDescription || 'No description available.'}</p>
-                                   <div class="video-meta">
-                                      <span><i class="far fa-clock"></i> ${remainingText}</span>
-                                      <span><i class="far fa-calendar"></i> Last viewed: ${lastViewedDate}</span>
-                                   </div>
-                               </div>
-                               <div class="play-btn"><i class="fas fa-play"></i></div>
-                          `;
-                          continueLearningContentDiv.appendChild(continueCard);
-
-                     } else {
-                          continueLearningContentDiv.innerHTML = '<p class="no-progress-message">Start a course to see your progress here!</p>';
-                      }
-                 }
+                        // --- Determine "Welcome" vs "Welcome back" ---
+                         // This now requires checking if the user has ANY progress in the database
+                         // We can do a quick check via the progress endpoint or assume if username is there they are back.
+                         // For simplicity for now, we'll just use "Welcome back" if loggedInUsername is found,
+                         // or you could make a small API call here just to check for any progress entries.
+                         // A more robust way would be for the login response to indicate if it's a new user or returning.
+                        if (welcomeMessagePrefixSpan) {
+                            // Assuming if loggedInUsername exists, they are likely returning users.
+                            // A more accurate way requires a backend check for existing progress.
+                             welcomeMessagePrefixSpan.textContent = 'Welcome back';
+                         }
 
 
-                // --- Function to Display Recommended Next Topic (Currently based on localStorage) ---
-                 function displayRecommendedLearning() {
-                     recommendedLearningContentDiv.innerHTML = '';
+                        // --- Helper function to format seconds into HH:MM:SS ---
+                         function formatTimeToHHMMSS(totalSeconds) {
+                            if (isNaN(totalSeconds) || totalSeconds < 0) return '00:00:00';
+                            const hours = Math.floor(totalSeconds / 3600);
+                            const minutes = Math.floor((totalSeconds % 3600) / 60);
+                            const seconds = Math.floor(totalSeconds % 60);
 
-                     const allVideos = loadAllVideosData();
-                     const userProgress = loadUserProgress();
-                     let recommendedVideo = null;
+                            const paddedHours = hours < 10 ? '0' + hours : hours;
+                            const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                            const paddedSeconds = seconds < 10 ? '0' + seconds : seconds;
 
-                     const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
-                      if (!loggedInUsername || loggedInUsername === 'Guest') {
-                           recommendedLearningContentDiv.innerHTML = '<p class="no-progress-message">Log in to get recommendations.</p>';
-                          return;
-                      }
+                            return hours > 0 ? `${paddedHours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
+                         }
 
-                      let mostRecentlyWatchedVideo = null;
-                      let latestTimestamp = null;
+                        // --- Helper function to show messages in a specific container ---
+                         function showMessage(containerElement, message, type = 'info') {
+                             // Clear previous content/messages
+                             containerElement.innerHTML = '';
+                             // Create and append the message element
+                             const messageElement = document.createElement('p');
+                             messageElement.classList.add('no-progress-message', `message-${type}`); // Use existing class + type class
+                             messageElement.textContent = message;
+                             containerElement.appendChild(messageElement);
 
-                      if (loggedInUsername) {
-                         allVideos.forEach(video => {
-                              const userVideoProgressKey = VIDEO_PROGRESS_KEY_PREFIX + loggedInUsername + '-' + video.topicId;
-                              const savedProgressJson = localStorage.getItem(userVideoProgressKey);
-                             if (savedProgressJson) {
-                                  try {
-                                      const progressData = JSON.parse(savedProgressJson);
-                                     if (progressData.timestamp) {
-                                          const currentTimestamp = new Date(progressData.timestamp);
-                                          if (latestTimestamp === null || currentTimestamp > latestTimestamp) {
-                                               latestTimestamp = currentTimestamp;
-                                               mostRecentlyWatchedVideo = video;
-                                          }
-                                      }
-                                  } catch (e) {
-                                       console.error(`Failed to parse progress for video ${video.topicId} for user ${loggedInUsername}:`, e);
-                                  }
-                             }
-                         });
-                     }
+                             // Optional: Add CSS for .message-info, .message-success, .message-error
+                         }
 
-                     if (mostRecentlyWatchedVideo) {
-                          const isCompleted = userProgress[mostRecentlyWatchedVideo.topicId] && userProgress[mostRecentlyWatchedVideo.topicId].completed;
+                         // --- Helper function to clear messages in a specific container ---
+                         function clearMessage(containerElement) {
+                              containerElement.innerHTML = '';
+                         }
 
-                         if (isCompleted) {
-                              const moduleVideos = allVideos.filter(v => v.videoModule === mostRecentlyWatchedVideo.videoModule)
-                                     .sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
 
-                              const currentIndex = moduleVideos.findIndex(v => v.topicId === mostRecentlyWatchedVideo.topicId);
+                        // --- Function to Display Data Science Roadmap (Static Cards) ---
+                         function displayDataScienceRoadmap() {
+                             // This is still using hardcoded data for static cards as per previous request
+                             const dataScienceTracks = [
+                                 { title: "Data Analyst Track", description: "Start here! Learn Excel, Statistics, SQL, Power BI, and Tableau." },
+                                 { title: "Business Analyst Track", description: "Build on fundamentals with business concepts and tools." },
+                                 { title: "Data Scientist Track", description: "Dive into advanced statistics, machine learning, and algorithms." },
+                                 { title: "Big Data & Cloud Tools", description: "Explore technologies for large datasets and cloud platforms." }
+                             ];
 
-                              for (let i = currentIndex + 1; i < moduleVideos.length; i++) {
-                                   const nextVideo = moduleVideos[i];
-                                   if (!userProgress[nextVideo.topicId] || !userProgress[nextVideo.topicId].completed) {
-                                       recommendedVideo = nextVideo;
-                                       break;
-                                   }
-                              }
-                          }
-                      }
+                             dataScienceRoadmapDiv.innerHTML = ''; // Clear placeholder
 
-                      if (!recommendedVideo) {
-                           const modules = {};
-                            allVideos.forEach(video => {
-                                if (!modules[video.videoModule]) {
-                                    modules[video.videoModule] = [];
-                                }
-                                modules[video.videoModule].push(video);
-                           });
-                           const moduleKeys = Object.keys(modules).sort();
+                             dataScienceTracks.forEach(track => {
+                                 const roadmapCard = document.createElement('div'); // Display cards, not links
+                                 roadmapCard.classList.add('roadmap-card'); // Use the existing roadmap-card class
 
-                           for (const moduleKey of moduleKeys) {
-                                const moduleVideos = allVideos.filter(v => v.videoModule === moduleKey)
-                                      .sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
+                                 roadmapCard.innerHTML = `
+                                     <h3>${track.title}</h3>
+                                     <p>${track.description}</p>
+                                 `;
+                                 dataScienceRoadmapDiv.appendChild(roadmapCard);
+                             });
+                         }
 
-                                for (const video of moduleVideos) {
-                                     if (!userProgress[video.topicId] || !userProgress[video.topicId].completed) {
-                                         recommendedVideo = video;
-                                         break;
-                                      }
-                                }
-                                if (recommendedVideo) break;
-                            }
-                      }
 
-                     if (recommendedVideo) {
-                          const recommendedCard = document.createElement('a');
-                           recommendedCard.classList.add('video-card');
-                           recommendedCard.href = `courses.html?video=${recommendedVideo.topicId}`;
+                        // --- Function to Calculate and Display Learning Progress (from Backend API) ---
+                         function displayLearningProgress(username) {
+                             clearMessage(learningProgressCardsDiv); // Clear loading message
+                             showMessage(learningProgressCardsDiv, "Loading progress...", 'info'); // Show loading
 
-                          recommendedCard.innerHTML = `
-                               <div class="video-info">
-                                   <h3>${recommendedVideo.videoTitle}</h3>
-                                   <p class="video-desc">${recommendedVideo.videoDescription || 'No description available.'}</p>
-                                   <div class="video-meta">
-                                       <span><i class="fas fa-book-open"></i> Module: ${recommendedVideo.videoModule}</span>
-                                   </div>
-                               </div>
-                               <div class="play-btn"><i class="fas fa-arrow-right"></i></div>
-                          `;
-                          recommendedLearningContentDiv.appendChild(recommendedCard);
+                             fetch(`http://127.0.0.1:5000/dashboard/progress/${username}`)
+                                 .then(response => {
+                                     clearMessage(learningProgressCardsDiv); // Clear loading message once response comes
+                                     if (!response.ok) {
+                                         console.error('Backend progress fetch failed:', response.status, response.statusText);
+                                          showMessage(learningProgressCardsDiv, `Error loading progress: ${response.statusText}`, 'error');
+                                         throw new Error('Failed to fetch learning progress');
+                                     }
+                                     return response.json();
+                                 })
+                                 .then(progressData => {
+                                     console.log("Learning progress data:", progressData);
 
-                      } else {
-                          recommendedLearningContentDiv.innerHTML = '<p class="no-progress-message">You have completed all available videos! 🎉 Check back later for new content.</p>';
-                       }
-                  }
+                                     if (progressData.length === 0) {
+                                          showMessage(learningProgressCardsDiv, 'No learning progress yet. Start a course to see progress here!', 'secondary');
+                                         return;
+                                     }
 
-                // --- Function to Display Data Science Roadmap (Populated with styled cards, not links) ---
-                 function displayDataScienceRoadmap() {
-                     // Sample hardcoded data for the Data Science roadmap tracks
-                     const dataScienceTracks = [
-                         { title: "Data Analyst Track", description: "Start here! Learn Excel, Statistics, SQL, Power BI, and Tableau." },
-                         { title: "Business Analyst Track", description: "Build on fundamentals with business concepts and tools." },
-                         { title: "Data Scientist Track", description: "Dive into advanced statistics, machine learning, and algorithms." },
-                         { title: "Big Data & Cloud Tools", description: "Explore technologies for large datasets and cloud platforms." }
-                     ];
+                                     // Sort progress data alphabetically by module name
+                                     progressData.sort((a, b) => a.module.localeCompare(b.module));
 
-                     dataScienceRoadmapDiv.innerHTML = ''; // Clear placeholder
+                                     // Populate progress cards
+                                     progressData.forEach(moduleProgress => {
+                                         const completionPercentage = Math.round(moduleProgress.completionPercentage); // Use rounded percentage from backend
+                                         const moduleTitle = moduleProgress.module; // Use module name from backend
+                                          const totalVideos = moduleProgress.totalVideos;
+                                          const completedVideos = moduleProgress.completedVideos;
 
-                     dataScienceTracks.forEach(track => {
-                         const roadmapCard = document.createElement('div'); // Changed from 'a' to 'div'
-                         roadmapCard.classList.add('roadmap-card'); // Use the existing roadmap-card class
+                                         // You might want a mapping for module names to symbols if you used them before
+                                         const moduleSymbols = {
+                                             'data-analyst': '🟦',
+                                             'business-analyst': '🟨',
+                                             'data-scientist': '🟥',
+                                             'big-data': '🟩',
+                                         };
+                                          const moduleSymbol = moduleSymbols[moduleTitle.toLowerCase()] || ' '; // Use lowercase for lookup
 
-                         roadmapCard.innerHTML = `
-                             <h3>${track.title}</h3>
-                             <p>${track.description}</p>
-                         `;
-                         dataScienceRoadmapDiv.appendChild(roadmapCard);
+
+                                         const progressCard = document.createElement('div');
+                                         progressCard.classList.add('progress-card');
+                                         progressCard.innerHTML = `
+                                             <h3>${moduleSymbol} ${moduleTitle}</h3>
+                                             <div class="progress-bar">
+                                                 <div class="progress-fill" style="width: ${completionPercentage}%"></div>
+                                             </div>
+                                             <span class="progress-percent">${completionPercentage}% Complete</span>
+                                             <div class="next-topic">${completedVideos} of ${totalVideos} videos completed</div>
+                                         `;
+                                         learningProgressCardsDiv.appendChild(progressCard);
+                                     });
+                                 })
+                                 .catch(error => {
+                                     console.error('Error during progress fetch:', error);
+                                      // Error message already shown by .then !response.ok check
+                                 });
+                         }
+
+
+                        // --- Function to Display Continue Learning Section (from Backend API) ---
+                         function displayContinueLearning(username) {
+                             clearMessage(continueLearningContentDiv); // Clear loading message
+                             showMessage(continueLearningContentDiv, "Looking for video to continue...", 'info'); // Show loading
+
+                             fetch(`http://127.0.0.1:5000/dashboard/continue/${username}`)
+                                 .then(response => {
+                                      clearMessage(continueLearningContentDiv); // Clear loading message once response comes
+                                     if (!response.ok) {
+                                         console.error('Backend continue video fetch failed:', response.status, response.statusText);
+                                         // Handle specific messages from backend if needed, e.g., 404 if user not found
+                                          showMessage(continueLearningContentDiv, `Error finding video to continue: ${response.statusText}`, 'error');
+                                         throw new Error('Failed to fetch continue video');
+                                     }
+                                      // Backend might return 200 with a message if no video to continue
+                                      return response.json(); // Parse the JSON response
+                                 })
+                                 .then(continueVideoData => {
+                                     console.log("Continue learning data:", continueVideoData);
+
+                                     if (continueVideoData && continueVideoData.message === 'No video to continue') {
+                                         // Backend explicitly sent message that no video to continue
+                                         showMessage(continueLearningContentDiv, 'Start a course to see your progress here!', 'secondary');
+
+                                     } else if (continueVideoData && continueVideoData.topicId) {
+                                          // Backend returned a video to continue
+                                          const continueCard = document.createElement('a');
+                                          continueCard.classList.add('video-card');
+                                          // Link to the video player page for this video, using topicId
+                                          continueCard.href = `courses.html?video=${continueVideoData.topicId}`;
+
+                                          const totalDurationSeconds = continueVideoData.totalDuration;
+                                          const lastWatchedTime = continueVideoData.lastWatchedTime || 0;
+                                          let remainingText = 'Duration N/A';
+
+                                         if (totalDurationSeconds !== undefined && !isNaN(totalDurationSeconds) && totalDurationSeconds > 0) {
+                                             const remainingDuration = totalDurationSeconds - lastWatchedTime;
+                                              const displayRemainingSeconds = Math.max(0, remainingDuration);
+                                              remainingText = `${formatTimeToHHMMSS(displayRemainingSeconds)} remaining`; // Use HH:MM:SS format
+                                         }
+
+                                          // lastUpdated timestamp is now from the backend (ISO format)
+                                          const lastViewedDate = continueVideoData.lastUpdated ? new Date(continueVideoData.lastUpdated).toLocaleString() : 'unknown date';
+
+
+                                          continueCard.innerHTML = `
+                                               <div class="video-info">
+                                                   <h3>${continueVideoData.videoTitle}</h3>
+                                                   <p class="video-desc">${continueVideoData.videoDescription || 'No description available.'}</p>
+                                                   <div class="video-meta">
+                                                      <span><i class="far fa-clock"></i> ${remainingText}</span>
+                                                      <span><i class="far fa-calendar"></i> Last viewed: ${lastViewedDate}</span>
+                                                   </div>
+                                               </div>
+                                               <div class="play-btn"><i class="fas fa-play"></i></div>
+                                          `;
+                                          continueLearningContentDiv.appendChild(continueCard);
+
+                                     } else {
+                                          // Fallback if backend returns unexpected empty data or format
+                                         showMessage(continueLearningContentDiv, 'Could not find a video to continue.', 'secondary');
+                                          console.warn("Backend did not return a continue video or 'No video to continue' message.");
+                                     }
+
+                                  })
+                                  .catch(error => {
+                                      console.error('Error during continue fetch:', error);
+                                       // Error message already shown by .then !response.ok check
+                                  });
+                         }
+
+
+                        // --- Function to Display Recommended Next Topic (from Backend API) ---
+                         function displayRecommendedLearning(username) {
+                             clearMessage(recommendedLearningContentDiv); // Clear loading message
+                             showMessage(recommendedLearningContentDiv, "Finding your next topic...", 'info'); // Show loading
+
+                             fetch(`http://127.0.0.1:5000/dashboard/recommended/${username}`)
+                                 .then(response => {
+                                     clearMessage(recommendedLearningContentDiv); // Clear loading message once response comes
+                                     if (!response.ok) {
+                                         console.error('Backend recommended video fetch failed:', response.status, response.statusText);
+                                          // Handle specific messages from backend if needed
+                                           if (response.status === 404) { // e.g., User not found on backend
+                                               showMessage(recommendedLearningContentDiv, "Error: User not found on backend.", 'error');
+                                           } else {
+                                               // Attempt to read backend's message for other non-200 responses
+                                               return response.json().then(errorData => {
+                                                    showMessage(recommendedLearningContentDiv, errorData.message || `Error fetching recommendation: ${response.statusText}`, 'error');
+                                                    throw new Error('Failed to fetch recommended video');
+                                               }).catch(() => {
+                                                    // If backend didn't return JSON or message
+                                                    showMessage(recommendedLearningContentDiv, `Error fetching recommendation: ${response.statusText}`, 'error');
+                                                    throw new Error('Failed to fetch recommended video (no JSON error)');
+                                               });
+                                           }
+                                     }
+                                      // Backend might return 200 with a message if all videos completed
+                                      return response.json(); // Parse the JSON response
+                                 })
+                                 .then(recommendedVideo => {
+                                     console.log("Recommended video data:", recommendedVideo);
+
+                                     if (recommendedVideo && recommendedVideo.message === 'All videos completed!') {
+                                          // Backend explicitly sent a message for all completed
+                                          showMessage(recommendedLearningContentDiv, 'You have completed all available videos! 🎉 Check back later for new content.', 'secondary');
+
+                                     } else if (recommendedVideo && recommendedVideo.topicId) {
+                                         // Found a recommended video
+                                          const recommendedCard = document.createElement('a');
+                                          recommendedCard.classList.add('video-card'); // Reuse video-card styling
+                                          // Link to the video player page for this video
+                                          recommendedCard.href = `courses.html?video=${recommendedVideo.topicId}`;
+
+
+                                          recommendedCard.innerHTML = `
+                                               <div class="video-info">
+                                                   <h3>${recommendedVideo.videoTitle}</h3>
+                                                   <p class="video-desc">${recommendedVideo.videoDescription || 'No description available.'}</p>
+                                                   <div class="video-meta">
+                                                       <span><i class="fas fa-book-open"></i> Module: ${recommendedVideo.videoModule}</span>
+                                                        ${recommendedVideo.totalDuration ? `<span><i class="far fa-clock"></i> ${formatTimeToHHMMSS(recommendedVideo.totalDuration)}</span>` : ''}
+                                                   </div>
+                                               </div>
+                                               <div class="play-btn"><i class="fas fa-arrow-right"></i></div>
+                                          `;
+                                          recommendedLearningContentDiv.appendChild(recommendedCard);
+
+                                       } else {
+                                           // Should not happen if backend works as expected, but as a fallback
+                                           showMessage(recommendedLearningContentDiv, 'No recommendation found.', 'secondary');
+                                           console.warn("Backend did not return a recommended video or 'All completed' message.");
+                                       }
+
+                                   })
+                                   .catch(error => {
+                                       console.error('Error during recommended video fetch:', error);
+                                        // Error message already shown by .then !response.ok check
+                                   });
+                           }
+
+
+                        // --- Initial Load and Display ---
+                         // Call the display functions ONLY if authenticated and username is found
+                         displayLearningProgress(loggedInUsername);
+                         displayContinueLearning(loggedInUsername);
+                         displayRecommendedLearning(loggedInUsername);
+                         displayDataScienceRoadmap(); // Roadmap is still static
+                    }
+
+                } // End of if(!userAuthLocal && ...) check (Authentication)
+
+                // --- Logout Functionality (Placed outside Auth check but within DOMContentLoaded) ---
+                 const logoutBtnElement = document.getElementById('logoutBtn');
+                 if (logoutBtnElement) {
+                     logoutBtnElement.addEventListener('click', function(e) {
+                         e.preventDefault(); // Prevent default link behavior
+                         console.log("Logging out...");
+                         // Clear relevant auth/user info from localStorage and sessionStorage
+                         localStorage.removeItem('userAuthenticated');
+                         sessionStorage.removeItem('userAuthenticated');
+                         localStorage.removeItem('adminAuthenticated');
+                         localStorage.removeItem('loggedInUsername');
+                         sessionStorage.removeItem('loggedInUsername');
+
+                         // Redirect to auth.html after logout
+                         window.location.replace("auth.html"); // Use replace
                      });
-
-                      // Add a visual separator or arrow indicator between cards if desired via CSS
-                      // The grid layout provides gaps, but explicit connectors would need more complex HTML/CSS or SVG.
                  }
-
-
-                // --- Initial Load and Display ---
-                if (userAuthLocal || userAuthSession || adminAuthLocal) {
-                     displayLearningProgress();
-                     displayContinueLearning();
-                     displayRecommendedLearning();
-                     displayDataScienceRoadmap(); // Display the roadmap section
-                }
             });
         </script>
     </body>
