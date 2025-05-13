@@ -246,34 +246,92 @@
     </script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // --- Element Selections (Add elements you have in profile.html for displaying data) ---
+        // Make sure your profile.html has elements with these IDs to display the data
+        const profileUsernameSpan = document.getElementById('profileUsername'); // Example ID for username display
+        const profileFullNameSpan = document.getElementById('profileFullName'); // Example ID for full name display
+        const profileEmailSpan = document.getElementById('profileEmail');     // Example ID for email display
+        // Add other elements you want to display (e.g., profile picture, registration date)
+
+        // --- localStorage/sessionStorage Keys ---
+        const ADMIN_AUTH_KEY = 'adminAuthenticated';
+        const LOGGED_IN_USERNAME_KEY = 'loggedInUsername'; // Used to get username for fetch
+
         // --- Authentication Check for Protected Page ---
         const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
         const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
-        const adminAuthLocal = localStorage.getItem('adminAuthenticated') === 'true'; // Assuming 'adminAuthenticated' is the key for admin
+        const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
+
+        console.log("Profile.html Auth Check:");
+        console.log("localStorage userAuthenticated:", userAuthLocal);
+        console.log("sessionStorage userAuthenticated:", userAuthSession);
+        console.log("localStorage adminAuthenticated:", adminAuthLocal);
+
 
         // If neither user nor admin authentication flag is found, redirect to login page
         if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
             console.log("User is not authenticated on profile.html, redirecting to auth.html");
-            // Use replace to prevent history stack issues
-            window.location.replace("auth.html#login"); // Redirect to login form on auth page
-            // Stop further script execution on this page if not authenticated
+            window.location.replace("auth.html#login");
             return;
         } else {
-             console.log("User is authenticated on profile.html, loading content.");
-             // User is authenticated, proceed to load profile content.
-             // You can add code here to fetch and display user-specific profile data.
+             console.log("User is authenticated on profile.html, attempting to load profile data.");
 
-              // Example: Display logged-in username on the profile page if you have an element for it
-              // const profileUsernameSpan = document.getElementById('profileUsername'); // Assuming you have an element with this ID
-              // const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
-              // if (profileUsernameSpan && loggedInUsername) {
-              //      profileUsernameSpan.textContent = loggedInUsername;
-              // }
+             // --- Get the logged-in username ---
+             const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
+
+             if (!loggedInUsername) {
+                 console.error("Logged-in username not found in storage.");
+                 // Optionally redirect to auth or show an error message on the profile page
+                 // window.location.replace("auth.html#login");
+                 // return;
+                  // Display a message on the page
+                  if (profileUsernameSpan) profileUsernameSpan.textContent = "Error loading user";
+                   // Consider logging out the user automatically here if username is missing despite auth flags
+                   // window.location.replace("index.html");
+             } else {
+                 console.log("Fetching profile data for user:", loggedInUsername);
+                 // --- Fetch user profile data from backend ---
+                 // NOTE: You need a backend endpoint that handles GET requests at `/profile/<username>`
+                 // and returns JSON data for the specified user.
+                 fetch(`http://127.0.0.1:5000/profile/${loggedInUsername}`)
+                     .then(response => {
+                         if (!response.ok) {
+                              // Handle non-200 responses (e.g., 404 if user not found, 500 server error)
+                             console.error('Backend profile fetch failed:', response.status, response.statusText);
+                             // Display an error on the page or redirect
+                             // if (profileUsernameSpan) profileUsernameSpan.textContent = "Error loading profile data";
+                             throw new Error('Failed to fetch profile data'); // Propagate error to catch block
+                         }
+                         return response.json(); // Parse the JSON response
+                     })
+                     .then(userData => {
+                         console.log("Profile data fetched:", userData);
+                         // --- Display fetched data on the page ---
+                         // Assuming userData is an object like { username: "...", fullName: "...", email: "...", ... }
+                         if (profileUsernameSpan) {
+                             profileUsernameSpan.textContent = userData.username || 'N/A';
+                         }
+                         if (profileFullNameSpan) {
+                             profileFullNameSpan.textContent = userData.fullName || 'N/A';
+                         }
+                         if (profileEmailSpan) {
+                             profileEmailSpan.textContent = userData.email || 'N/A';
+                         }
+                         // Update other elements with data from userData
+                         // Example: document.getElementById('profilePicture').src = userData.profilePicUrl || 'default-pic.png';
+
+                     })
+                     .catch(error => {
+                         console.error('Error fetching or processing profile data:', error);
+                         // Display a user-friendly error message on the page
+                         // if (profileUsernameSpan) profileUsernameSpan.textContent = "Could not load profile data.";
+                     });
+             }
+
+
+             // --- Rest of your profile.html JavaScript would go here ---
+             // (e.g., logic for editing profile details, saving changes, etc.)
         }
-
-        // --- Rest of your profile.html JavaScript would go here ---
-        // (e.g., logic to load/edit profile details, change password, etc.)
-
     });
 </script>
 </body>
