@@ -63,7 +63,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // --- Element Selections ---
-            const authStatusMessage = document.getElementById('authStatusMessage'); // Selection for the placeholder message
+            const authStatusMessage = document.getElementById('authStatusMessage'); // Placeholder message (can hide in CSS)
 
             const displayUsernameSpan = document.getElementById('displayUsername');
             const displayFullNameSpan = document.getElementById('displayFullName');
@@ -81,19 +81,15 @@
             const editEmailInput = document.getElementById('editEmail');
 
             const profileMessage = document.getElementById('profileMessage');
-            const logoutBtn = document.getElementById('logoutBtn');
+            const logoutBtn = document.getElementById('logoutBtn'); // Ensure logoutBtn is selected
 
 
             // --- localStorage/sessionStorage Keys (Consistent with auth.html & dashboard.html) ---
             const ADMIN_AUTH_KEY = 'adminAuthenticated';
-            const LOGGED_IN_USERNAME_KEY = 'loggedInUsername'; // Used to get username
-
-            // --- localStorage Key for Users Data (Currently used for profile edit - WILL BE UPDATED TO USE BACKEND API) ---
-            const USERS_STORAGE_KEY = 'uknoClubUsers'; // Note: This is for the OLD local storage approach
+            const LOGGED_IN_USERNAME_KEY = 'loggedInUsername';
 
 
             // --- Authentication Check for Protected Page ---
-            // This runs when the page loads to ensure the user is authenticated using primary flags
             const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
             const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
             const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
@@ -104,66 +100,38 @@
             console.log("localStorage adminAuthenticated:", localStorage.getItem(ADMIN_AUTH_KEY), "->", adminAuthLocal);
 
 
-            // If neither user nor admin authentication flag is found, redirect to login page
             if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
-                console.log("Minimal Profile: User is NOT authenticated. Redirecting to auth.html");
+                console.log("Profile: User is NOT authenticated. Redirecting to auth.html");
                  if (authStatusMessage) {
                      authStatusMessage.textContent = "Not authenticated. Redirecting...";
                      authStatusMessage.style.color = 'var(--error)';
-                     authStatusMessage.style.display = 'block'; // Show the message
+                     authStatusMessage.style.display = 'block';
                  }
-                window.location.replace("auth.html#login"); // Use replace
-                return; // Stop script execution if not authenticated
+                window.location.replace("auth.html#login");
+                return;
             } else {
-                 console.log("Minimal Profile: User IS authenticated. Proceeding with profile logic.");
+                 console.log("Profile: User IS authenticated. Proceeding to load profile data from backend.");
                  if (authStatusMessage) {
-                     authStatusMessage.textContent = "Authentication successful!"; // Show success message briefly
+                     authStatusMessage.textContent = "Authentication successful! Loading data...";
                      authStatusMessage.style.color = 'var(--success)';
-                     authStatusMessage.style.display = 'block'; // Show the message
-                      // Optionally hide the success message after a delay
+                     authStatusMessage.style.display = 'block';
+                      // Optionally hide the success message after a delay, as data loading message will appear
                       setTimeout(() => {
                           if (authStatusMessage) authStatusMessage.style.display = 'none';
-                      }, 2000); // Hide after 2 seconds
+                      }, 1000);
                  }
 
 
-                 // --- User is authenticated! Load and manage profile data (from localStorage for now) ---
+                 // --- User is authenticated! Get the logged-in username and fetch data ---
 
-                 // --- Get the logged-in username (Needed for fetching/storing data) ---
                  const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
 
                  if (!loggedInUsername) {
                      console.error("Logged-in username not found in storage despite authentication flags.");
-                     // This case should ideally not happen if login stored the username correctly.
-                     // You might want to log out the user or show a critical error on the page.
-                     if (profileMessage) showMessage("Error: User data could not be loaded.", 'error');
-                     // Consider logging out automatically: window.location.replace("index.html");
+                     if (profileMessage) showMessage("Error: User data could not be loaded (Username missing).", 'error');
+                      // Consider logging out automatically or showing a critical error.
                  } else {
                       console.log("Logged in as:", loggedInUsername);
-
-                     // --- NOTE: The functions below currently load/save profile data from/to localStorage. ---
-                     // --- We will update these in a future step to fetch/save data from/to the backend API. ---
-                     // --- The "Error loading profile data" message below will appear ---
-                     // --- if your localStorage does not contain user data saved under the USERS_STORAGE_KEY. ---
-
-
-                     // --- Helper function to get user data from localStorage ---
-                     function getUsers() {
-                         const usersJson = localStorage.getItem(USERS_STORAGE_KEY);
-                         try {
-                             // The user data structure is expected to be an object keyed by username
-                             // { "user1": { fullName: "...", email: "..." }, "admin": { ... } }
-                              return usersJson ? JSON.parse(usersJson) : {};
-                         } catch (e) {
-                             console.error("Error parsing users data from localStorage:", e);
-                             return {}; // Return empty object if parsing fails
-                         }
-                     }
-
-                     // --- Helper function to save user data to localStorage ---
-                     function saveUsers(usersObject) {
-                         localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usersObject));
-                     }
 
                      // --- Helper function to show messages ---
                      function showMessage(message, type = 'info') {
@@ -175,8 +143,8 @@
                              // Hide message after a few seconds for non-error messages
                              if (type !== 'error') {
                                  setTimeout(() => {
-                                     if (profileMessage) profileMessage.style.display = 'none'; // Added check
-                                 }, 5000); // Hide after 5 seconds
+                                      if (profileMessage) profileMessage.style.display = 'none';
+                                 }, 5000);
                              }
                          }
                      }
@@ -190,39 +158,55 @@
                      }
 
 
-                     // --- Function to Load and Display Current User's Profile (from localStorage) ---
-                     // This will be updated to fetch from backend
+                     // --- Function to Load and Display Current User's Profile (from Backend API) ---
                      function loadAndDisplayProfile() {
-                         console.log("Attempting to load profile data from localStorage for user:", loggedInUsername);
+                          showMessage("Loading profile data...", 'info'); // Show loading message
 
-                         const users = getUsers();
-                         const currentUser = users[loggedInUsername]; // Get data for the logged-in user using username as key
+                         fetch(`http://127.0.0.1:5000/profile/${loggedInUsername}`)
+                             .then(response => {
+                                 clearMessages(); // Clear loading message once response is received
+                                 if (!response.ok) {
+                                     console.error('Backend profile fetch failed:', response.status, response.statusText);
+                                     // Display error message on the page
+                                     showMessage(`Error loading profile data: ${response.statusText}`, 'error');
+                                     // Hide display/edit sections if data fails to load
+                                      if (profileDisplayDiv) profileDisplayDiv.classList.add('hidden');
+                                      if (profileEditForm) profileEditForm.classList.add('hidden');
+                                      if (editProfileBtn) editProfileBtn.style.display = 'none';
+                                     throw new Error('Failed to fetch profile data');
+                                 }
+                                 return response.json();
+                             })
+                             .then(userData => {
+                                 console.log("Profile data fetched:", userData);
+                                 // --- Display fetched data on the page ---
+                                 // Assuming userData is an object like { username: "...", fullName: "...", email: "...", ... }
+                                 // Check if elements exist before setting content
+                                 if (displayUsernameSpan) displayUsernameSpan.textContent = userData.username || 'N/A';
+                                 if (displayFullNameSpan) displayFullNameSpan.textContent = userData.fullName || 'Not provided';
+                                 if (displayEmailSpan) displayEmailSpan.textContent = userData.email || 'Not provided';
 
-                         if (currentUser) {
-                             console.log("User data found in localStorage:", currentUser);
-                             // Populate display fields - Check if elements exist before setting textContent
-                             if (displayUsernameSpan) displayUsernameSpan.textContent = loggedInUsername;
-                             if (displayFullNameSpan) displayFullNameSpan.textContent = currentUser.fullName || 'Not provided';
-                             if (displayEmailSpan) displayEmailSpan.textContent = currentUser.email || 'Not provided';
+                                 // Populate edit form fields (initial state) - Check if elements exist
+                                 if (editUsernameInput) editUsernameInput.value = userData.username || ''; // Username input is disabled
+                                 if (editFullNameInput) editFullNameInput.value = userData.fullName || '';
+                                 if (editEmailInput) editEmailInput.value = userData.email || '';
 
-                             // Populate edit form fields (initial state) - Check if elements exist
-                             if (editUsernameInput) editUsernameInput.value = loggedInUsername; // Username input is disabled
-                             if (editFullNameInput) editFullNameInput.value = currentUser.fullName || '';
-                             if (editEmailInput) editEmailInput.value = currentUser.email || '';
+                                 // Ensure display section is visible and edit form is hidden on successful load
+                                 if (profileDisplayDiv) profileDisplayDiv.classList.remove('hidden');
+                                 if (profileEditForm) profileEditForm.classList.add('hidden');
+                                 if (editProfileBtn) editProfileBtn.style.display = 'inline-block'; // Show edit button
 
-                             // Ensure display/edit divs are visible/hidden correctly on load
-                             if (profileDisplayDiv) profileDisplayDiv.classList.remove('hidden');
-                             if (profileEditForm) profileEditForm.classList.add('hidden');
-                             if (editProfileBtn) editProfileBtn.style.display = 'inline-block'; // Ensure button is shown
-                             clearMessages(); // Clear any leftover messages
 
-                         } else {
-                             console.error("Current user data not found in localStorage under key:", loggedInUsername);
-                              if (profileDisplayDiv) profileDisplayDiv.innerHTML = '<p class="error-message">Error loading profile data or data not found. Please ensure user data is saved correctly (e.g., via Admin Panel).</p>';
-                              if (editProfileBtn) editProfileBtn.style.display = 'none'; // Hide edit button if data not found
-                              if (profileEditForm) profileEditForm.classList.add('hidden'); // Ensure form is hidden
-                              clearMessages(); // Clear any leftover messages
-                         }
+                             })
+                             .catch(error => {
+                                 console.error('Error fetching or processing profile data:', error);
+                                 // The fetch .catch block is already handled above by the .then !response.ok check
+                                 // However, this can catch other errors like network issues
+                                 // Ensure an error message is shown if not already handled
+                                  if (profileMessage && profileMessage.style.display === 'none') {
+                                     showMessage("An unexpected error occurred while loading profile.", 'error');
+                                  }
+                             });
                      }
 
                      // --- Toggle between Display and Edit Mode ---
@@ -236,9 +220,9 @@
                              } else {
                                  profileEditForm.classList.add('hidden');
                                  profileDisplayDiv.classList.remove('hidden');
-                                 editProfileBtn.style.display = 'inline-block'; // Or 'block' depending on CSS
+                                 editProfileBtn.style.display = 'inline-block';
                                  clearMessages(); // Clear message area when canceling or after saving
-                                 loadAndDisplayProfile(); // Reload display to show latest data (from localStorage)
+                                 loadAndDisplayProfile(); // Reload display data from backend
                              }
                           }
                      }
@@ -261,67 +245,94 @@
                              e.preventDefault(); // Prevent default form submission
 
                              clearMessages(); // Clear previous messages
+                             showMessage("Saving changes...", 'info'); // Show saving message
 
-                             console.log("Attempting to save profile changes to localStorage...");
+                             console.log("Attempting to save profile changes to backend...");
 
-                             const users = getUsers();
-                             const currentUser = users[loggedInUsername]; // Get user data from localStorage
+                             // Get updated values from the form - Check if elements exist
+                             const updatedFullName = editFullNameInput ? editFullNameInput.value.trim() : '';
+                             const updatedEmail = editEmailInput ? editEmailInput.value.trim() : '';
 
+                             // Optional: Add validation for email format if desired
+                              if (updatedEmail && !/@.+\..+/.test(updatedEmail)) {
+                                  showMessage("Please enter a valid email address.", 'error');
+                                  return; // Stop if email is invalid
+                              }
 
-                             if (currentUser) {
-                                 // Get updated values from the form - Check if elements exist
-                                 const updatedFullName = editFullNameInput ? editFullNameInput.value.trim() : currentUser.fullName;
-                                 const updatedEmail = editEmailInput ? editEmailInput.value.trim() : currentUser.email;
+                              // Prepare data to send to backend
+                              const updateData = {
+                                  fullName: updatedFullName,
+                                  email: updatedEmail
+                                  // Do NOT include username or password here
+                              };
 
-                                 // Optional: Add validation for email format if desired
-                                  if (updatedEmail && !/@.+\..+/.test(updatedEmail)) {
-                                      showMessage("Please enter a valid email address.", 'error');
-                                      return; // Stop if email is invalid
+                             // --- Fetch API Call to Save Profile Data to Backend ---
+                             // NOTE: You need a backend endpoint that handles POST requests at `/profile/update/<username>`
+                             // and processes the updated data received in the request body.
+                              fetch(`http://127.0.0.1:5000/profile/update/${loggedInUsername}`, {
+                                  method: 'POST', // Use POST method for sending data
+                                  headers: {
+                                      'Content-Type': 'application/json', // Tell the backend we are sending JSON
+                                  },
+                                  body: JSON.stringify(updateData), // Send the data as a JSON string
+                              })
+                              .then(response => {
+                                  clearMessages(); // Clear saving message
+                                  if (!response.ok) {
+                                       // Handle non-200 responses from backend (e.g., validation errors, server errors)
+                                      console.error('Backend profile save failed:', response.status, response.statusText);
+                                       // Attempt to read backend's error message if available
+                                      return response.json().then(errorData => {
+                                          showMessage(errorData.message || `Error saving profile: ${response.statusText}`, 'error');
+                                          throw new Error('Failed to save profile data'); // Propagate error
+                                      }).catch(() => {
+                                           // If backend didn't return JSON or message
+                                          showMessage(`Error saving profile: ${response.statusText}`, 'error');
+                                          throw new Error('Failed to save profile data (no JSON error)');
+                                      });
                                   }
+                                   // Assuming backend returns a success message or updated data on success
+                                  return response.json(); // Parse success response (e.g., { message: "Profile updated!" })
+                              })
+                              .then(successData => {
+                                  console.log("Profile save success:", successData);
+                                  showMessage(successData.message || "Profile updated successfully!", 'success');
 
-                                 // Update the user object in the local 'users' object
-                                 currentUser.fullName = updatedFullName;
-                                 currentUser.email = updatedEmail;
-                                 // Do NOT update password here
-
-                                 // Save the entire updated users object back to localStorage
-                                 saveUsers(users);
-
-                                 showMessage("Profile updated successfully!", 'success');
-
-                                 // Switch back to display mode after a delay
-                                 setTimeout(() => {
-                                     toggleEditMode(false); // Calls loadAndDisplayProfile internally
-                                 }, 1000); // Switch after 1 second
-                             } else {
-                                 showMessage("Error: Could not find user data in localStorage to save.", 'error');
-                             }
+                                  // Switch back to display mode after a delay, which reloads data from backend
+                                  setTimeout(() => {
+                                      toggleEditMode(false); // Calls loadAndDisplayProfile internally
+                                  }, 1000); // Switch after 1 second
+                              })
+                              .catch(error => {
+                                  console.error('Error during profile save fetch:', error);
+                                  // Catch network errors or errors thrown in the .then block
+                                   if (profileMessage && profileMessage.style.display === 'none') {
+                                      showMessage("An unexpected error occurred while saving profile.", 'error');
+                                   }
+                              });
                          });
                      }
 
                      // --- Logout Functionality ---
-                      // This was already there, just ensuring it's inside the main script block
-                      const logoutBtnElement = document.getElementById('logoutBtn'); // Correctly get the element
+                      const logoutBtnElement = document.getElementById('logoutBtn');
                       if (logoutBtnElement) {
                           logoutBtnElement.addEventListener('click', function(e) {
-                              e.preventDefault(); // Prevent default link behavior
+                              e.preventDefault();
                               console.log("Logging out...");
-                              // Clear relevant auth/user info from localStorage and sessionStorage
                               localStorage.removeItem('userAuthenticated');
                               sessionStorage.removeItem('userAuthenticated');
                               localStorage.removeItem('adminAuthenticated');
                               localStorage.removeItem('loggedInUsername');
                               sessionStorage.removeItem('loggedInUsername');
 
-                              // Redirect to auth.html after logout (as per your change)
                               window.location.replace("auth.html"); // Use replace
                           });
                       }
 
 
                      // --- Initial Load of Profile Data ---
-                     // Call the function to load and display profile data ONLY if authenticated and username is found
-                     loadAndDisplayProfile(); // Load and display profile data (from localStorage for now)
+                     loadAndDisplayProfile(); // Call the function to load and display profile data from backend
+
 
                  } // End of if(loggedInUsername) check
 
