@@ -399,7 +399,94 @@
                                         // Error message already shown by .then !response.ok check
                                    });
                            }
+                        // --- Function to Calculate and Display Learning Progress (from Backend API) ---
+                 function displayLearningProgress(username) {
+                     // ... (loading message and fetch call before .then)
 
+                     fetch(`http://127.0.0.1:5000/dashboard/progress/${username}`)
+                         .then(response => {
+                             clearMessage(learningProgressCardsDiv); // Clear loading message once response comes
+                             console.log('Progress fetch raw response:', response); // Add this log
+                             if (!response.ok) {
+                                 // ... (error handling)
+                             }
+                             return response.json();
+                         })
+                         .then(progressData => {
+                             console.log("Learning progress data received:", progressData); // Add this log
+
+                             if (progressData.length === 0) {
+                                 // ... (no progress message)
+                             } else {
+                                 // ... (looping and creating cards)
+                             }
+                         })
+                         .catch(error => {
+                             console.error('Error during progress fetch or processing:', error); // Modify existing log
+                         });
+                 }
+
+
+                 // --- Function to Display Continue Learning Section (from Backend API) ---
+                 function displayContinueLearning(username) {
+                     // ... (loading message and fetch call before .then)
+
+                     fetch(`http://127.0.0.1:5000/dashboard/continue/${username}`)
+                         .then(response => {
+                              clearMessage(continueLearningContentDiv); // Clear loading message once response comes
+                             console.log('Continue fetch raw response:', response); // Add this log
+                             if (!response.ok) {
+                                  // ... (error handling)
+                             }
+                              return response.json();
+                         })
+                         .then(continueVideoData => {
+                             console.log("Continue learning data received:", continueVideoData); // Add this log
+
+                             if (continueVideoData && continueVideoData.message === 'No video to continue') {
+                                 // ... (no video message)
+                             } else if (continueVideoData && continueVideoData.topicId) {
+                                  // ... (creating video card)
+                             } else {
+                                  // ... (fallback message)
+                             }
+
+                           })
+                           .catch(error => {
+                               console.error('Error during continue fetch or processing:', error); // Modify existing log
+                           });
+                 }
+
+
+                 // --- Function to Display Recommended Next Topic (from Backend API) ---
+                 function displayRecommendedLearning(username) {
+                     // ... (loading message and fetch call before .then)
+
+                     fetch(`http://127.0.0.1:5000/dashboard/recommended/${username}`)
+                         .then(response => {
+                             clearMessage(recommendedLearningContentDiv); // Clear loading message once response comes
+                             console.log('Recommended fetch raw response:', response); // Add this log
+                             if (!response.ok) {
+                                  // ... (error handling)
+                             }
+                              return response.json();
+                         })
+                         .then(recommendedVideo => {
+                             console.log("Recommended video data received:", recommendedVideo); // Add this log
+
+                             if (recommendedVideo && recommendedVideo.message === 'All videos completed!') {
+                                  // ... (all completed message)
+                             } else if (recommendedVideo && recommendedVideo.topicId) {
+                                  // ... (creating video card)
+                               } else {
+                                    // ... (fallback message)
+                               }
+
+                           })
+                           .catch(error => {
+                               console.error('Error during recommended fetch or processing:', error); // Modify existing log
+                           });
+                   }   
 
                         // --- Initial Load and Display ---
                          // Call the display functions ONLY if authenticated and username is found
