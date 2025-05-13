@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimal Profile - Ukno Club</title>
+    <title>My Profile - Ukno Club</title>
     <link rel="stylesheet" href="profile.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+    </head>
 <body>
     <div class="profile-container">
         <header class="profile-header">
             <div class="branding">
                 <img src="assets/logo.png" alt="Ukno Club" class="logo">
-                <h1>Minimal Profile Page</h1>
+                <h1>My Profile</h1>
             </div>
             <nav class="user-nav">
                 <a href="dashboard.html">Dashboard</a>
-                <a href="auth.html" class="logout-btn" id="logoutBtn">
+                 <a href="auth.html" class="logout-btn" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </nav>
@@ -27,19 +27,70 @@
 
         <main class="profile-content">
             <section class="profile-section">
-                <h2>Authentication Check Result</h2>
-                <p id="authStatusMessage">Checking authentication...</p>
+                <h2>Account Information</h2>
+
+                <p id="authStatusMessage" style="display: none;"></p>
+                <div id="profileDisplay" class="profile-display">
+                    <p><strong>Username:</strong> <span id="displayUsername"></span></p>
+                    <p><strong>Full Name:</strong> <span id="displayFullName"></span></p>
+                    <p><strong>Email:</strong> <span id="displayEmail"></span></p>
+                    <button id="editProfileBtn" class="btn"><i class="fas fa-edit"></i> Edit Profile</button>
+                </div>
+
+                <form id="profileEditForm" class="profile-edit-form hidden">
+                    <div class="form-group">
+                        <label for="editUsername">Username:</label>
+                        <input type="text" id="editUsername" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFullName">Full Name:</label>
+                        <input type="text" id="editFullName">
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email:</label>
+                        <input type="email" id="editEmail">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="saveProfileBtn" class="btn btn-save"><i class="fas fa-save"></i> Save Changes</button>
+                        <button type="button" id="cancelEditBtn" class="btn btn-cancel"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
+                    <p class="message" id="profileMessage"></p>
+                </form>
             </section>
         </main>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const authStatusMessage = document.getElementById('authStatusMessage');
+            // --- Element Selections ---
+            const authStatusMessage = document.getElementById('authStatusMessage'); // Selection for the placeholder message
+
+            const displayUsernameSpan = document.getElementById('displayUsername');
+            const displayFullNameSpan = document.getElementById('displayFullName');
+            const displayEmailSpan = document.getElementById('displayEmail');
+
+            const profileDisplayDiv = document.getElementById('profileDisplay');
+            const profileEditForm = document.getElementById('profileEditForm');
+
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const saveProfileBtn = document.getElementById('saveProfileBtn');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+            const editUsernameInput = document.getElementById('editUsername');
+            const editFullNameInput = document.getElementById('editFullName');
+            const editEmailInput = document.getElementById('editEmail');
+
+            const profileMessage = document.getElementById('profileMessage');
+            const logoutBtn = document.getElementById('logoutBtn');
+
 
             // --- localStorage/sessionStorage Keys (Consistent with auth.html & dashboard.html) ---
             const ADMIN_AUTH_KEY = 'adminAuthenticated';
-            // LOGGED_IN_USERNAME_KEY is not needed for just the auth check
+            const LOGGED_IN_USERNAME_KEY = 'loggedInUsername'; // Used to get username
+
+            // --- localStorage Key for Users Data (Currently used for profile edit - WILL BE UPDATED TO USE BACKEND API) ---
+            const USERS_STORAGE_KEY = 'uknoClubUsers'; // Note: This is for the OLD local storage approach
+
 
             // --- Authentication Check for Protected Page ---
             // This runs when the page loads to ensure the user is authenticated using primary flags
@@ -47,7 +98,7 @@
             const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
             const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
 
-            console.log("--- Minimal Profile.html Auth Check ---");
+            console.log("--- Profile.html Auth Check ---");
             console.log("localStorage userAuthenticated:", localStorage.getItem('userAuthenticated'), "->", userAuthLocal);
             console.log("sessionStorage userAuthenticated:", sessionStorage.getItem('userAuthenticated'), "->", userAuthSession);
             console.log("localStorage adminAuthenticated:", localStorage.getItem(ADMIN_AUTH_KEY), "->", adminAuthLocal);
@@ -56,35 +107,225 @@
             // If neither user nor admin authentication flag is found, redirect to login page
             if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
                 console.log("Minimal Profile: User is NOT authenticated. Redirecting to auth.html");
-                authStatusMessage.textContent = "Not authenticated. Redirecting...";
-                authStatusMessage.style.color = 'var(--error)'; // Assuming --error is defined in profile.css
+                 if (authStatusMessage) {
+                     authStatusMessage.textContent = "Not authenticated. Redirecting...";
+                     authStatusMessage.style.color = 'var(--error)';
+                     authStatusMessage.style.display = 'block'; // Show the message
+                 }
                 window.location.replace("auth.html#login"); // Use replace
+                return; // Stop script execution if not authenticated
             } else {
-                 console.log("Minimal Profile: User IS authenticated. Loading minimal page content.");
-                 authStatusMessage.textContent = "Authentication successful!";
-                 authStatusMessage.style.color = 'var(--success)'; // Assuming --success is defined in profile.css
-                 // User is authenticated, they stay on this page.
-                 // No other profile logic is included in this minimal version.
+                 console.log("Minimal Profile: User IS authenticated. Proceeding with profile logic.");
+                 if (authStatusMessage) {
+                     authStatusMessage.textContent = "Authentication successful!"; // Show success message briefly
+                     authStatusMessage.style.color = 'var(--success)';
+                     authStatusMessage.style.display = 'block'; // Show the message
+                      // Optionally hide the success message after a delay
+                      setTimeout(() => {
+                          if (authStatusMessage) authStatusMessage.style.display = 'none';
+                      }, 2000); // Hide after 2 seconds
+                 }
 
-                 // --- Logout Functionality (Can keep this simple logout) ---
-                  const logoutBtn = document.getElementById('logoutBtn');
-                   if (logoutBtn) {
-                       logoutBtn.addEventListener('click', function(e) {
-                           e.preventDefault();
-                           console.log("Minimal Profile: Logging out...");
-                           // Clear relevant auth/user info from localStorage and sessionStorage
-                           localStorage.removeItem('userAuthenticated');
-                           sessionStorage.removeItem('userAuthenticated');
-                           localStorage.removeItem('adminAuthenticated');
-                           localStorage.removeItem('loggedInUsername'); // Clear username too
-                           sessionStorage.removeItem('loggedInUsername');
 
-                           // Redirect to auth.html after logout
-                           window.location.replace("auth.html");
-                       });
-                   }
-            }
-             console.log("--- End Minimal Profile.html Auth Check ---");
+                 // --- User is authenticated! Load and manage profile data (from localStorage for now) ---
+
+                 // --- Get the logged-in username (Needed for fetching/storing data) ---
+                 const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
+
+                 if (!loggedInUsername) {
+                     console.error("Logged-in username not found in storage despite authentication flags.");
+                     // This case should ideally not happen if login stored the username correctly.
+                     // You might want to log out the user or show a critical error on the page.
+                     if (profileMessage) showMessage("Error: User data could not be loaded.", 'error');
+                     // Consider logging out automatically: window.location.replace("index.html");
+                 } else {
+                      console.log("Logged in as:", loggedInUsername);
+
+                     // --- NOTE: The functions below currently load/save profile data from/to localStorage. ---
+                     // --- We will update these in a future step to fetch/save data from/to the backend API. ---
+                     // --- The "Error loading profile data" message below will appear ---
+                     // --- if your localStorage does not contain user data saved under the USERS_STORAGE_KEY. ---
+
+
+                     // --- Helper function to get user data from localStorage ---
+                     function getUsers() {
+                         const usersJson = localStorage.getItem(USERS_STORAGE_KEY);
+                         try {
+                             // The user data structure is expected to be an object keyed by username
+                             // { "user1": { fullName: "...", email: "..." }, "admin": { ... } }
+                              return usersJson ? JSON.parse(usersJson) : {};
+                         } catch (e) {
+                             console.error("Error parsing users data from localStorage:", e);
+                             return {}; // Return empty object if parsing fails
+                         }
+                     }
+
+                     // --- Helper function to save user data to localStorage ---
+                     function saveUsers(usersObject) {
+                         localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usersObject));
+                     }
+
+                     // --- Helper function to show messages ---
+                     function showMessage(message, type = 'info') {
+                         if (profileMessage) {
+                             profileMessage.textContent = message;
+                             profileMessage.style.color = type === 'success' ? 'var(--success)' : (type === 'error' ? 'var(--error)' : 'var(--text-secondary)');
+                             profileMessage.style.display = 'block';
+
+                             // Hide message after a few seconds for non-error messages
+                             if (type !== 'error') {
+                                 setTimeout(() => {
+                                     if (profileMessage) profileMessage.style.display = 'none'; // Added check
+                                 }, 5000); // Hide after 5 seconds
+                             }
+                         }
+                     }
+
+                     // --- Helper function to clear messages ---
+                     function clearMessages() {
+                          if (profileMessage) {
+                             profileMessage.textContent = '';
+                             profileMessage.style.display = 'none';
+                          }
+                     }
+
+
+                     // --- Function to Load and Display Current User's Profile (from localStorage) ---
+                     // This will be updated to fetch from backend
+                     function loadAndDisplayProfile() {
+                         console.log("Attempting to load profile data from localStorage for user:", loggedInUsername);
+
+                         const users = getUsers();
+                         const currentUser = users[loggedInUsername]; // Get data for the logged-in user using username as key
+
+                         if (currentUser) {
+                             console.log("User data found in localStorage:", currentUser);
+                             // Populate display fields - Check if elements exist before setting textContent
+                             if (displayUsernameSpan) displayUsernameSpan.textContent = loggedInUsername;
+                             if (displayFullNameSpan) displayFullNameSpan.textContent = currentUser.fullName || 'Not provided';
+                             if (displayEmailSpan) displayEmailSpan.textContent = currentUser.email || 'Not provided';
+
+                             // Populate edit form fields (initial state) - Check if elements exist
+                             if (editUsernameInput) editUsernameInput.value = loggedInUsername; // Username input is disabled
+                             if (editFullNameInput) editFullNameInput.value = currentUser.fullName || '';
+                             if (editEmailInput) editEmailInput.value = currentUser.email || '';
+
+                             // Ensure display/edit divs are visible/hidden correctly on load
+                             if (profileDisplayDiv) profileDisplayDiv.classList.remove('hidden');
+                             if (profileEditForm) profileEditForm.classList.add('hidden');
+                             if (editProfileBtn) editProfileBtn.style.display = 'inline-block'; // Ensure button is shown
+                             clearMessages(); // Clear any leftover messages
+
+                         } else {
+                             console.error("Current user data not found in localStorage under key:", loggedInUsername);
+                              if (profileDisplayDiv) profileDisplayDiv.innerHTML = '<p class="error-message">Error loading profile data or data not found. Please ensure user data is saved correctly (e.g., via Admin Panel).</p>';
+                              if (editProfileBtn) editProfileBtn.style.display = 'none'; // Hide edit button if data not found
+                              if (profileEditForm) profileEditForm.classList.add('hidden'); // Ensure form is hidden
+                              clearMessages(); // Clear any leftover messages
+                         }
+                     }
+
+                     // --- Toggle between Display and Edit Mode ---
+                     function toggleEditMode(isEditing) {
+                          if (profileDisplayDiv && profileEditForm && editProfileBtn) {
+                             if (isEditing) {
+                                 profileDisplayDiv.classList.add('hidden');
+                                 profileEditForm.classList.remove('hidden');
+                                 editProfileBtn.style.display = 'none';
+                                 clearMessages(); // Clear message area when entering edit mode
+                             } else {
+                                 profileEditForm.classList.add('hidden');
+                                 profileDisplayDiv.classList.remove('hidden');
+                                 editProfileBtn.style.display = 'inline-block'; // Or 'block' depending on CSS
+                                 clearMessages(); // Clear message area when canceling or after saving
+                                 loadAndDisplayProfile(); // Reload display to show latest data (from localStorage)
+                             }
+                          }
+                     }
+
+                     // --- Event Listeners ---
+                      if (editProfileBtn) {
+                         editProfileBtn.addEventListener('click', function() {
+                             toggleEditMode(true); // Switch to edit mode
+                         });
+                      }
+
+                      if (cancelEditBtn) {
+                         cancelEditBtn.addEventListener('click', function() {
+                             toggleEditMode(false); // Switch back to display mode
+                         });
+                      }
+
+                     if (profileEditForm) {
+                         profileEditForm.addEventListener('submit', function(e) {
+                             e.preventDefault(); // Prevent default form submission
+
+                             clearMessages(); // Clear previous messages
+
+                             console.log("Attempting to save profile changes to localStorage...");
+
+                             const users = getUsers();
+                             const currentUser = users[loggedInUsername]; // Get user data from localStorage
+
+
+                             if (currentUser) {
+                                 // Get updated values from the form - Check if elements exist
+                                 const updatedFullName = editFullNameInput ? editFullNameInput.value.trim() : currentUser.fullName;
+                                 const updatedEmail = editEmailInput ? editEmailInput.value.trim() : currentUser.email;
+
+                                 // Optional: Add validation for email format if desired
+                                  if (updatedEmail && !/@.+\..+/.test(updatedEmail)) {
+                                      showMessage("Please enter a valid email address.", 'error');
+                                      return; // Stop if email is invalid
+                                  }
+
+                                 // Update the user object in the local 'users' object
+                                 currentUser.fullName = updatedFullName;
+                                 currentUser.email = updatedEmail;
+                                 // Do NOT update password here
+
+                                 // Save the entire updated users object back to localStorage
+                                 saveUsers(users);
+
+                                 showMessage("Profile updated successfully!", 'success');
+
+                                 // Switch back to display mode after a delay
+                                 setTimeout(() => {
+                                     toggleEditMode(false); // Calls loadAndDisplayProfile internally
+                                 }, 1000); // Switch after 1 second
+                             } else {
+                                 showMessage("Error: Could not find user data in localStorage to save.", 'error');
+                             }
+                         });
+                     }
+
+                     // --- Logout Functionality ---
+                      // This was already there, just ensuring it's inside the main script block
+                      const logoutBtnElement = document.getElementById('logoutBtn'); // Correctly get the element
+                      if (logoutBtnElement) {
+                          logoutBtnElement.addEventListener('click', function(e) {
+                              e.preventDefault(); // Prevent default link behavior
+                              console.log("Logging out...");
+                              // Clear relevant auth/user info from localStorage and sessionStorage
+                              localStorage.removeItem('userAuthenticated');
+                              sessionStorage.removeItem('userAuthenticated');
+                              localStorage.removeItem('adminAuthenticated');
+                              localStorage.removeItem('loggedInUsername');
+                              sessionStorage.removeItem('loggedInUsername');
+
+                              // Redirect to auth.html after logout (as per your change)
+                              window.location.replace("auth.html"); // Use replace
+                          });
+                      }
+
+
+                     // --- Initial Load of Profile Data ---
+                     // Call the function to load and display profile data ONLY if authenticated and username is found
+                     loadAndDisplayProfile(); // Load and display profile data (from localStorage for now)
+
+                 } // End of if(loggedInUsername) check
+
+            } // End of if(!userAuthLocal && ...) check (Authentication)
         });
     </script>
 </body>
