@@ -127,13 +127,9 @@
 
                         // --- Determine "Welcome" vs "Welcome back" ---
                          // This now requires checking if the user has ANY progress in the database
-                         // We can do a quick check via the progress endpoint or assume if username is there they are back.
-                         // For simplicity for now, we'll just use "Welcome back" if loggedInUsername is found,
-                         // or you could make a small API call here just to check for any progress entries.
-                         // A more robust way would be for the login response to indicate if it's a new user or returning.
+                         // For simplicity for now, we'll just use "Welcome back" if loggedInUsername is found.
+                         // A more accurate way requires a backend check for existing progress.
                         if (welcomeMessagePrefixSpan) {
-                            // Assuming if loggedInUsername exists, they are likely returning users.
-                            // A more accurate way requires a backend check for existing progress.
                              welcomeMessagePrefixSpan.textContent = 'Welcome back';
                          }
 
@@ -198,12 +194,13 @@
 
                         // --- Function to Calculate and Display Learning Progress (from Backend API) ---
                          function displayLearningProgress(username) {
-                             clearMessage(learningProgressCardsDiv); // Clear loading message
+                             clearMessage(learningProgressCardsDiv); // Clear previous content
                              showMessage(learningProgressCardsDiv, "Loading progress...", 'info'); // Show loading
 
                              fetch(`http://127.0.0.1:5000/dashboard/progress/${username}`)
                                  .then(response => {
                                      clearMessage(learningProgressCardsDiv); // Clear loading message once response comes
+                                     console.log('Progress fetch raw response:', response); // Add this log
                                      if (!response.ok) {
                                          console.error('Backend progress fetch failed:', response.status, response.statusText);
                                           showMessage(learningProgressCardsDiv, `Error loading progress: ${response.statusText}`, 'error');
@@ -212,48 +209,66 @@
                                      return response.json();
                                  })
                                  .then(progressData => {
-                                     console.log("Learning progress data:", progressData);
+                                     console.log("Learning progress data received:", progressData); // Add this log
 
-                                     if (progressData.length === 0) {
+                                     if (!Array.isArray(progressData) || progressData.length === 0) { // Check if it's an array and not empty
                                           showMessage(learningProgressCardsDiv, 'No learning progress yet. Start a course to see progress here!', 'secondary');
+                                         console.log("No progress data received or data is not an array, showing empty message."); // Add this log
                                          return;
                                      }
 
                                      // Sort progress data alphabetically by module name
                                      progressData.sort((a, b) => a.module.localeCompare(b.module));
+                                     console.log("Sorted progress data:", progressData); // Add this log
 
                                      // Populate progress cards
                                      progressData.forEach(moduleProgress => {
-                                         const completionPercentage = Math.round(moduleProgress.completionPercentage); // Use rounded percentage from backend
-                                         const moduleTitle = moduleProgress.module; // Use module name from backend
-                                          const totalVideos = moduleProgress.totalVideos;
-                                          const completedVideos = moduleProgress.completedVideos;
+                                         console.log('Processing module progress:', moduleProgress); // Add this log
 
-                                         // You might want a mapping for module names to symbols if you used them before
-                                         const moduleSymbols = {
-                                             'data-analyst': '🟦',
-                                             'business-analyst': '🟨',
-                                             'data-scientist': '🟥',
-                                             'big-data': '🟩',
-                                         };
-                                          const moduleSymbol = moduleSymbols[moduleTitle.toLowerCase()] || ' '; // Use lowercase for lookup
+                                         // Ensure necessary properties exist in moduleProgress object
+                                         if (moduleProgress.module !== undefined &&
+                                             moduleProgress.totalVideos !== undefined &&
+                                             moduleProgress.completedVideos !== undefined &&
+                                             moduleProgress.completionPercentage !== undefined)
+                                         {
+                                             const completionPercentage = Math.round(moduleProgress.completionPercentage);
+                                             const moduleTitle = moduleProgress.module;
+                                              const totalVideos = moduleProgress.totalVideos;
+                                              const completedVideos = moduleProgress.completedVideos;
+
+                                             console.log('Creating card for module:', moduleTitle, 'Completion:', completionPercentage + '%', 'Completed:', completedVideos, 'Total:', totalVideos); // Add this log
+
+                                             // You might want a mapping for module names to symbols if you used them before
+                                             const moduleSymbols = {
+                                                 'data-analyst': '🟦',
+                                                 'business-analyst': '🟨',
+                                                 'data-scientist': '🟥',
+                                                 'big-data': '🟩',
+                                             };
+                                              // Convert moduleTitle to lowercase for symbol lookup consistency
+                                              const moduleSymbol = moduleSymbols[moduleTitle.toLowerCase()] || ' ';
 
 
-                                         const progressCard = document.createElement('div');
-                                         progressCard.classList.add('progress-card');
-                                         progressCard.innerHTML = `
-                                             <h3>${moduleSymbol} ${moduleTitle}</h3>
-                                             <div class="progress-bar">
-                                                 <div class="progress-fill" style="width: ${completionPercentage}%"></div>
-                                             </div>
-                                             <span class="progress-percent">${completionPercentage}% Complete</span>
-                                             <div class="next-topic">${completedVideos} of ${totalVideos} videos completed</div>
-                                         `;
-                                         learningProgressCardsDiv.appendChild(progressCard);
+                                             const progressCard = document.createElement('div');
+                                             progressCard.classList.add('progress-card');
+                                             progressCard.innerHTML = `
+                                                 <h3>${moduleSymbol} ${moduleTitle}</h3>
+                                                 <div class="progress-bar">
+                                                     <div class="progress-fill" style="width: ${completionPercentage}%"></div>
+                                                 </div>
+                                                 <span class="progress-percent">${completionPercentage}% Complete</span>
+                                                 <div class="next-topic">${completedVideos} of ${totalVideos} videos completed</div>
+                                             `;
+                                             learningProgressCardsDiv.appendChild(progressCard);
+                                              console.log('Appended progress card for module:', moduleTitle); // Add this log
+                                         } else {
+                                             console.warn("Skipping progress card creation due to missing data in moduleProgress:", moduleProgress);
+                                         }
+
                                      });
                                  })
                                  .catch(error => {
-                                     console.error('Error during progress fetch:', error);
+                                     console.error('Error during progress fetch or processing:', error);
                                       // Error message already shown by .then !response.ok check
                                  });
                          }
@@ -261,12 +276,13 @@
 
                         // --- Function to Display Continue Learning Section (from Backend API) ---
                          function displayContinueLearning(username) {
-                             clearMessage(continueLearningContentDiv); // Clear loading message
+                             clearMessage(continueLearningContentDiv); // Clear previous content
                              showMessage(continueLearningContentDiv, "Looking for video to continue...", 'info'); // Show loading
 
                              fetch(`http://127.0.0.1:5000/dashboard/continue/${username}`)
                                  .then(response => {
                                       clearMessage(continueLearningContentDiv); // Clear loading message once response comes
+                                     console.log('Continue fetch raw response:', response); // Add this log
                                      if (!response.ok) {
                                          console.error('Backend continue video fetch failed:', response.status, response.statusText);
                                          // Handle specific messages from backend if needed, e.g., 404 if user not found
@@ -277,14 +293,16 @@
                                       return response.json(); // Parse the JSON response
                                  })
                                  .then(continueVideoData => {
-                                     console.log("Continue learning data:", continueVideoData);
+                                     console.log("Continue learning data received:", continueVideoData); // Add this log
 
                                      if (continueVideoData && continueVideoData.message === 'No video to continue') {
                                          // Backend explicitly sent message that no video to continue
                                          showMessage(continueLearningContentDiv, 'Start a course to see your progress here!', 'secondary');
+                                         console.log("Backend reported no video to continue."); // Add this log
 
                                      } else if (continueVideoData && continueVideoData.topicId) {
                                           // Backend returned a video to continue
+                                          console.log("Backend returned a continue video with topicId:", continueVideoData.topicId); // Add this log
                                           const continueCard = document.createElement('a');
                                           continueCard.classList.add('video-card');
                                           // Link to the video player page for this video, using topicId
@@ -316,16 +334,18 @@
                                                <div class="play-btn"><i class="fas fa-play"></i></div>
                                           `;
                                           continueLearningContentDiv.appendChild(continueCard);
+                                          console.log('Appended continue video card.'); // Add this log
+
 
                                      } else {
                                           // Fallback if backend returns unexpected empty data or format
                                          showMessage(continueLearningContentDiv, 'Could not find a video to continue.', 'secondary');
-                                          console.warn("Backend did not return a continue video or 'No video to continue' message.");
+                                          console.warn("Backend did not return a continue video or 'No video to continue' message, and returned data was unexpected:", continueVideoData); // Add this log
                                      }
 
                                   })
                                   .catch(error => {
-                                      console.error('Error during continue fetch:', error);
+                                      console.error('Error during continue fetch or processing:', error);
                                        // Error message already shown by .then !response.ok check
                                   });
                          }
@@ -333,12 +353,13 @@
 
                         // --- Function to Display Recommended Next Topic (from Backend API) ---
                          function displayRecommendedLearning(username) {
-                             clearMessage(recommendedLearningContentDiv); // Clear loading message
+                             clearMessage(recommendedLearningContentDiv); // Clear previous content
                              showMessage(recommendedLearningContentDiv, "Finding your next topic...", 'info'); // Show loading
 
                              fetch(`http://127.0.0.1:5000/dashboard/recommended/${username}`)
                                  .then(response => {
                                      clearMessage(recommendedLearningContentDiv); // Clear loading message once response comes
+                                     console.log('Recommended fetch raw response:', response); // Add this log
                                      if (!response.ok) {
                                          console.error('Backend recommended video fetch failed:', response.status, response.statusText);
                                           // Handle specific messages from backend if needed
@@ -360,14 +381,16 @@
                                       return response.json(); // Parse the JSON response
                                  })
                                  .then(recommendedVideo => {
-                                     console.log("Recommended video data:", recommendedVideo);
+                                     console.log("Recommended video data received:", recommendedVideo); // Add this log
 
                                      if (recommendedVideo && recommendedVideo.message === 'All videos completed!') {
                                           // Backend explicitly sent a message for all completed
                                           showMessage(recommendedLearningContentDiv, 'You have completed all available videos! 🎉 Check back later for new content.', 'secondary');
+                                          console.log("Backend reported all videos completed."); // Add this log
 
                                      } else if (recommendedVideo && recommendedVideo.topicId) {
                                          // Found a recommended video
+                                         console.log("Backend returned a recommended video with topicId:", recommendedVideo.topicId); // Add this log
                                           const recommendedCard = document.createElement('a');
                                           recommendedCard.classList.add('video-card'); // Reuse video-card styling
                                           // Link to the video player page for this video
@@ -386,107 +409,21 @@
                                                <div class="play-btn"><i class="fas fa-arrow-right"></i></div>
                                           `;
                                           recommendedLearningContentDiv.appendChild(recommendedCard);
+                                          console.log('Appended recommended video card.'); // Add this log
 
                                        } else {
                                            // Should not happen if backend works as expected, but as a fallback
                                            showMessage(recommendedLearningContentDiv, 'No recommendation found.', 'secondary');
-                                           console.warn("Backend did not return a recommended video or 'All completed' message.");
+                                           console.warn("Backend did not return a recommended video or 'All completed' message, and returned data was unexpected:", recommendedVideo); // Add this log
                                        }
 
                                    })
                                    .catch(error => {
-                                       console.error('Error during recommended video fetch:', error);
+                                       console.error('Error during recommended fetch or processing:', error);
                                         // Error message already shown by .then !response.ok check
                                    });
                            }
-                        // --- Function to Calculate and Display Learning Progress (from Backend API) ---
-                 function displayLearningProgress(username) {
-                     // ... (loading message and fetch call before .then)
 
-                     fetch(`http://127.0.0.1:5000/dashboard/progress/${username}`)
-                         .then(response => {
-                             clearMessage(learningProgressCardsDiv); // Clear loading message once response comes
-                             console.log('Progress fetch raw response:', response); // Add this log
-                             if (!response.ok) {
-                                 // ... (error handling)
-                             }
-                             return response.json();
-                         })
-                         .then(progressData => {
-                             console.log("Learning progress data received:", progressData); // Add this log
-
-                             if (progressData.length === 0) {
-                                 // ... (no progress message)
-                             } else {
-                                 // ... (looping and creating cards)
-                             }
-                         })
-                         .catch(error => {
-                             console.error('Error during progress fetch or processing:', error); // Modify existing log
-                         });
-                 }
-
-
-                 // --- Function to Display Continue Learning Section (from Backend API) ---
-                 function displayContinueLearning(username) {
-                     // ... (loading message and fetch call before .then)
-
-                     fetch(`http://127.0.0.1:5000/dashboard/continue/${username}`)
-                         .then(response => {
-                              clearMessage(continueLearningContentDiv); // Clear loading message once response comes
-                             console.log('Continue fetch raw response:', response); // Add this log
-                             if (!response.ok) {
-                                  // ... (error handling)
-                             }
-                              return response.json();
-                         })
-                         .then(continueVideoData => {
-                             console.log("Continue learning data received:", continueVideoData); // Add this log
-
-                             if (continueVideoData && continueVideoData.message === 'No video to continue') {
-                                 // ... (no video message)
-                             } else if (continueVideoData && continueVideoData.topicId) {
-                                  // ... (creating video card)
-                             } else {
-                                  // ... (fallback message)
-                             }
-
-                           })
-                           .catch(error => {
-                               console.error('Error during continue fetch or processing:', error); // Modify existing log
-                           });
-                 }
-
-
-                 // --- Function to Display Recommended Next Topic (from Backend API) ---
-                 function displayRecommendedLearning(username) {
-                     // ... (loading message and fetch call before .then)
-
-                     fetch(`http://127.0.0.1:5000/dashboard/recommended/${username}`)
-                         .then(response => {
-                             clearMessage(recommendedLearningContentDiv); // Clear loading message once response comes
-                             console.log('Recommended fetch raw response:', response); // Add this log
-                             if (!response.ok) {
-                                  // ... (error handling)
-                             }
-                              return response.json();
-                         })
-                         .then(recommendedVideo => {
-                             console.log("Recommended video data received:", recommendedVideo); // Add this log
-
-                             if (recommendedVideo && recommendedVideo.message === 'All videos completed!') {
-                                  // ... (all completed message)
-                             } else if (recommendedVideo && recommendedVideo.topicId) {
-                                  // ... (creating video card)
-                               } else {
-                                    // ... (fallback message)
-                               }
-
-                           })
-                           .catch(error => {
-                               console.error('Error during recommended fetch or processing:', error); // Modify existing log
-                           });
-                   }   
 
                         // --- Initial Load and Display ---
                          // Call the display functions ONLY if authenticated and username is found
