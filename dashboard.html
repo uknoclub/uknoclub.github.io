@@ -15,18 +15,24 @@
         <header class="dashboard-header">
             <div class="branding">
                 <img src="assets/logo.png" alt="Ukno Club" class="logo">
-                 <h1>Welcome back, <span class="username" id="loggedInUsername">User</span>!</h1>
+                 <h1><span id="welcomeMessagePrefix">Welcome back</span>, <span class="username" id="loggedInUsername">User</span>!</h1>
             </div>
             <nav class="user-nav">
                 <a href="profile.html" class="profile-link">Profile</a>
-                 <a href="courses.html" class="courses-link">Courses</a>
-                <a href="index.html" class="logout-btn" id="logoutBtn">
+                 <a href="index.html" class="logout-btn" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </nav>
         </header>
 
         <main class="dashboard-content">
+
+            <section class="roadmap-section">
+                 <h2><i class="fas fa-map-signs"></i> Data Science Roadmap</h2>
+                 <div id="dataScienceRoadmap">
+                     <p class="no-progress-message">Loading roadmap...</p>
+                     </div>
+             </section>
 
             <section class="recommended-section">
                  <h2><i class="fas fa-arrow-right"></i> Your Next Step</h2>
@@ -66,23 +72,20 @@
                         <i class="fas fa-comment-alt"></i>
                         <span>Feedback</span>
                     </a>
-                     <a href="admin-dashboard.html" class="action-card admin-link hidden" id="adminPanelLink">
-                         <i class="fas fa-user-shield"></i>
-                         <span>Admin Panel</span>
-                     </a>
-                </div>
+                     </div>
             </section>
         </main>
 
          <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // --- Element Selections ---
+                const welcomeMessagePrefixSpan = document.getElementById('welcomeMessagePrefix'); // Span for "Welcome back" / "Welcome"
                 const usernameSpan = document.getElementById('loggedInUsername');
                 const logoutBtn = document.getElementById('logoutBtn');
                 const learningProgressCardsDiv = document.getElementById('learningProgressCards');
                 const continueLearningContentDiv = document.getElementById('continueLearningContent');
                 const recommendedLearningContentDiv = document.getElementById('recommendedLearningContent');
-                const adminPanelLink = document.getElementById('adminPanelLink');
+                const dataScienceRoadmapDiv = document.getElementById('dataScienceRoadmap'); // Roadmap div
 
 
                 // --- localStorage/sessionStorage Keys (Used by authentication & logout) ---
@@ -113,12 +116,10 @@
                     console.log("User is authenticated on dashboard.html, loading dashboard content.");
                     // User is authenticated, proceed
                      // Determine which username to display based on who is authenticated
-                     let loggedInUsername = 'Guest';
+                     let loggedInUsername = 'User'; // Default username text
                      if (adminAuthLocal) {
                          loggedInUsername = 'Admin'; // Display "Admin" for admin
-                          if (adminPanelLink) {
-                             adminPanelLink.classList.remove('hidden'); // Show Admin Panel link
-                          }
+                         // Admin-specific logic would go here if needed
                      } else if (localStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
                          loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY); // Get username from local storage
                      } else if (sessionStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
@@ -126,10 +127,22 @@
                      }
 
                     // Display Logged-in Username
-                    if (usernameSpan && loggedInUsername && loggedInUsername !== 'Guest') {
+                    if (usernameSpan && loggedInUsername) {
                         usernameSpan.textContent = loggedInUsername;
-                    } else if (usernameSpan) {
-                         usernameSpan.textContent = 'User'; // Default display if username not found but authenticated
+                    }
+
+
+                    // --- Determine "Welcome" vs "Welcome back" ---
+                    // Simple proxy: Check if user has any completed progress.
+                    const userProgressCheck = loadUserProgress(); // Load progress from localStorage (temporary)
+                    const hasProgress = Object.keys(userProgressCheck).length > 0; // Check if the progress object is not empty
+
+                    if (welcomeMessagePrefixSpan) {
+                        if (hasProgress) {
+                            welcomeMessagePrefixSpan.textContent = 'Welcome back';
+                        } else {
+                            welcomeMessagePrefixSpan.textContent = 'Welcome'; // First time seeing progress
+                        }
                     }
                 }
 
@@ -155,6 +168,7 @@
 
                 // --- NOTE: The functions below currently load data from localStorage. ---
                 // --- We will update these in a future step to fetch data from the backend API. ---
+                // --- You will likely see errors related to these if localStorage is empty/missing data. ---
 
 
                 // --- Function to Load All Video Data (Currently from localStorage) ---
@@ -173,6 +187,7 @@
                 function loadUserProgress() {
                      // Need the user ID from the backend login response eventually
                      // For now, still using username-based localStorage key as before
+                    const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
                     if (loggedInUsername && loggedInUsername !== 'Guest') {
                         const progressJson = localStorage.getItem(USER_PROGRESS_KEY_PREFIX + loggedInUsername); // Using loggedInUsername as key suffix
                         try {
@@ -214,7 +229,7 @@
                 // This will need to be updated to use data from the backend
                 function displayLearningProgress() {
                     const allVideos = loadAllVideosData(); // Reads from localStorage
-                    const userProgress = loadUserProgress(); // Reads from localStorage
+                    const userProgress = loadUserProgress(); // Reads from localStorage user completion
                     learningProgressCardsDiv.innerHTML = ''; // Clear current cards
 
                     if (allVideos.length === 0) {
@@ -302,7 +317,7 @@
 
                      // Need to retrieve individual video progress from localStorage for the currently logged-in user
                      const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
-                     if (!loggedInUsername) {
+                     if (!loggedInUsername || loggedInUsername === 'Guest') {
                           continueLearningContentDiv.innerHTML = '<p class="no-progress-message">Log in to track your progress.</p>';
                          return;
                      }
@@ -342,7 +357,7 @@
 
                      if (mostRecentlyWatchedVideo) {
                           // Found the most recently watched video
-                          const continueCard = document.createElement('a');
+                          const continueCard = document.createElement('a'); // Changed div to a for linking
                           continueCard.classList.add('video-card');
                           // Link to the video player page for this video, resuming from last time
                           // The video player page will need to fetch the last watched time from the backend
@@ -371,14 +386,7 @@
 
 
                           continueCard.innerHTML = `
-                              <div class="video-thumbnail">
-                                   <img src="assets/placeholder-thumb.jpg" alt="Video Thumbnail">
-                                  <div class="video-progress">
-                                       <div class="progress-fill" style="width: ${progressPercent}%"></div>
-                                   </div>
-                                   <div class="play-btn"><i class="fas fa-play"></i></div>
-                               </div>
-                              <div class="video-info">
+                               <div class="video-info">
                                    <h3>${mostRecentlyWatchedVideo.videoTitle}</h3>
                                    <p class="video-desc">${mostRecentlyWatchedVideo.videoDescription || 'No description available.'}</p>
                                    <div class="video-meta">
@@ -386,6 +394,7 @@
                                       <span><i class="far fa-calendar"></i> Last viewed: ${lastViewedDate}</span>
                                    </div>
                                </div>
+                               <div class="play-btn"><i class="fas fa-play"></i></div>
                           `;
                           continueLearningContentDiv.appendChild(continueCard);
 
@@ -406,6 +415,14 @@
                      const userProgress = loadUserProgress(); // Reads from localStorage
                      let recommendedVideo = null;
 
+                     // Need the logged-in username for individual progress check
+                     const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
+                      if (!loggedInUsername || loggedInUsername === 'Guest') {
+                           recommendedLearningContentDiv.innerHTML = '<p class="no-progress-message">Log in to get recommendations.</p>';
+                          return;
+                      }
+
+
                      // Logic: Find the last watched video (if any). If completed, find the next in the same module.
                      // If no last watched or it's completed and no next, find the first uncompleted video in any module.
 
@@ -413,8 +430,7 @@
                       let latestTimestamp = null;
 
                       // Find the most recently watched video (completed or not) based on individual video progress timestamp
-                      const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
-                     if (loggedInUsername) {
+                      if (loggedInUsername) { // Redundant check, but harmless
                          allVideos.forEach(video => {
                               const userVideoProgressKey = VIDEO_PROGRESS_KEY_PREFIX + loggedInUsername + '-' + video.topicId;
                               const savedProgressJson = localStorage.getItem(userVideoProgressKey);
@@ -490,16 +506,12 @@
 
 
                      if (recommendedVideo) {
-                          const recommendedCard = document.createElement('a');
+                          const recommendedCard = document.createElement('a'); // Changed div to a for linking
                            recommendedCard.classList.add('video-card'); // Reuse video-card styling
                            recommendedCard.href = `courses.html?video=${recommendedVideo.topicId}`; // Link to the video
 
 
                           recommendedCard.innerHTML = `
-                               <div class="video-thumbnail">
-                                    <img src="assets/placeholder-thumb.jpg" alt="Video Thumbnail">
-                                   <div class="play-btn"><i class="fas fa-arrow-right"></i></div>
-                                </div>
                                <div class="video-info">
                                    <h3>${recommendedVideo.videoTitle}</h3>
                                    <p class="video-desc">${recommendedVideo.videoDescription || 'No description available.'}</p>
@@ -507,6 +519,7 @@
                                        <span><i class="fas fa-book-open"></i> Module: ${recommendedVideo.videoModule}</span>
                                    </div>
                                </div>
+                               <div class="play-btn"><i class="fas fa-arrow-right"></i></div>
                           `;
                           recommendedLearningContentDiv.appendChild(recommendedCard);
 
@@ -516,6 +529,35 @@
                        }
                   }
 
+                // --- Function to Load and Display Data Science Roadmap ---
+                 function displayDataScienceRoadmap() {
+                     // This function should ideally fetch roadmap data from a backend API or a static file
+                     // For now, we'll add a placeholder message.
+                     dataScienceRoadmapDiv.innerHTML = '<p class="no-progress-message">Roadmap content goes here (e.g., image, list, or fetched data).</p>';
+
+                     // Example of adding an image placeholder (replace with your actual image path)
+                     // const roadmapImage = document.createElement('img');
+                     // roadmapImage.src = 'assets/data-science-roadmap.png'; // Replace with your image path
+                     // roadmapImage.alt = 'Data Science Learning Roadmap';
+                     // roadmapImage.style.maxWidth = '100%'; // Basic styling
+                     // roadmapImage.style.height = 'auto';
+                     // dataScienceRoadmapDiv.innerHTML = ''; // Clear placeholder message
+                     // dataScienceRoadmapDiv.appendChild(roadmapImage);
+
+                      // Example of adding a simple ordered list placeholder
+                      // dataScienceRoadmapDiv.innerHTML = `
+                      //     <ol>
+                      //         <li>Step 1: Introduction to Data Science</li>
+                      //         <li>Step 2: Learn Python Fundamentals</li>
+                      //         <li>Step 3: Data Analysis with Pandas</li>
+                      //         <li>Step 4: Data Visualization with Matplotlib/Seaborn</li>
+                      //         <li>Step 5: Introduction to Machine Learning</li>
+                      //         //     </ol>
+                      // `;
+
+
+                 }
+
 
                 // --- Initial Load and Display ---
                  // Call the display functions ONLY if authenticated
@@ -523,6 +565,7 @@
                      displayLearningProgress(); // Display progress cards
                      displayContinueLearning(); // Display continue learning section
                      displayRecommendedLearning(); // Display recommended learning section
+                     displayDataScienceRoadmap(); // Display the roadmap section
                 }
 
 
