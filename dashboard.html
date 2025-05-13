@@ -85,7 +85,7 @@
                 const learningProgressCardsDiv = document.getElementById('learningProgressCards');
                 const continueLearningContentDiv = document.getElementById('continueLearningContent');
                 const recommendedLearningContentDiv = document.getElementById('recommendedLearningContent');
-                const dataScienceRoadmapDiv = document.getElementById('dataScienceRoadmap'); // Roadmap div selection
+                const dataScienceRoadmapDiv = document.getElementById('dataScienceRoadmap');
 
 
                 // --- localStorage/sessionStorage Keys ---
@@ -111,21 +111,17 @@
                 } else {
                     console.log("User is authenticated on dashboard.html, loading dashboard content.");
                     let loggedInUsername = 'User';
-                     // Determine username
                      if (adminAuthLocal) {
                          loggedInUsername = 'Admin';
-                         // Admin-specific logic would go here
                      } else if (localStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
                          loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY);
                      } else if (sessionStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
                          loggedInUsername = sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
                      }
 
-                    // Display Logged-in Username
                     if (usernameSpan && loggedInUsername) {
                         usernameSpan.textContent = loggedInUsername;
                     }
-
 
                     // --- Determine "Welcome" vs "Welcome back" ---
                     const userProgressCheck = loadUserProgress(); // Load progress from localStorage (temporary)
@@ -140,7 +136,6 @@
                     }
                 }
 
-
                 // --- Logout Functionality ---
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', function(e) {
@@ -151,7 +146,6 @@
                         localStorage.removeItem('adminAuthenticated');
                         localStorage.removeItem('loggedInUsername');
                         sessionStorage.removeItem('loggedInUsername');
-
                         window.location.replace("index.html");
                     });
                 }
@@ -443,8 +437,8 @@
                       }
 
                      if (recommendedVideo) {
-                          const recommendedCard = document.createElement('a'); // Changed div to a
-                           recommendedCard.classList.add('video-card'); // Reuse styling
+                          const recommendedCard = document.createElement('a');
+                           recommendedCard.classList.add('video-card');
                            recommendedCard.href = `courses.html?video=${recommendedVideo.topicId}`;
 
                           recommendedCard.innerHTML = `
@@ -464,51 +458,41 @@
                        }
                   }
 
-                // --- Function to Display Data Science Roadmap (Populated with styled cards) ---
+                // --- Function to Display Data Science Roadmap (Populated with styled cards, not links) ---
                  function displayDataScienceRoadmap() {
-                     // Sample hardcoded data for the Data Science roadmap
-                     const dataScienceSteps = [
-                         { title: "Fundamentals", description: "Learn basic programming (Python), math, and statistics.", link: "courses.html#fundamentals" },
-                         { title: "Data Analysis", description: "Master data manipulation (Pandas, NumPy) and visualization (Matplotlib, Seaborn).", link: "courses.html#data-analysis" },
-                         { title: "Databases & SQL", description: "Understand relational databases and query data using SQL.", link: "courses.html#sql" },
-                         { title: "Machine Learning Basics", description: "Introduction to core ML concepts, algorithms (Scikit-learn).", link: "courses.html#ml-basics" },
-                         { title: "Specialization", description: "Explore areas like NLP, Computer Vision, Time Series Analysis, or Big Data.", link: "courses.html#specialization" },
-                         { title: "Projects & Portfolio", description: "Apply knowledge to real-world problems and build a portfolio.", link: "profile.html#portfolio" },
-                         { title: "Deployment", description: "Learn to deploy models (e.g., using Flask/Streamlit, cloud platforms).", link: "courses.html#deployment" }
-                         // Add more steps as needed
+                     // Sample hardcoded data for the Data Science roadmap tracks
+                     const dataScienceTracks = [
+                         { title: "Data Analyst Track", description: "Start here! Learn Excel, Statistics, SQL, Power BI, and Tableau." },
+                         { title: "Business Analyst Track", description: "Build on fundamentals with business concepts and tools." },
+                         { title: "Data Scientist Track", description: "Dive into advanced statistics, machine learning, and algorithms." },
+                         { title: "Big Data & Cloud Tools", description: "Explore technologies for large datasets and cloud platforms." }
                      ];
 
                      dataScienceRoadmapDiv.innerHTML = ''; // Clear placeholder
 
-                     dataScienceSteps.forEach(step => {
-                         const roadmapCard = document.createElement('a'); // Use 'a' if linking, 'div' if not
-                         roadmapCard.classList.add('roadmap-card'); // Use a new class for roadmap cards
-                         if (step.link) {
-                             roadmapCard.href = step.link; // Set link if available
-                         } else {
-                             roadmapCard.style.cursor = 'default'; // No link, change cursor
-                         }
-
+                     dataScienceTracks.forEach(track => {
+                         const roadmapCard = document.createElement('div'); // Changed from 'a' to 'div'
+                         roadmapCard.classList.add('roadmap-card'); // Use the existing roadmap-card class
 
                          roadmapCard.innerHTML = `
-                             <h3>${step.title}</h3>
-                             <p>${step.description}</p>
+                             <h3>${track.title}</h3>
+                             <p>${track.description}</p>
                          `;
                          dataScienceRoadmapDiv.appendChild(roadmapCard);
                      });
+
+                      // Add a visual separator or arrow indicator between cards if desired via CSS
+                      // The grid layout provides gaps, but explicit connectors would need more complex HTML/CSS or SVG.
                  }
 
 
                 // --- Initial Load and Display ---
-                 // Call the display functions ONLY if authenticated
                 if (userAuthLocal || userAuthSession || adminAuthLocal) {
                      displayLearningProgress();
                      displayContinueLearning();
                      displayRecommendedLearning();
                      displayDataScienceRoadmap(); // Display the roadmap section
                 }
-
-
             });
         </script>
     </body>
