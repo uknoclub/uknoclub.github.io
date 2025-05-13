@@ -9,17 +9,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    </head>
+</head>
 <body>
     <div class="dashboard-container">
         <header class="dashboard-header">
             <div class="branding">
                 <img src="assets/logo.png" alt="Ukno Club" class="logo">
-                 <h1><span id="welcomeMessagePrefix">Welcome back</span>, <span class="username" id="loggedInUsername">User</span>!</h1>
+                <h1><span id="welcomeMessagePrefix">Welcome back</span>, <span class="username" id="loggedInUsername">User</span>!</h1>
             </div>
             <nav class="user-nav">
                 <a href="profile.html" class="profile-link">Profile</a>
-                 <a href="index.html" class="logout-btn" id="logoutBtn">
+                <a href="index.html" class="logout-btn" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </nav>
@@ -29,9 +29,9 @@
 
             <section class="roadmap-section">
                  <h2><i class="fas fa-map-signs"></i> Data Science Roadmap</h2>
-                 <div id="dataScienceRoadmap">
+                 <div id="dataScienceRoadmap" class="roadmap-cards-grid">
                      <p class="no-progress-message">Loading roadmap...</p>
-                     </div>
+                 </div>
              </section>
 
             <section class="recommended-section">
@@ -72,58 +72,53 @@
                         <i class="fas fa-comment-alt"></i>
                         <span>Feedback</span>
                     </a>
-                     </div>
+                </div>
             </section>
         </main>
 
-         <script>
+        <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // --- Element Selections ---
-                const welcomeMessagePrefixSpan = document.getElementById('welcomeMessagePrefix'); // Span for "Welcome back" / "Welcome"
+                const welcomeMessagePrefixSpan = document.getElementById('welcomeMessagePrefix');
                 const usernameSpan = document.getElementById('loggedInUsername');
                 const logoutBtn = document.getElementById('logoutBtn');
                 const learningProgressCardsDiv = document.getElementById('learningProgressCards');
                 const continueLearningContentDiv = document.getElementById('continueLearningContent');
                 const recommendedLearningContentDiv = document.getElementById('recommendedLearningContent');
-                const dataScienceRoadmapDiv = document.getElementById('dataScienceRoadmap'); // Roadmap div
+                const dataScienceRoadmapDiv = document.getElementById('dataScienceRoadmap'); // Roadmap div selection
 
 
-                // --- localStorage/sessionStorage Keys (Used by authentication & logout) ---
-                // Note: These are temporary and ideally replaced by checking a backend token
-                const ADMIN_AUTH_KEY = 'adminAuthenticated'; // Used by auth check
-                const LOGGED_IN_USERNAME_KEY = 'loggedInUsername'; // Used by auth check and display
+                // --- localStorage/sessionStorage Keys ---
+                const ADMIN_AUTH_KEY = 'adminAuthenticated';
+                const LOGGED_IN_USERNAME_KEY = 'loggedInUsername';
 
                 // --- localStorage Keys (Currently used for data loading - WILL BE UPDATED TO USE BACKEND API) ---
-                const VIDEO_STORAGE_KEY = 'uknoClubVideoData'; // From admin interface
-                const USER_PROGRESS_KEY_PREFIX = 'uknoClubProgress-'; // User-specific completion { videoId: { completed: true, ... } }
-                const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-'; // Individual video progress { time: ..., timestamp: ... }
+                const VIDEO_STORAGE_KEY = 'uknoClubVideoData';
+                const USER_PROGRESS_KEY_PREFIX = 'uknoClubProgress-';
+                const VIDEO_PROGRESS_KEY_PREFIX = 'ukno-video-progress-';
 
 
                 // --- Authentication Check ---
-                // This runs when the page loads to ensure the user is authenticated
                 console.log("Checking authentication status on dashboard.html load...");
                 const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
                 const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
-                const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true'; // Check admin auth from localStorage
+                const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
 
-                // If neither user nor admin authentication flag is found, redirect to login page
                 if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
                     console.log("User is not authenticated on dashboard.html, redirecting to auth.html");
-                    // Use replace to prevent history stack issues
-                    window.location.replace("auth.html#login"); // Redirect to login form on auth page
-                    return; // Stop script execution if not authenticated
+                    window.location.replace("auth.html#login");
+                    return;
                 } else {
                     console.log("User is authenticated on dashboard.html, loading dashboard content.");
-                    // User is authenticated, proceed
-                     // Determine which username to display based on who is authenticated
-                     let loggedInUsername = 'User'; // Default username text
+                    let loggedInUsername = 'User';
+                     // Determine username
                      if (adminAuthLocal) {
-                         loggedInUsername = 'Admin'; // Display "Admin" for admin
-                         // Admin-specific logic would go here if needed
+                         loggedInUsername = 'Admin';
+                         // Admin-specific logic would go here
                      } else if (localStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
-                         loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY); // Get username from local storage
+                         loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY);
                      } else if (sessionStorage.getItem(LOGGED_IN_USERNAME_KEY)) {
-                         loggedInUsername = sessionStorage.getItem(LOGGED_IN_USERNAME_KEY); // Get username from session storage
+                         loggedInUsername = sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
                      }
 
                     // Display Logged-in Username
@@ -133,15 +128,14 @@
 
 
                     // --- Determine "Welcome" vs "Welcome back" ---
-                    // Simple proxy: Check if user has any completed progress.
                     const userProgressCheck = loadUserProgress(); // Load progress from localStorage (temporary)
-                    const hasProgress = Object.keys(userProgressCheck).length > 0; // Check if the progress object is not empty
+                    const hasProgress = Object.keys(userProgressCheck).length > 0;
 
                     if (welcomeMessagePrefixSpan) {
                         if (hasProgress) {
                             welcomeMessagePrefixSpan.textContent = 'Welcome back';
                         } else {
-                            welcomeMessagePrefixSpan.textContent = 'Welcome'; // First time seeing progress
+                            welcomeMessagePrefixSpan.textContent = 'Welcome';
                         }
                     }
                 }
@@ -150,25 +144,21 @@
                 // --- Logout Functionality ---
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', function(e) {
-                        e.preventDefault(); // Prevent default link behavior
+                        e.preventDefault();
                         console.log("Logging out...");
-                        // Clear all relevant auth/user info from localStorage and sessionStorage
                         localStorage.removeItem('userAuthenticated');
-                        sessionStorage.removeItem('userAuthenticated'); // Clear session flag too
+                        sessionStorage.removeItem('userAuthenticated');
                         localStorage.removeItem('adminAuthenticated');
                         localStorage.removeItem('loggedInUsername');
-                        sessionStorage.removeItem('loggedInUsername'); // Clear session flag too
-                        // Add other user-specific localStorage items to clear here if necessary
-                        // (like unique user ID once implemented via backend)
+                        sessionStorage.removeItem('loggedInUsername');
 
-                        // Redirect to landing page after logout - Use replace
                         window.location.replace("index.html");
                     });
                 }
 
                 // --- NOTE: The functions below currently load data from localStorage. ---
                 // --- We will update these in a future step to fetch data from the backend API. ---
-                // --- You will likely see errors related to these if localStorage is empty/missing data. ---
+                // --- You may see errors related to these if localStorage is empty/missing data. ---
 
 
                 // --- Function to Load All Video Data (Currently from localStorage) ---
@@ -183,13 +173,10 @@
                 }
 
                 // --- Function to Load User Progress Data (Currently from localStorage) ---
-                // This will need to be updated to fetch progress from the backend based on user_id
                 function loadUserProgress() {
-                     // Need the user ID from the backend login response eventually
-                     // For now, still using username-based localStorage key as before
                     const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
                     if (loggedInUsername && loggedInUsername !== 'Guest') {
-                        const progressJson = localStorage.getItem(USER_PROGRESS_KEY_PREFIX + loggedInUsername); // Using loggedInUsername as key suffix
+                        const progressJson = localStorage.getItem(USER_PROGRESS_KEY_PREFIX + loggedInUsername);
                         try {
                              return progressJson ? JSON.parse(progressJson) : {};
                         } catch (e) {
@@ -197,7 +184,7 @@
                              return {};
                         }
                     }
-                    return {}; // Return empty object if no user or guest
+                    return {};
                 }
 
                 // --- Helper to format seconds into MM:SS ---
@@ -210,7 +197,7 @@
                      return `${paddedMinutes}:${paddedSeconds}`;
                  }
 
-                 // --- Helper to format seconds into HH:MM:SS (if needed for display) ---
+                 // --- Helper to format seconds into HH:MM:SS ---
                  function formatTimeToHHMMSS(totalSeconds) {
                     if (isNaN(totalSeconds) || totalSeconds < 0) return '00:00:00';
                     const hours = Math.floor(totalSeconds / 3600);
@@ -226,18 +213,16 @@
 
 
                 // --- Function to Calculate and Display Learning Progress (Currently from localStorage) ---
-                // This will need to be updated to use data from the backend
                 function displayLearningProgress() {
-                    const allVideos = loadAllVideosData(); // Reads from localStorage
-                    const userProgress = loadUserProgress(); // Reads from localStorage user completion
-                    learningProgressCardsDiv.innerHTML = ''; // Clear current cards
+                    const allVideos = loadAllVideosData();
+                    const userProgress = loadUserProgress();
+                    learningProgressCardsDiv.innerHTML = '';
 
                     if (allVideos.length === 0) {
                          learningProgressCardsDiv.innerHTML = '<p class="no-progress-message">No course data available. Please check back later.</p>';
                          return;
                     }
 
-                    // Group videos by module/track (Logic based on localStorage data)
                     const modules = {};
                     allVideos.forEach(video => {
                         if (!modules[video.videoModule]) {
@@ -246,31 +231,25 @@
                         modules[video.videoModule].push(video);
                     });
 
-                    // Get module titles and symbols (should be consistent with courses.html)
                     const moduleTitles = {
                         'data-analyst': 'Data Analyst Track',
                         'business-analyst': 'Business Analyst Track',
                         'data-scientist': 'Data Scientist Track',
                         'big-data': 'Big Data & Cloud Tools',
-                        // Add other modules here
                     };
                     const moduleSymbols = {
                         'data-analyst': '🟦',
                         'business-analyst': '🟨',
                         'data-scientist': '🟥',
                         'big-data': '🟩',
-                        // Add other modules here
                     };
 
-
-                    // Calculate and display progress for each module (Logic based on localStorage data)
-                    const moduleKeys = Object.keys(modules).sort(); // Sort modules alphabetically
+                    const moduleKeys = Object.keys(modules).sort();
 
                     if (moduleKeys.length === 0) {
                          learningProgressCardsDiv.innerHTML = '<p class="no-progress-message">No course modules defined yet.</p>';
                          return;
                     }
-
 
                     moduleKeys.forEach(moduleKey => {
                         const moduleVideos = modules[moduleKey];
@@ -278,7 +257,6 @@
                         let completedVideosInModule = 0;
 
                         moduleVideos.forEach(video => {
-                            // Check completion based on localStorage user progress
                             if (userProgress[video.topicId] && userProgress[video.topicId].completed) {
                                 completedVideosInModule++;
                             }
@@ -306,40 +284,32 @@
                 }
 
                 // --- Function to Display Continue Learning Section (Currently from localStorage) ---
-                // This will need to be updated to fetch progress from the backend based on user_id and video_id
                  function displayContinueLearning() {
-                     continueLearningContentDiv.innerHTML = ''; // Clear current content
+                     continueLearningContentDiv.innerHTML = '';
 
-                     const allVideos = loadAllVideosData(); // Reads from localStorage
+                     const allVideos = loadAllVideosData();
                      let mostRecentlyWatchedVideo = null;
                      let latestTimestamp = null;
                      let lastSavedTime = 0;
 
-                     // Need to retrieve individual video progress from localStorage for the currently logged-in user
                      const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
                      if (!loggedInUsername || loggedInUsername === 'Guest') {
                           continueLearningContentDiv.innerHTML = '<p class="no-progress-message">Log in to track your progress.</p>';
                          return;
                      }
 
-                     // Find the video with the most recent saved progress timestamp for the current user
                      allVideos.forEach(video => {
-                          // Construct the localStorage key specific to the user and video
                           const userVideoProgressKey = VIDEO_PROGRESS_KEY_PREFIX + loggedInUsername + '-' + video.topicId;
                           const savedProgressJson = localStorage.getItem(userVideoProgressKey);
 
                           if (savedProgressJson) {
                              try {
                                  const progressData = JSON.parse(savedProgressJson);
-                                  // Check if there's a timestamp and a saved time (time > 0)
-                                  // Also ensure the video is NOT marked as completed in user progress (this check is outdated, should use backend progress)
-                                  const userProgress = loadUserProgress(); // Still reads from localStorage user completion
+                                  const userProgress = loadUserProgress();
                                   const isCompleted = userProgress[video.topicId] && userProgress[video.topicId].completed;
-
 
                                  if (!isCompleted && progressData.timestamp && progressData.time !== undefined && parseFloat(progressData.time) > 0) {
                                       const currentTimestamp = new Date(progressData.timestamp);
-                                      // Find the latest timestamp among videos with saved progress > 0 AND not completed
                                       if (latestTimestamp === null || currentTimestamp > latestTimestamp) {
                                            latestTimestamp = currentTimestamp;
                                            mostRecentlyWatchedVideo = video;
@@ -348,42 +318,29 @@
                                  }
                              } catch (e) {
                                  console.error(`Failed to parse progress for video ${video.topicId} for user ${loggedInUsername}:`, e);
-                                 // Potentially clear invalid data
                                  localStorage.removeItem(userVideoProgressKey);
                              }
                           }
                       });
 
-
                      if (mostRecentlyWatchedVideo) {
-                          // Found the most recently watched video
-                          const continueCard = document.createElement('a'); // Changed div to a for linking
+                          const continueCard = document.createElement('a');
                           continueCard.classList.add('video-card');
-                          // Link to the video player page for this video, resuming from last time
-                          // The video player page will need to fetch the last watched time from the backend
-                          continueCard.href = `courses.html?video=${mostRecentlyWatchedVideo.topicId}`; // Link to the video player view
+                          continueCard.href = `courses.html?video=${mostRecentlyWatchedVideo.topicId}`;
 
-
-                          // Calculate time remaining using saved time and total duration (Logic based on localStorage data)
-                          const totalDurationSeconds = mostRecentlyWatchedVideo.totalDuration; // Use total duration from admin data
+                          const totalDurationSeconds = mostRecentlyWatchedVideo.totalDuration;
                           let remainingText = 'Duration N/A';
                           let progressPercent = 0;
 
                          if (totalDurationSeconds !== undefined && !isNaN(totalDurationSeconds) && totalDurationSeconds > 0) {
                              const remainingDuration = totalDurationSeconds - lastSavedTime;
-                              // Ensure remaining duration is not negative
                               const displayRemainingSeconds = Math.max(0, remainingDuration);
                               remainingText = `${formatTime(displayRemainingSeconds)} remaining`;
-
-                              // Calculate progress percentage
                               progressPercent = Math.round((lastSavedTime / totalDurationSeconds) * 100);
-                              // Ensure progress doesn't exceed 100%
                               progressPercent = Math.min(100, Math.max(0, progressPercent));
                          }
 
-                          // Display the last viewed date/time
                            const lastViewedDate = latestTimestamp ? latestTimestamp.toLocaleString() : 'unknown date';
-
 
                           continueCard.innerHTML = `
                                <div class="video-info">
@@ -399,38 +356,29 @@
                           continueLearningContentDiv.appendChild(continueCard);
 
                      } else {
-                          // No video progress found that isn't completed, show the default message
                           continueLearningContentDiv.innerHTML = '<p class="no-progress-message">Start a course to see your progress here!</p>';
                       }
-
                  }
 
 
                 // --- Function to Display Recommended Next Topic (Currently based on localStorage) ---
-                // This will need to be updated to use data from the backend
                  function displayRecommendedLearning() {
-                     recommendedLearningContentDiv.innerHTML = ''; // Clear current content
+                     recommendedLearningContentDiv.innerHTML = '';
 
-                     const allVideos = loadAllVideosData(); // Reads from localStorage
-                     const userProgress = loadUserProgress(); // Reads from localStorage
+                     const allVideos = loadAllVideosData();
+                     const userProgress = loadUserProgress();
                      let recommendedVideo = null;
 
-                     // Need the logged-in username for individual progress check
                      const loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
                       if (!loggedInUsername || loggedInUsername === 'Guest') {
                            recommendedLearningContentDiv.innerHTML = '<p class="no-progress-message">Log in to get recommendations.</p>';
                           return;
                       }
 
-
-                     // Logic: Find the last watched video (if any). If completed, find the next in the same module.
-                     // If no last watched or it's completed and no next, find the first uncompleted video in any module.
-
                       let mostRecentlyWatchedVideo = null;
                       let latestTimestamp = null;
 
-                      // Find the most recently watched video (completed or not) based on individual video progress timestamp
-                      if (loggedInUsername) { // Redundant check, but harmless
+                      if (loggedInUsername) {
                          allVideos.forEach(video => {
                               const userVideoProgressKey = VIDEO_PROGRESS_KEY_PREFIX + loggedInUsername + '-' + video.topicId;
                               const savedProgressJson = localStorage.getItem(userVideoProgressKey);
@@ -451,65 +399,53 @@
                          });
                      }
 
-
                      if (mostRecentlyWatchedVideo) {
-                          // Check if the most recent video is completed (Based on localStorage user progress)
                           const isCompleted = userProgress[mostRecentlyWatchedVideo.topicId] && userProgress[mostRecentlyWatchedVideo.topicId].completed;
 
                          if (isCompleted) {
-                              // If the last watched video is completed, find the next uncompleted in the same module
                               const moduleVideos = allVideos.filter(v => v.videoModule === mostRecentlyWatchedVideo.videoModule)
-                                     .sort((a, b) => a.videoTitle.localeCompare(b.videoTitle)); // Sort to get a logical order
+                                     .sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
 
                               const currentIndex = moduleVideos.findIndex(v => v.topicId === mostRecentlyWatchedVideo.topicId);
 
-                              // Find the next uncompleted video in this module (Based on localStorage user progress)
                               for (let i = currentIndex + 1; i < moduleVideos.length; i++) {
                                    const nextVideo = moduleVideos[i];
                                    if (!userProgress[nextVideo.topicId] || !userProgress[nextVideo.topicId].completed) {
                                        recommendedVideo = nextVideo;
-                                       break; // Found the next uncompleted video
+                                       break;
                                    }
                               }
-                          } else {
-                               // If the last watched video is NOT completed, recommend that one to finish it
-                               // This case is largely covered by "Continue Learning", but we could still list it here
-                               // If the current one is NOT finished, "Continue Learning" handles it.
                           }
                       }
 
-                      // If no next video was found in the last watched module (or no last watched),
-                      // find the first uncompleted video in the first module (Based on localStorage user progress)
                       if (!recommendedVideo) {
-                           const modules = {}; // Re-group videos by module (can optimize this)
+                           const modules = {};
                             allVideos.forEach(video => {
                                 if (!modules[video.videoModule]) {
                                     modules[video.videoModule] = [];
                                 }
                                 modules[video.videoModule].push(video);
                            });
-                           const moduleKeys = Object.keys(modules).sort(); // Get sorted module keys
+                           const moduleKeys = Object.keys(modules).sort();
 
                            for (const moduleKey of moduleKeys) {
                                 const moduleVideos = allVideos.filter(v => v.videoModule === moduleKey)
-                                      .sort((a, b) => a.videoTitle.localeCompare(b.videoTitle)); // Sort for order
+                                      .sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
 
                                 for (const video of moduleVideos) {
                                      if (!userProgress[video.topicId] || !userProgress[video.topicId].completed) {
                                          recommendedVideo = video;
-                                         break; // Found the first uncompleted video overall
+                                         break;
                                       }
                                 }
-                                if (recommendedVideo) break; // Stop searching modules
+                                if (recommendedVideo) break;
                             }
                       }
 
-
                      if (recommendedVideo) {
-                          const recommendedCard = document.createElement('a'); // Changed div to a for linking
-                           recommendedCard.classList.add('video-card'); // Reuse video-card styling
-                           recommendedCard.href = `courses.html?video=${recommendedVideo.topicId}`; // Link to the video
-
+                          const recommendedCard = document.createElement('a'); // Changed div to a
+                           recommendedCard.classList.add('video-card'); // Reuse styling
+                           recommendedCard.href = `courses.html?video=${recommendedVideo.topicId}`;
 
                           recommendedCard.innerHTML = `
                                <div class="video-info">
@@ -524,47 +460,51 @@
                           recommendedLearningContentDiv.appendChild(recommendedCard);
 
                       } else {
-                          // No uncompleted videos found
                           recommendedLearningContentDiv.innerHTML = '<p class="no-progress-message">You have completed all available videos! 🎉 Check back later for new content.</p>';
                        }
                   }
 
-                // --- Function to Load and Display Data Science Roadmap ---
+                // --- Function to Display Data Science Roadmap (Populated with styled cards) ---
                  function displayDataScienceRoadmap() {
-                     // This function should ideally fetch roadmap data from a backend API or a static file
-                     // For now, we'll add a placeholder message.
-                     dataScienceRoadmapDiv.innerHTML = '<p class="no-progress-message">Roadmap content goes here (e.g., image, list, or fetched data).</p>';
+                     // Sample hardcoded data for the Data Science roadmap
+                     const dataScienceSteps = [
+                         { title: "Fundamentals", description: "Learn basic programming (Python), math, and statistics.", link: "courses.html#fundamentals" },
+                         { title: "Data Analysis", description: "Master data manipulation (Pandas, NumPy) and visualization (Matplotlib, Seaborn).", link: "courses.html#data-analysis" },
+                         { title: "Databases & SQL", description: "Understand relational databases and query data using SQL.", link: "courses.html#sql" },
+                         { title: "Machine Learning Basics", description: "Introduction to core ML concepts, algorithms (Scikit-learn).", link: "courses.html#ml-basics" },
+                         { title: "Specialization", description: "Explore areas like NLP, Computer Vision, Time Series Analysis, or Big Data.", link: "courses.html#specialization" },
+                         { title: "Projects & Portfolio", description: "Apply knowledge to real-world problems and build a portfolio.", link: "profile.html#portfolio" },
+                         { title: "Deployment", description: "Learn to deploy models (e.g., using Flask/Streamlit, cloud platforms).", link: "courses.html#deployment" }
+                         // Add more steps as needed
+                     ];
 
-                     // Example of adding an image placeholder (replace with your actual image path)
-                     // const roadmapImage = document.createElement('img');
-                     // roadmapImage.src = 'assets/data-science-roadmap.png'; // Replace with your image path
-                     // roadmapImage.alt = 'Data Science Learning Roadmap';
-                     // roadmapImage.style.maxWidth = '100%'; // Basic styling
-                     // roadmapImage.style.height = 'auto';
-                     // dataScienceRoadmapDiv.innerHTML = ''; // Clear placeholder message
-                     // dataScienceRoadmapDiv.appendChild(roadmapImage);
+                     dataScienceRoadmapDiv.innerHTML = ''; // Clear placeholder
 
-                      // Example of adding a simple ordered list placeholder
-                      // dataScienceRoadmapDiv.innerHTML = `
-                      //     <ol>
-                      //         <li>Step 1: Introduction to Data Science</li>
-                      //         <li>Step 2: Learn Python Fundamentals</li>
-                      //         <li>Step 3: Data Analysis with Pandas</li>
-                      //         <li>Step 4: Data Visualization with Matplotlib/Seaborn</li>
-                      //         <li>Step 5: Introduction to Machine Learning</li>
-                      //         //     </ol>
-                      // `;
+                     dataScienceSteps.forEach(step => {
+                         const roadmapCard = document.createElement('a'); // Use 'a' if linking, 'div' if not
+                         roadmapCard.classList.add('roadmap-card'); // Use a new class for roadmap cards
+                         if (step.link) {
+                             roadmapCard.href = step.link; // Set link if available
+                         } else {
+                             roadmapCard.style.cursor = 'default'; // No link, change cursor
+                         }
 
 
+                         roadmapCard.innerHTML = `
+                             <h3>${step.title}</h3>
+                             <p>${step.description}</p>
+                         `;
+                         dataScienceRoadmapDiv.appendChild(roadmapCard);
+                     });
                  }
 
 
                 // --- Initial Load and Display ---
                  // Call the display functions ONLY if authenticated
                 if (userAuthLocal || userAuthSession || adminAuthLocal) {
-                     displayLearningProgress(); // Display progress cards
-                     displayContinueLearning(); // Display continue learning section
-                     displayRecommendedLearning(); // Display recommended learning section
+                     displayLearningProgress();
+                     displayContinueLearning();
+                     displayRecommendedLearning();
                      displayDataScienceRoadmap(); // Display the roadmap section
                 }
 
