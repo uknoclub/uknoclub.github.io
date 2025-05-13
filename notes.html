@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Notes - Ukno Club</title>
-    <link rel="stylesheet" href="notes.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="notes.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
 <body>
     <div class="notes-container">
         <header class="notes-header">
@@ -17,120 +19,99 @@
             </div>
             <nav class="header-nav">
                 <a href="dashboard.html">Dashboard</a>
-                <a href="courses.html">Catalog</a> <a href="feedback.html">Feedback</a>
-                 </nav>
+                <a href="courses.html">Catalog</a>
+                <a href="notes.html">My Notes</a>
+                <a href="feedback.html">Feedback</a>
+                 <a href="auth.html" class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
         </header>
 
-        <section class="notes-section">
-            <h2><i class="fas fa-book"></i> Saved Notes</h2>
+        <main class="notes-main">
+            <h2>Notes Saved for Videos</h2>
             <div id="notesList">
-                <p class="no-notes-message">Loading notes...</p> </div>
-        </section>
+                <p class="no-notes-message">Loading notes...</p>
+                 </div>
+
+            <div id="specificNoteView" class="hidden">
+                 <h3>Note for: <span id="noteVideoTitle"></span></h3>
+                 <textarea id="viewNoteContent" readonly></textarea>
+                 <button id="editNoteBtn">Edit Note</button>
+            </div>
+
+        </main>
+
+        <script>
+            // --- localStorage/sessionStorage Keys (Consistent) ---
+            const ADMIN_AUTH_KEY = 'adminAuthenticated';
+            const LOGGED_IN_USERNAME_KEY = 'loggedInUsername';
+
+
+            // --- Authentication Check ---
+            // This runs at the very start to protect the page
+             const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
+             const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
+             const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
+
+             console.log("--- Notes.html Auth Check ---");
+             console.log("localStorage userAuthenticated:", localStorage.getItem('userAuthenticated'), "->", userAuthLocal);
+             console.log("sessionStorage userAuthenticated:", sessionStorage.getItem('userAuthenticated'), "->", userAuthSession);
+             console.log("localStorage adminAuthenticated:", localStorage.getItem(ADMIN_AUTH_KEY), "->", adminAuthLocal);
+
+
+             if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
+                 console.log("Notes: User is NOT authenticated. Redirecting to auth.html");
+                 window.location.replace("auth.html#login");
+                 throw new Error("Not Authenticated");
+             } else {
+                  console.log("Notes: User IS authenticated. Proceeding to load notes.");
+                  // Script execution continues within this authenticated block
+             }
+
+             // --- Get the logged-in username ---
+            const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
+             if (!loggedInUsername || loggedInUsername === 'Guest') {
+                 console.error("Notes: Logged-in username not found in storage despite authentication flags.");
+                 // Handle this error - maybe force logout or show an error message
+                 // For now, let's just log and proceed cautiously. API calls needing username will fail.
+             }
+
+
+            // --- Helper Functions (if any are needed later) ---
+            // function showMessage(...) { ... }
+            // function clearMessage(...) { ... }
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+                 // --- Handle Logout Click ---
+                 const logoutBtnElement = document.getElementById('logoutBtn');
+                 if (logoutBtnElement) {
+                     logoutBtnElement.addEventListener('click', function(e) {
+                         e.preventDefault();
+                         console.log("Logging out...");
+                         localStorage.removeItem('userAuthenticated');
+                         sessionStorage.removeItem('userAuthenticated');
+                         localStorage.removeItem('adminAuthenticated');
+                         localStorage.removeItem('loggedInUsername');
+                         sessionStorage.removeItem('loggedInUsername');
+
+                         window.location.replace("auth.html");
+                     });
+                 }
+
+                 // --- Notes Page Specific Logic (Backend integration for fetching notes list will go here later) ---
+                 const notesListDiv = document.getElementById('notesList');
+                 const loadingMessageElement = notesListDiv ? notesListDiv.querySelector('.no-notes-message') : null;
+
+                 if (loadingMessageElement) {
+                     loadingMessageElement.textContent = 'Feature Coming Soon!'; // Placeholder for now
+                 }
+                 // The logic to fetch the list of videos with notes and display them will be added here next.
+
+            });
+        </script>
+
     </div>
-
-    <script>
-         // Basic authentication check - redirect if not logged in
-         const userAuthenticated = localStorage.getItem('userAuthenticated');
-         const adminAuthenticated = localStorage.getItem('adminAuthenticated');
-         if (!userAuthenticated && !adminAuthenticated) {
-              window.location.href = "auth.html#login"; // Redirect to login form
-         }
-
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const notesListDiv = document.getElementById('notesList');
-
-            // --- localStorage Keys ---
-             const VIDEO_STORAGE_KEY = 'uknoClubVideoData'; // From admin interface
-             const VIDEO_NOTES_KEY_PREFIX = 'video-notes-'; // Key prefix for notes saved by courses.html
-
-
-            // --- Helper Function to Load Videos from localStorage ---
-            function loadVideosData() {
-                const videosJson = localStorage.getItem(VIDEO_STORAGE_KEY);
-                return videosJson ? JSON.parse(videosJson) : [];
-            }
-
-
-            // --- Function to Load and Display Notes ---
-            function loadAndDisplayNotes() {
-                // Clear current content
-                notesListDiv.innerHTML = '';
-
-                const allVideos = loadVideosData(); // Get all video data to find titles/modules
-                const notesToDisplay = []; // Array to hold note objects with video context
-
-                // Iterate through all items in localStorage
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-
-                    // Check if the key is a video notes key
-                    if (key.startsWith(VIDEO_NOTES_KEY_PREFIX)) {
-                        const topicId = key.replace(VIDEO_NOTES_KEY_PREFIX, ''); // Extract the topic ID
-                        const noteContent = localStorage.getItem(key);
-
-                        if (noteContent && noteContent.trim()) { // Only process if notes are not empty
-                             // Find the video details using the topicId
-                             const videoDetails = allVideos.find(video => video.topicId === topicId);
-
-                            notesToDisplay.push({
-                                topicId: topicId,
-                                videoTitle: videoDetails ? videoDetails.videoTitle : `Unknown Video (${topicId})`,
-                                videoModule: videoDetails ? videoDetails.videoModule : 'Unknown Module',
-                                content: noteContent,
-                                // We don't have timestamps for notes saving currently, using a placeholder
-                                timestamp: 'Saved recently' // Placeholder
-                            });
-                        }
-                    }
-                }
-
-                // Sort notes if needed (e.g., by module, then video title)
-                notesToDisplay.sort((a, b) => {
-                    const moduleCompare = a.videoModule.localeCompare(b.videoModule);
-                    if (moduleCompare !== 0) {
-                        return moduleCompare;
-                    }
-                    return a.videoTitle.localeCompare(b.videoTitle);
-                });
-
-
-                if (notesToDisplay.length === 0) {
-                    notesListDiv.innerHTML = '<p class="no-notes-message">No notes saved yet. Go to the Courses section, watch a video, and use the notes area!</p>';
-                } else {
-                    // Render notes grouped by module (Optional but nice for organization)
-                     let currentModule = null;
-
-                    notesToDisplay.forEach(note => {
-                         // If module changes, add a module heading (optional)
-                         if (note.videoModule !== currentModule) {
-                             currentModule = note.videoModule;
-                             const moduleHeading = document.createElement('h3'); // Use h3 for module grouping
-                             moduleHeading.textContent = note.videoModule ? `Module: ${note.videoModule}` : 'Notes without Module';
-                             moduleHeading.style.marginTop = '30px';
-                             moduleHeading.style.marginBottom = '15px';
-                             moduleHeading.style.color = 'var(--text-highlight)'; // Highlight color
-                             notesListDiv.appendChild(moduleHeading);
-                         }
-
-
-                        const noteElement = document.createElement('div');
-                        noteElement.classList.add('note-item');
-                        noteElement.innerHTML = `
-                            <h4><a href="courses.html?video=${note.topicId}">${note.videoTitle}</a></h4> <p>${note.content}</p>
-                            <span class="note-timestamp">${note.timestamp}</span>
-                        `;
-                        notesListDiv.appendChild(noteElement);
-                    });
-                }
-            }
-
-            // Load notes when the page loads
-            loadAndDisplayNotes();
-
-            // Note: Deleting/Editing notes would require adding buttons and logic here.
-            // For now, notes are only edited from the video page.
-        });
-    </script>
 </body>
 </html>

@@ -4,412 +4,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback - Ukno Club</title>
-    <link rel="stylesheet" href="feedback.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="feedback.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
 <body>
     <div class="feedback-container">
         <header class="feedback-header">
             <div class="branding">
                 <img src="assets/logo.png" alt="Ukno Club" class="logo">
-                <h1>Feedback</h1>
+                <h1>Provide Feedback</h1>
             </div>
             <nav class="header-nav">
                 <a href="dashboard.html">Dashboard</a>
+                <a href="courses.html">Catalog</a>
                 <a href="notes.html">My Notes</a>
-                 </nav>
+                <a href="feedback.html">Feedback</a>
+                 <a href="auth.html" class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
         </header>
 
-        <section class="feedback-form-section">
-            <h2><i class="fas fa-comment-alt"></i> Leave a Comment</h2>
-            <form id="feedbackForm" class="feedback-form">
-                <label for="feedbackText">Your Comment:</label>
-                <textarea id="feedbackText" placeholder="Share your feedback or questions..." required></textarea>
-                <button type="submit">Post Comment</button>
+        <main class="feedback-main">
+            <p>We value your feedback! Please let us know your thoughts, suggestions, or report any issues.</p>
+            <form id="feedbackForm">
+                <textarea id="feedbackContent" placeholder="Enter your feedback here..." required></textarea>
+                <button type="submit">Submit Feedback</button>
             </form>
-             <p id="feedbackMessage" class="no-feedback-message" style="display: none; margin-top: 10px;"></p> </section>
+            <p id="feedbackMessage" class="message"></p> </main>
 
-        <section class="feedback-list-section">
-            <h2><i class="fas fa-comments"></i> Comments</h2>
-             <div class="filter-options">
-                 <label>
-                     <input type="checkbox" id="showMyPostsOnly"> Show only my posts
-                 </label>
-             </div>
-            <div id="commentsList">
-                <p class="no-feedback-message">Loading comments...</p> </div>
-        </section>
+        <script>
+            // --- localStorage/sessionStorage Keys (Consistent) ---
+            const ADMIN_AUTH_KEY = 'adminAuthenticated';
+            const LOGGED_IN_USERNAME_KEY = 'loggedInUsername';
+
+
+            // --- Authentication Check ---
+            // This runs at the very start to protect the page
+             const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
+             const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
+             const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
+
+             console.log("--- Feedback.html Auth Check ---");
+             console.log("localStorage userAuthenticated:", localStorage.getItem('userAuthenticated'), "->", userAuthLocal);
+             console.log("sessionStorage userAuthenticated:", sessionStorage.getItem('userAuthenticated'), "->", userAuthSession);
+             console.log("localStorage adminAuthenticated:", localStorage.getItem(ADMIN_AUTH_KEY), "->", adminAuthLocal);
+
+
+             if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
+                 console.log("Feedback: User is NOT authenticated. Redirecting to auth.html");
+                 window.location.replace("auth.html#login");
+                 throw new Error("Not Authenticated");
+             } else {
+                  console.log("Feedback: User IS authenticated. Proceeding to load feedback form.");
+                  // Script execution continues within this authenticated block
+             }
+
+             // --- Get the logged-in username ---
+            const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
+             if (!loggedInUsername || loggedInUsername === 'Guest') {
+                 console.warn("Feedback: Logged-in username not found in storage despite authentication flags. Feedback might be submitted anonymously.");
+                 // The backend allows anonymous feedback, so this is just a warning.
+             }
+
+
+            // --- Helper Functions ---
+            function showMessage(element, message, type = 'info') {
+                if (element) {
+                    element.textContent = message;
+                    element.className = `message message-${type}`;
+                     element.style.display = 'block';
+                }
+            }
+
+            function clearMessage(element) {
+                 if (element) {
+                     element.textContent = '';
+                     element.className = 'message';
+                     element.style.display = 'none';
+                 }
+            }
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+                 const feedbackForm = document.getElementById('feedbackForm');
+                 const feedbackContentTextarea = document.getElementById('feedbackContent');
+                 const feedbackMessageElement = document.getElementById('feedbackMessage');
+
+                 // --- Handle Logout Click ---
+                 const logoutBtnElement = document.getElementById('logoutBtn');
+                 if (logoutBtnElement) {
+                     logoutBtnElement.addEventListener('click', function(e) {
+                         e.preventDefault();
+                         console.log("Logging out...");
+                         localStorage.removeItem('userAuthenticated');
+                         sessionStorage.removeItem('userAuthenticated');
+                         localStorage.removeItem('adminAuthenticated');
+                         localStorage.removeItem('loggedInUsername');
+                         sessionStorage.removeItem('loggedInUsername');
+
+                         window.location.replace("auth.html");
+                     });
+                 }
+
+                 // --- Feedback Submission Logic (Backend integration will go here later) ---
+                 if (feedbackForm && feedbackContentTextarea && feedbackMessageElement) {
+                      feedbackForm.addEventListener('submit', function(e) {
+                           e.preventDefault();
+                           console.log("Feedback form submitted.");
+                           showMessage(feedbackMessageElement, "Submitting feedback...", 'info');
+
+                           // The logic to send feedback to the backend will be added here next.
+                            showMessage(feedbackMessageElement, "Submission Feature Coming Soon!", 'secondary'); // Placeholder
+
+                      });
+                 }
+
+
+            });
+        </script>
+
     </div>
-
-     <script>
-         // Basic authentication check (similar to dashboard/notes) - redirect if not logged in
-         const userAuthenticated = localStorage.getItem('userAuthenticated');
-         const adminAuthenticated = localStorage.getItem('adminAuthenticated');
-         if (!userAuthenticated && !adminAuthenticated) {
-              window.location.href = "auth.html#login"; // Redirect to login form
-         }
-
-         // Get logged-in username (or 'Admin' if admin)
-         const loggedInUsername = localStorage.getItem('loggedInUsername') || (adminAuthenticated ? 'Admin' : 'Guest');
-
-
-         document.addEventListener('DOMContentLoaded', function() {
-             const feedbackForm = document.getElementById('feedbackForm');
-             const feedbackTextarea = document.getElementById('feedbackText');
-             const commentsListDiv = document.getElementById('commentsList');
-             const showMyPostsCheckbox = document.getElementById('showMyPostsOnly');
-             const feedbackMessageArea = document.getElementById('feedbackMessage'); // Message area
-
-
-             // --- localStorage Key ---
-             const FEEDBACK_STORAGE_KEY = 'uknoClubFeedback';
-             const EDIT_TIME_LIMIT_MS = 10 * 60 * 1000; // 10 minutes in milliseconds
-
-             // --- Helper Function to Load Feedback from localStorage ---
-             function loadFeedback() {
-                 const feedbackJson = localStorage.getItem(FEEDBACK_STORAGE_KEY);
-                 return feedbackJson ? JSON.parse(feedbackJson) : [];
-             }
-
-             // --- Helper Function to Save Feedback to localStorage ---
-             function saveFeedback(feedbackArray) {
-                 localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(feedbackArray));
-             }
-
-             // --- Function to Display Feedback ---
-             function displayFeedback(feedbackArray) {
-                 commentsListDiv.innerHTML = ''; // Clear current comments
-
-                 const showMyPosts = showMyPostsCheckbox.checked;
-                 const filteredFeedback = showMyPosts
-                     ? feedbackArray.filter(comment => comment.author === loggedInUsername)
-                     : feedbackArray;
-
-                 if (filteredFeedback.length === 0) {
-                      commentsListDiv.innerHTML = `<p class="no-feedback-message">${showMyPosts ? 'You have no posts yet.' : 'No comments posted yet.'}</p>`;
-                 } else {
-                     // Sort comments by timestamp (newest first)
-                     filteredFeedback.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-
-                     filteredFeedback.forEach(comment => {
-                         const commentElement = document.createElement('div');
-                         commentElement.classList.add('comment');
-                         commentElement.setAttribute('data-id', comment.id); // Store comment ID
-
-
-                         const commentMeta = `
-                             <div class="comment-meta">
-                                 <span class="author">${comment.author}</span> -
-                                 <span class="timestamp">${new Date(comment.timestamp).toLocaleString()}</span>
-                             </div>
-                         `;
-
-                         const commentContent = `<p class="comment-content">${comment.content}</p>`;
-
-                         const actions = [];
-                         // User can edit their own comments within time limit
-                         const postTime = new Date(comment.timestamp).getTime();
-                         const currentTime = new Date().getTime();
-                         const canEdit = comment.author === loggedInUsername && (currentTime - postTime <= EDIT_TIME_LIMIT_MS);
-                         const canDelete = comment.author === loggedInUsername || adminAuthenticated; // User or Admin can delete
-
-                         if (canEdit) {
-                             actions.push(`<button class="edit-button"><i class="fas fa-edit"></i> Edit</button>`);
-                         }
-                          if (canDelete) {
-                              actions.push(`<button class="delete-button"><i class="fas fa-trash-alt"></i> Delete</button>`);
-                          }
-                         actions.push(`<button class="reply-button"><i class="fas fa-reply"></i> Reply</button>`);
-
-
-                         const commentActions = `<div class="comment-actions">${actions.join('')}</div>`;
-
-                         // Render replies
-                         const replySection = `
-                             <div class="reply-section">
-                                 <h4>Replies (${comment.replies ? comment.replies.length : 0})</h4>
-                                 <div class="replies-list">
-                                     ${comment.replies && comment.replies.length > 0 ?
-                                        comment.replies.map(reply => `
-                                            <div class="reply" data-id="${reply.id}">
-                                                <div class="reply-meta">
-                                                     <span class="author">${reply.author}</span> -
-                                                     <span class="timestamp">${new Date(reply.timestamp).toLocaleString()}</span>
-                                                </div>
-                                                <div class="reply-content">${reply.content}</div>
-                                                 <div class="reply-actions">
-                                                    ${(reply.author === loggedInUsername || adminAuthenticated) ?
-                                                        `<button class="delete-reply-button"><i class="fas fa-trash-alt"></i> Delete</button>` : ''}
-                                                 </div>
-                                            </div>
-                                        `).join('')
-                                     : '<p>No replies yet.</p>'}
-                                 </div>
-                                 <div class="reply-form" style="display: none;">
-                                      <textarea placeholder="Write a reply..." rows="2"></textarea>
-                                      <button class="submit-reply">Post Reply</button>
-                                      <button class="cancel-reply">Cancel</button>
-                                  </div>
-                             </div>
-                         `;
-
-
-                         commentElement.innerHTML = commentMeta + commentContent + commentActions + replySection;
-
-                         commentsListDiv.appendChild(commentElement);
-                     });
-
-                     // Add event listeners to the new buttons after they are added to the DOM
-                     attachEventListeners();
-                 }
-             }
-
-             // --- Function to Attach Event Listeners to Buttons ---
-             // Re-attaches listeners after re-rendering comments
-             function attachEventListeners() {
-                 // Edit button listeners (for comments)
-                 document.querySelectorAll('.comment .edit-button').forEach(button => {
-                     button.addEventListener('click', function() {
-                         const commentElement = this.closest('.comment');
-                         const commentId = commentElement.getAttribute('data-id');
-                         const feedbackArray = loadFeedback();
-                         const commentToEdit = feedbackArray.find(c => c.id === commentId);
-
-                         if (commentToEdit) {
-                             // Check edit time limit again on click
-                             const postTime = new Date(commentToEdit.timestamp).getTime();
-                             const currentTime = new Date().getTime();
-                             if (currentTime - postTime > EDIT_TIME_LIMIT_MS && commentToEdit.author === loggedInUsername && !adminAuthenticated) { // Admins can edit anytime (optional)
-                                 showMessage("Cannot edit post after 10 minutes.", 'error');
-                                  // Optionally remove edit button if time is up
-                                  // this.remove();
-                                 displayFeedback(loadFeedback()); // Re-display to revert edit mode
-                                 return;
-                             }
-
-                              // Replace content with textarea and save/cancel buttons
-                              const contentElement = commentElement.querySelector('.comment-content');
-                              const originalContent = commentToEdit.content; // Use stored content
-                              contentElement.innerHTML = `
-                                  <textarea class="edit-textarea" rows="4">${originalContent}</textarea>
-                                  <button class="save-edit">Save</button>
-                                  <button class="cancel-edit">Cancel</button>
-                              `;
-
-                             // Remove original actions like Edit/Delete/Reply temporarily
-                             commentElement.querySelector('.comment-actions').style.display = 'none';
-
-
-                              // Add event listeners for Save and Cancel within this scope
-                              commentElement.querySelector('.save-edit').addEventListener('click', function() {
-                                  const newContent = commentElement.querySelector('.edit-textarea').value.trim(); // Trim whitespace
-                                  if (newContent) { // Check if not empty
-                                       // Check time limit again on save to be safe (especially for admin override)
-                                        const postTimeOnSave = new Date(commentToEdit.timestamp).getTime();
-                                        const currentTimeOnSave = new Date().getTime();
-                                       if (currentTimeOnSave - postTimeOnSave > EDIT_TIME_LIMIT_MS && commentToEdit.author === loggedInUsername && !adminAuthenticated) {
-                                            showMessage("Edit time limit expired.", 'error');
-                                            displayFeedback(loadFeedback()); // Revert
-                                            return;
-                                       }
-
-
-                                       // Update content in the array
-                                       commentToEdit.content = newContent;
-                                       saveFeedback(feedbackArray);
-                                       // Re-display all feedback to refresh
-                                       displayFeedback(loadFeedback());
-                                       showMessage("Comment updated.", 'success');
-                                  } else {
-                                       showMessage("Edit cannot be empty.", 'error');
-                                        displayFeedback(loadFeedback()); // Revert
-                                  }
-                              });
-
-                             commentElement.querySelector('.cancel-edit').addEventListener('click', function() {
-                                 // Revert to original content and actions
-                                 displayFeedback(loadFeedback()); // Simplest way to revert
-                             });
-
-                         }
-                     });
-                 });
-
-
-                 // Delete button listeners (for comments)
-                 document.querySelectorAll('.comment .delete-button').forEach(button => {
-                     button.addEventListener('click', function() {
-                         if (confirm('Are you sure you want to delete this comment?')) {
-                              const commentElement = this.closest('.comment');
-                              const commentId = commentElement.getAttribute('data-id');
-                              let feedbackArray = loadFeedback();
-
-                              // Filter out the comment to delete
-                              feedbackArray = feedbackArray.filter(c => c.id !== commentId);
-
-                              saveFeedback(feedbackArray);
-                              displayFeedback(feedbackArray); // Update display
-                              showMessage("Comment deleted.", 'success');
-                         }
-                     });
-                 });
-
-                 // Reply button listeners
-                 document.querySelectorAll('.comment .reply-button').forEach(button => {
-                     button.addEventListener('click', function() {
-                         const commentElement = this.closest('.comment');
-                         const replyForm = commentElement.querySelector('.reply-form');
-                         // Hide all other reply forms and cancel any active edits
-                          document.querySelectorAll('.reply-form').forEach(form => {
-                              form.style.display = 'none';
-                              // Clear textarea when hiding
-                              form.querySelector('textarea').value = '';
-                           });
-                         // Revert any active edits before showing reply form
-                         displayFeedback(loadFeedback());
-
-
-                         // Show this reply form
-                         replyForm.style.display = 'block';
-                          replyForm.querySelector('textarea').focus(); // Focus on the textarea
-                     });
-                 });
-
-                 // Delete button listeners (for replies)
-                 document.querySelectorAll('.reply .delete-reply-button').forEach(button => {
-                      button.addEventListener('click', function() {
-                          if (confirm('Are you sure you want to delete this reply?')) {
-                               const replyElement = this.closest('.reply');
-                               const replyId = replyElement.getAttribute('data-id');
-                               const commentElement = this.closest('.comment');
-                               const commentId = commentElement.getAttribute('data-id');
-
-                               let feedbackArray = loadFeedback();
-                               const parentComment = feedbackArray.find(c => c.id === commentId);
-
-                               if (parentComment && parentComment.replies) {
-                                   // Filter out the reply to delete
-                                    parentComment.replies = parentComment.replies.filter(r => r.id !== replyId);
-                                    saveFeedback(feedbackArray);
-                                    displayFeedback(feedbackArray); // Update display
-                                    showMessage("Reply deleted.", 'success');
-                               }
-                          }
-                      });
-                 });
-
-                  // Submit Reply button listeners
-                  document.querySelectorAll('.reply-form .submit-reply').forEach(button => {
-                      button.addEventListener('click', function() {
-                          const replyForm = this.closest('.reply-form');
-                          const replyTextarea = replyForm.querySelector('textarea');
-                          const replyContent = replyTextarea.value.trim();
-
-                          if (replyContent) {
-                               const commentElement = this.closest('.comment');
-                               const commentId = commentElement.getAttribute('data-id');
-                               let feedbackArray = loadFeedback();
-                               const parentComment = feedbackArray.find(c => c.id === commentId);
-
-                               if (parentComment) {
-                                   // Create new reply object
-                                   const newReply = {
-                                       id: Date.now().toString() + Math.random().toString(16).slice(2), // Simple unique ID
-                                       author: loggedInUsername, // Use logged-in user as author
-                                       content: replyContent,
-                                       timestamp: new Date().toISOString()
-                                   };
-
-                                   // Add reply to the parent comment's replies array
-                                   if (!parentComment.replies) { // Should already be initialized, but safe check
-                                       parentComment.replies = [];
-                                   }
-                                   parentComment.replies.push(newReply);
-
-                                   saveFeedback(feedbackArray);
-                                   displayFeedback(feedbackArray); // Update display
-                                   showMessage("Reply posted.", 'success');
-
-                               }
-                          } else {
-                              showMessage("Reply cannot be empty.", 'error');
-                          }
-                      });
-                  });
-
-                   // Cancel Reply button listeners
-                   document.querySelectorAll('.reply-form .cancel-reply').forEach(button => {
-                       button.addEventListener('click', function() {
-                            const replyForm = this.closest('.reply-form');
-                            replyForm.style.display = 'none'; // Hide the reply form
-                            replyForm.querySelector('textarea').value = ''; // Clear textarea
-                       });
-                   });
-
-             }
-
-
-             // --- Handle New Feedback Form Submission ---
-             feedbackForm.addEventListener('submit', function(e) {
-                 e.preventDefault(); // Prevent default form submission
-
-                 const commentContent = feedbackTextarea.value.trim();
-
-                 if (commentContent) {
-                     const feedbackArray = loadFeedback();
-
-                     // Create a new comment object
-                     const newComment = {
-                         id: Date.now().toString() + Math.random().toString(16).slice(2), // Simple unique ID
-                         author: loggedInUsername, // Use logged-in user as author
-                         content: commentContent,
-                         timestamp: new Date().toISOString(), // Use ISO string for easy parsing
-                         replies: [] // Initialize with empty replies array
-                     };
-
-                     // Add the new comment to the array
-                     feedbackArray.push(newComment);
-
-                     // Save the updated array back to localStorage
-                     saveFeedback(feedbackArray);
-
-                     // Clear the textarea
-                     feedbackTextarea.value = '';
-
-                     // Re-display all feedback to include the new comment
-                     displayFeedback(feedbackArray);
-
-                     showMessage("Comment posted successfully!", 'success');
-
-                 } else {
-                      showMessage("Comment cannot be empty.", 'error');
-                 }
-             });
-
-             // --- Handle "Show only my posts" checkbox change ---
-              showMyPostsCheckbox.addEventListener('change', function() {
-                  displayFeedback(loadFeedback()); // Re-display based on the new filter state
-              });
-
-
-             // Initial load and display of feedback
-             displayFeedback(loadFeedback());
-
-             // Function to show temporary messages
-             function showMessage(message, type) {
-                 feedbackMessageArea.textContent = message;
-                 feedbackMessageArea.style.color = type === 'success' ? 'var(--success)' : 'var(--error)';
-                 feedbackMessageArea.style.display = 'block';
-
-                 // Hide message after a few seconds
-                 setTimeout(() => {
-                     feedbackMessageArea.style.display = 'none';
-                 }, 5000); // Hide after 5 seconds
-             }
-         });
-     </script>
-
 </body>
 </html>
