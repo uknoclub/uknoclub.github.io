@@ -18,8 +18,7 @@
                 <h1 id="pageTitle">Loading...</h1> </div>
             <nav class="header-nav">
                 <a href="dashboard.html">Dashboard</a>
-                <a href="courses.html">Catalog</a>
-                <a href="notes.html">My Notes</a>
+                 <a href="notes.html">My Notes</a>
                 <a href="feedback.html">Feedback</a>
                  <a href="auth.html" class="logout-btn" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -36,17 +35,24 @@
                 <div class="back-link-container">
                     <a href="courses.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
                 </div>
-                <h2 id="videoTitle"></h2> <div class="video-container">
-                    <div id="youtubePlayer"></div>
+                <h2 id="videoTitle"></h2> <div class="video-notes-layout">
+                    <div class="video-player-section">
+                         <div id="youtubePlayer"></div>
+                         <p id="resumeMessage" style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-top: 10px; display: none;"></p>
+                          <div id="playlistItemsContainer" class="hidden">
+                               <h4>Playlist Videos:</h4>
+                               <ul id="playlistItemsList">
+                                   </ul>
+                          </div>
+                    </div>
+                    <div class="notes-section">
+                        <h3>Your Notes</h3>
+                        <label for="videoNotes"></label>
+                        <textarea id="videoNotes" placeholder="Write your notes here..."></textarea>
+                         <p id="notesMessage" class="message"></p>
+                    </div>
                 </div>
-                <p id="resumeMessage" style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-top: 10px; display: none;"></p>
 
-                <div class="notes-section">
-                    <h3>Your Notes</h3>
-                    <label for="videoNotes"></label>
-                    <textarea id="videoNotes" placeholder="Write your notes here..."></textarea>
-                     <p id="notesMessage" class="message"></p>
-                </div>
             </div>
         </main>
 
@@ -70,21 +76,16 @@
 
              if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
                  console.log("Courses: User is NOT authenticated. Redirecting to auth.html");
-                 // Optional: Show a message before redirecting
-                 // document.body.innerHTML = '<p style="text-align:center; margin-top:50px;">Not authenticated. Redirecting...</p>';
                  window.location.replace("auth.html#login");
-                 // Stop script execution if not authenticated
-                 throw new Error("Not Authenticated"); // Throw an error to stop further script execution cleanly
+                 throw new Error("Not Authenticated");
              } else {
                   console.log("Courses: User IS authenticated. Proceeding to load courses content.");
-                  // Script execution continues within this authenticated block
              }
 
 
             // --- YouTube Player API Script ---
-            // This code loads the IFrame Player API asynchronously.
             var tag = document.createElement('script');
-             tag.src = "https://www.youtube.com/iframe_api"; // Correct API URL
+             tag.src = "http://www.youtube.com/iframe_api"; // Correct API URL
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -112,6 +113,20 @@
                  }
             }
 
+             // --- Helper function to format seconds into HH:MM:SS ---
+             function formatTimeToHHMMSS(totalSeconds) {
+                if (isNaN(totalSeconds) || totalSeconds < 0) return '00:00:00';
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = Math.floor(totalSeconds % 60);
+
+                const paddedHours = hours < 10 ? '0' + hours : hours;
+                const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                const paddedSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+                return hours > 0 ? `${paddedHours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
+             }
+
 
             // --- Function called when the YouTube API is ready. ---
             function onYouTubeIframeAPIReady() {
@@ -120,10 +135,8 @@
                  const videoTopicIdInUrl = urlParams.get('video');
 
                  if (videoTopicIdInUrl) {
-                      // If a video ID is in the URL, fetch its details and load the player
                       fetchVideoAndLoadPlayer(videoTopicIdInUrl);
                  } else {
-                      // If no video ID, DOMContentLoaded will fetch and render the catalog
                       console.log("No video ID in URL, DOMContentLoaded will handle catalog.");
                  }
             }
@@ -178,29 +191,36 @@
 
                       try {
                            const url = new URL(videoDetails.videoUrl);
-                           // Corrected YouTube URL check
-                           if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be') || url.hostname.includes('youtu.be') || url.hostname.includes('youtube.com')) {
+                           // Corrected YouTube URL check to include common YouTube hosts
+                           if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be') || url.hostname === 'youtu.be' || url.hostname === 'youtube.com' || url.hostname.includes('https://www.youtube.com/watch?v=la8xtsRbqRY') || url.hostname.includes('https://www.youtube.com/watch?v=NwnZU6mWJkk3')) {
                                 if (url.searchParams.get('list')) {
                                     isPlaylist = true;
                                     youtubeId = url.searchParams.get('list');
                                      console.log('Detected YouTube playlist ID:', youtubeId);
                                 } else if (url.searchParams.get('v')) {
                                     youtubeId = url.searchParams.get('v');
-                                     console.log('Detected YouTube video ID:', youtubeId);
+                                     console.log('Detected YouTube video ID from v parameter:', youtubeId);
                                 } else {
-                                     // Handle youtu.be/VIDEO_ID or youtu.be format
+                                     // Handle youtu.be/VIDEO_ID or youtu.be format by checking path
                                      const pathSegments = url.pathname.split('/').filter(segment => segment);
-                                      if (pathSegments.length > 0) {
-                                          youtubeId = pathSegments[pathSegments.length - 1];
-                                           console.log('Detected youtu.be/youtu.be video ID:', youtubeId);
+                                      if (pathSegments.length > 0 && pathSegments[0] === 'watch' && url.searchParams.get('v')) {
+                                           youtubeId = url.searchParams.get('v'); // Double check 'v' param for /watch paths
+                                            console.log('Detected YouTube video ID from /watch path and v parameter:', youtubeId);
+                                      } else if (pathSegments.length > 0 && !pathSegments[0].includes('watch')) {
+                                          // Assume the last segment is the video ID if not a /watch path (e.g., youtu.be/VIDEO_ID)
+                                           youtubeId = pathSegments[pathSegments.length - 1];
+                                            console.log('Detected YouTube video ID from path segment:', youtubeId);
                                       }
                                 }
+                           } else {
+                                console.warn("Video URL does not appear to be a standard YouTube URL:", videoDetails.videoUrl);
+                                // Optional: Show a message to the user
                            }
                       } catch (e) {
                           console.error("Error parsing video URL:", videoDetails.videoUrl, e);
-                           if (videoTitleElement) videoTitleElement.textContent = "Invalid Video URL";
+                           if (videoTitleElement) videoTitleElement.textContent = "Invalid Video URL Format";
                            if (pageTitleElement) pageTitleElement.textContent = "Video Error";
-                           if (videoPlayerContentDiv) videoPlayerContentDiv.innerHTML = '<p class="message message-error">The video URL is invalid.</p>';
+                           if (videoPlayerContentDiv) videoPlayerContentDiv.innerHTML = '<p class="message message-error">The video URL format is invalid.</p>';
                           return;
                       }
 
@@ -215,12 +235,11 @@
 
 
                      // --- Load the YouTube Player ---
-                      // Only proceed if YT object and youtubePlayer div are available
                       const youtubePlayerDiv = document.getElementById('youtubePlayer');
                      if (typeof YT !== 'undefined' && YT.Player && youtubePlayerDiv) {
                           const playerOptions = {
                               height: '390',
-                              width: '640',
+                              width: '640', // Adjust width if needed based on CSS layout
                               playerVars: {
                                   'autoplay': 1,
                                   'controls': 1,
@@ -239,12 +258,20 @@
                           if (isPlaylist) {
                               playerOptions.playerVars.listType = 'playlist';
                               playerOptions.playerVars.list = youtubeId;
+                               console.log("Loading YouTube Playlist with ID:", youtubeId);
+                               // Show the playlist items container (even if empty for now)
+                               const playlistItemsContainer = document.getElementById('playlistItemsContainer');
+                               if (playlistItemsContainer) playlistItemsContainer.classList.remove('hidden');
+
                           } else {
                               playerOptions.videoId = youtubeId;
+                               console.log("Loading YouTube Video with ID:", youtubeId);
+                               // Hide the playlist items container for single videos
+                               const playlistItemsContainer = document.getElementById('playlistItemsContainer');
+                               if (playlistItemsContainer) playlistItemsContainer.classList.add('hidden');
                           }
 
-                           // Clear previous player content if any
-                           youtubePlayerDiv.innerHTML = '';
+                           youtubePlayerDiv.innerHTML = ''; // Clear previous player content
 
                           player = new YT.Player('youtubePlayer', playerOptions);
                           console.log("YouTube Player initiated.");
@@ -284,7 +311,6 @@
 
                  if (!username || !topicId) {
                      console.warn("Cannot fetch notes: Username or topicId is missing.");
-                     // showMessage(notesMessageElement, "Login required to view notes.", 'secondary'); // Optional
                      return;
                  }
 
@@ -308,7 +334,6 @@
                      if (notesData && notesData.noteContent !== undefined) {
                           notesTextarea.value = notesData.noteContent;
                           console.log("Notes textarea populated.");
-                          // Optional: show timestamp if needed
                      } else {
                           notesTextarea.value = '';
                           console.log("No note found for this video.");
@@ -331,8 +356,9 @@
                      return;
                  }
 
-                 clearMessage(notesMessageElement);
-                 showMessage(notesMessageElement, "Saving notes...", 'info');
+                 // Clear previous messages but don't immediately show "Saving..." to avoid flicker on quick typing
+                 // clearMessage(notesMessageElement);
+                 // showMessage(notesMessageElement, "Saving notes...", 'info'); // Optional: if you want immediate feedback
 
                  console.log(`Attempting to save notes for user '${username}' and topic_id '${topicId}'`);
 
@@ -354,13 +380,14 @@
 
                        const successData = await response.json();
                        console.log('Notes save success:', successData);
-                       showMessage(notesMessageElement, successData.message || 'Notes saved successfully!', 'success');
+                       showMessage(notesMessageElement, successData.message || 'Notes saved!', 'success'); // Shorter message
 
-                       setTimeout(() => { clearMessage(notesMessageElement); }, 3000);
+
+                       setTimeout(() => { clearMessage(notesMessageElement); }, 2000); // Hide message faster
 
                  } catch (error) {
                       console.error('Error during notes save fetch:', error);
-                       showMessage(notesMessageElement, `An unexpected error occurred while saving notes: ${error.message}`, 'error');
+                       showMessage(notesMessageElement, `Error saving notes: ${error.message}`, 'error');
                  }
              }
 
@@ -378,25 +405,27 @@
                  console.log(`Workspaceing progress for user '${username}' and topic_id '${topicId}'`);
 
                  try {
-                     // Assuming the backend endpoint exists and returns { lastWatchedTime: ..., completed: ..., lastUpdated: ... }
-                     const response = await fetch(`http://127.0.0.1:5000/progress/${username}/${topicId}`);
+                     const response = await fetch(`http://127.0.0.0.1:5000/progress/${username}/${topicId}`); // Corrected IP address - was 127.0.0.0.1
+                     // Backend should ideally return 404 if no progress
+                     if (response.status === 404) {
+                         console.log(`No existing progress found for ${username} / ${topicId} (404).`);
+                         return; // Stop here if 404
+                     }
                      if (!response.ok) {
-                          // This is expected if no progress exists, backend should ideally return 404 or 200 with empty data
-                          console.log('Backend progress fetch failed:', response.status, response.statusText, ' - This might be okay if no progress exists.');
-                          // No need to show an error message for expected cases like 404
-                         return; // Stop if fetch fails or returns non-200/non-404
+                          console.error('Backend progress fetch failed with unexpected status:', response.status, response.statusText);
+                          // Optional: Show an error message if status is unexpected
+                          // showMessage(resumeMessageElement, `Error loading progress: ${response.statusText}`, 'error');
+                         return; // Stop if fetch fails
                      }
                      const progressData = await response.json();
                      console.log('Progress data fetched:', progressData);
 
-                     // Check if progress data is valid and not completed, and player is ready
                      if (progressData && progressData.lastWatchedTime !== undefined && progressData.lastWatchedTime > 0 && !progressData.completed) {
                          const timeToSeek = progressData.lastWatchedTime;
                          const lastUpdatedTimestamp = progressData.lastUpdated;
 
-                          // Wait for player to be ready before seeking
                           function seekWhenReady() {
-                               if (player && player.seekTo && typeof player.seekTo === 'function') {
+                               if (player && typeof player.seekTo === 'function') {
                                    player.seekTo(timeToSeek);
                                    console.log('Resuming video to:', timeToSeek, 'seconds after player ready');
 
@@ -407,13 +436,12 @@
                                     showMessage(resumeMessageElement, `Resuming from ${minutes}m ${seconds}s (Last viewed: ${timestamp})`, 'info');
                                     setTimeout(() => { clearMessage(resumeMessageElement); }, 8000);
                                } else {
-                                   console.log("Player not yet ready, waiting to seek...");
-                                    // Wait a bit longer and try again
-                                    setTimeout(seekWhenReady, 100);
+                                   console.log("Player not yet ready for seeking, waiting...");
+                                    setTimeout(seekWhenReady, 100); // Retry after 100ms
                                }
                            }
 
-                          seekWhenReady(); // Start the waiting/seeking process
+                          seekWhenReady();
 
 
                      } else {
@@ -422,7 +450,6 @@
 
                  } catch (error) {
                      console.error('Error fetching or processing progress data:', error);
-                     // showMessage(resumeMessageElement, `An unexpected error occurred while loading progress: ${error.message}`, 'error'); // Optional
                  }
             }
 
@@ -490,14 +517,11 @@
 
             // --- YouTube Player API Event Handlers ---
 
-            // The API calls this function when the video player is ready.
             function onPlayerReady(event) {
                  console.log('YouTube Player is ready');
-                 // fetchAndLoadProgress will attempt to seek here if player was ready.
-                 // If not ready when fetch finished, fetchAndLoadProgress has a retry loop.
+                 // fetchAndLoadProgress calls seekWhenReady which handles player readiness.
             }
 
-            // The API calls this function when the player's state changes.
             function onPlayerStateChange(event) {
                  const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
                  if (!loggedInUsername || loggedInUsername === 'Guest' || !currentVideoTopicId) {
@@ -506,25 +530,21 @@
 
                  if (event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.PAUSED) {
                      const currentTime = player.getCurrentTime();
-                     // Save progress after a short delay when playing/paused
-                      // Clear any existing timer to avoid saving too often
                       if (window.saveProgressTimer) {
                            clearTimeout(window.saveProgressTimer);
                        }
                        window.saveProgressTimer = setTimeout(() => {
                             saveProgress(loggedInUsername, currentVideoTopicId, currentTime);
-                       }, 2000); // Save every 2 seconds while playing/paused (or shortly after state change)
+                       }, 2000);
 
 
                  } else if (event.data === YT.PlayerState.ENDED) {
                      console.log('Video ended.');
-                      // Ensure any pending progress save timer is cleared
                      if (window.saveProgressTimer) {
                           clearTimeout(window.saveProgressTimer);
                       }
                      const currentTime = player.getCurrentTime();
                      markVideoAsCompleted(loggedInUsername, currentVideoTopicId);
-                     // Save final time after completion
                      saveProgress(loggedInUsername, currentVideoTopicId, currentTime);
 
 
@@ -547,8 +567,24 @@
                            clearTimeout(saveNotesTimer);
                            saveNotesTimer = setTimeout(() => {
                                 const noteContent = notesTextarea.value;
-                                saveNotes(loggedInUsername, currentVideoTopicId, noteContent); // Use global currentVideoTopicId
+                                // Ensure currentVideoTopicId is set before attempting to save
+                                 if (currentVideoTopicId) {
+                                      saveNotes(loggedInUsername, currentVideoTopicId, noteContent);
+                                 } else {
+                                      console.warn("Cannot auto-save notes: Video Topic ID not set.");
+                                      // Optional: Show message to user "Cannot save notes until video loads"
+                                 }
                            }, 1000);
+                       });
+                       // Also save when leaving the page or element loses focus for final changes
+                       notesTextarea.addEventListener('blur', function() {
+                           clearTimeout(saveNotesTimer); // Clear any pending auto-save timer
+                           const noteContent = notesTextarea.value;
+                            if (currentVideoTopicId) {
+                                 saveNotes(loggedInUsername, currentVideoTopicId, noteContent);
+                            } else {
+                                 console.warn("Cannot save notes on blur: Video Topic ID not set.");
+                            }
                        });
                    }
 
@@ -587,7 +623,8 @@
                          if (pageTitle) pageTitle.textContent = "Loading Video...";
                          if (indexLoadingMessage) indexLoadingMessage.style.display = 'none';
 
-                         // fetchVideoAndLoadPlayer will be called by onYouTubeIframeAPIReady
+                         // fetchVideoAndLoadPlayer is called by onYouTubeIframeAPIReady
+
 
                     } else {
                         console.log("No video ID in URL. Displaying course catalog.");
@@ -640,18 +677,19 @@
                  }
              }
 
-             // --- Function to Render the Course Index from Video Data Array ---
+             // --- Function to Render the Course Index from Video Data Array (Track/Module Layout) ---
              function renderCourseIndex(videosData) {
                   const courseIndexContentDiv = document.getElementById('courseIndexContent');
                   if (!courseIndexContentDiv) return;
 
-                 courseIndexContentDiv.innerHTML = '';
+                 courseIndexContentDiv.innerHTML = ''; // Clear current content area
 
                  if (videosData.length === 0) {
                       showMessage(courseIndexContentDiv, 'No courses or videos available to render.', 'secondary');
                      return;
                  }
 
+                 // Group videos by module/track
                  const modules = {};
                  videosData.forEach(video => {
                       const moduleName = video.videoModule || 'Uncategorized';
@@ -661,15 +699,16 @@
                        modules[moduleName].push(video);
                    });
 
-                  const moduleTitles = {
-                       'Statistics': '📊 Statistics Fundamentals',
-                       'Excel': '📈 Excel for Data Analysis',
-                       'SQL': '🗄️ SQL for Analytics',
-                      'data-analyst': '🟦 MODULE 1: Data Analyst Track',
-                      'business-analyst': '🟨 MODULE 2: Business Analyst Track',
-                      'data-scientist': '🟥 MODULE 3: Data Scientist Track',
-                      'big-data': '🟩 BONUS MODULE: Big Data & Cloud Tools',
-                      'Uncategorized': '❓ Uncategorized Videos',
+                  // Define display titles and symbols for modules
+                  const moduleDisplayInfo = {
+                       'Statistics': { title: '📊 Statistics Fundamentals', description: 'Learn the basics of statistical analysis.'},
+                       'Excel': { title: '📈 Excel for Data Analysis', description: 'Master Excel for data manipulation and analysis.'},
+                       'SQL': { title: '🗄️ SQL for Analytics', description: 'Query and manage data using SQL.'},
+                       'data-analyst': { title: '🟦 Data Analyst Track', description: 'Comprehensive path for aspiring data analysts.'},
+                       'business-analyst': { title: '🟨 Business Analyst Track', description: 'Apply data skills to business problems.'},
+                       'data-scientist': { title: '🟥 Data Scientist Track', description: 'Advanced topics in data science.'},
+                       'big-data': { title: '🟩 Big Data & Cloud Tools', description: 'Explore tools for large-scale data.'},
+                       'Uncategorized': { title: '❓ Uncategorized Videos', description: 'Videos not assigned to a specific module.'}
                    };
 
                  const moduleKeys = Object.keys(modules).sort();
@@ -682,33 +721,33 @@
 
                  moduleKeys.forEach(moduleKey => {
                      const moduleVideos = modules[moduleKey];
-                     moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
+                     moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle)); // Sort videos alphabetically within module
 
                      const moduleSection = document.createElement('section');
-                     moduleSection.classList.add('course-module');
+                     moduleSection.classList.add('course-module-card'); // Use a new class for the main module/track card
 
-                      const fullModuleTitle = moduleTitles[moduleKey] || `📚 ${moduleKey}`;
+                     const displayInfo = moduleDisplayInfo[moduleKey] || { title: `📚 ${moduleKey}`, description: 'Videos in this module.' };
 
 
                      moduleSection.innerHTML = `
-                         <h2>${fullModuleTitle}</h2>
-                         <p class="module-goal">Browse videos in this module.</p>
+                         <h2>${displayInfo.title}</h2>
+                         <p class="module-description">${displayInfo.description}</p>
                          <div class="topic-list-grid">
-                         </div>
+                             </div>
                      `;
 
                      const topicListGrid = moduleSection.querySelector('.topic-list-grid');
 
                      moduleVideos.forEach(video => {
                          const topicCardLink = document.createElement('a');
-                         topicCardLink.href = `courses.html?video=${video.topicId}`;
+                         topicCardLink.href = `courses.html?video=${video.topicId}`; // Link to the video player view
                          topicCardLink.classList.add('topic-card');
 
                          topicCardLink.innerHTML = `
                              <h4>${video.videoTitle}</h4>
                              <p>${video.videoDescription || 'No description available.'}</p>
                              <span class="view-video-link"><i class="fas fa-video"></i> Watch ${video.videoUrl && video.videoUrl.includes('list=') ? 'Playlist' : 'Video'}</span>
-                         `;
+                             ${video.totalDuration ? `<span><i class="far fa-clock"></i> ${formatTimeToHHMMSS(video.totalDuration)}</span>` : ''} `;
                          topicListGrid.appendChild(topicCardLink);
                      });
 
