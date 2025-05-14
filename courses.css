@@ -9,32 +9,33 @@ body {
     justify-content: center;
     padding: 20px;
     box-sizing: border-box;
-    min-height: 100vh; /* Ensure body takes at least full viewport height */
+    min-height: 100vh;
 }
 
 :root {
     --background-color: #2b2b2b;
     --text-primary: #ffffff;
-    --text-secondary: #cccccc; /* Light gray secondary text */
-    --header-bg: #3c3c3c; /* Slightly lighter dark for header */
-    --card-bg: #3c3c3c; /* Slightly lighter dark for cards */
-    --card-border: #555; /* Subtle border */
+    --text-secondary: #cccccc;
+    --header-bg: #3c3c3c;
+    --card-bg: #3c3c3c;
+    --card-border: #555;
     --accent-color: #ff4081; /* Vibrant red/pink accent */
-    --accent-dark: #e03070; /* Darker accent for headings etc. */
-    --hover-bg: #4a4a4a; /* Slightly lighter on hover */
-    --progress-fill: #28a745; /* Green for progress */
-    --error-color: #dc3545; /* Red for errors */
-    --success-color: #28a745; /* Green for success */
-    --info-color: #17a2b8; /* Info blue */
-    --secondary-message: #6c757d; /* Muted gray for secondary messages */
+    --accent-dark: #e03070; /* Darker accent */
+    --hover-bg: #4a4a4a;
+    --progress-fill: #28a745;
+    --error-color: #dc3545;
+    --success-color: #28a745;
+    --info-color: #17a2b8;
+    --secondary-message: #6c757d;
+    --topic-card-bg: #4a4a4a; /* Slightly darker card background for topics */
 }
 
 
 .course-container {
     width: 100%;
     max-width: 1200px;
-    background-color: var(--card-bg); /* Main container uses card background */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Darker shadow */
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     overflow: hidden;
     display: flex;
@@ -106,26 +107,26 @@ body {
 }
 
 .message-info {
-    background-color: #3a506b; /* Darker blue */
-    color: #b3e5fc; /* Lighter blue text */
+    background-color: #3a506b;
+    color: #b3e5fc;
     border: 1px solid #4a6572;
 }
 
 .message-success {
-    background-color: #4caf50; /* Green */
-    color: #e8f5e9; /* Lighter green text */
+    background-color: #4caf50;
+    color: #e8f5e9;
     border: 1px solid #388e3c;
 }
 
 .message-error {
-    background-color: #f44336; /* Red */
-    color: #ffcdd2; /* Lighter red text */
+    background-color: #f44336;
+    color: #ffcdd2;
     border: 1px solid #d32f2f;
 }
 
 .message-secondary {
-    background-color: #5a5a5a; /* Medium gray */
-    color: #e0e0e0; /* Light gray text */
+    background-color: #5a5a5a;
+    color: #e0e0e0;
     border: 1px solid #757575;
 }
 
@@ -138,87 +139,63 @@ body {
 
 /* --- Course Catalog Index View Styles --- */
 
-/* Style for the main Track/Module cards */
-.track-card {
-    background-color: var(--header-bg); /* Use header background for main cards */
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+/* Container for each module section (heading + grid) */
+.module-section {
+    margin-bottom: 30px; /* Space between module sections */
 }
 
-.track-card h2 {
-     border-bottom: none; /* Remove border */
-     margin-top: 0;
-     margin-bottom: 8px; /* Space below title */
-     padding-bottom: 0;
-     color: var(--text-primary);
-     font-size: 1.6rem;
+/* Style for the module heading */
+.module-heading {
+    font-size: 1.8rem; /* Larger heading */
+    color: var(--accent-color); /* Accent color for headings */
+    margin-top: 0;
+    margin-bottom: 20px; /* Space below heading */
+    border-bottom: 2px solid var(--accent-color); /* Underline */
+    padding-bottom: 10px; /* Space between text and underline */
 }
 
-.track-description {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-}
-
-
-/* Grid for Topic (Video) cards INSIDE a track card */
-.topic-grid {
+/* Grid for Topic (Video) cards BELOW the module heading */
+.topic-cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid for topics */
-    gap: 15px; /* Space between topic cards */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid for topics */
+    gap: 20px; /* Space between topic cards */
 }
 
-/* Style for individual Video/Topic cards */
-.video-topic-card {
+/* Style for individual Topic (Video) cards */
+.topic-card {
     display: block;
-    background-color: var(--card-bg); /* Use card background for nested cards */
+    background-color: var(--topic-card-bg); /* Slightly darker card background */
     border: 1px solid var(--card-border);
-    border-radius: 6px;
+    border-radius: 8px; /* Rounded corners */
     padding: 15px;
     text-decoration: none;
     color: var(--text-primary);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    position: relative;
     overflow: hidden;
-    display: flex;
+    text-align: center; /* Center content */
+    display: flex; /* Use flex to center content vertically if needed */
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    min-height: 120px; /* Ensure a minimum height for consistent size */
 }
 
-.video-topic-card:hover {
-    transform: translateY(-3px); /* Less pronounced lift */
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+.topic-card:hover {
+    transform: translateY(-5px); /* Lift effect */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
     border-color: var(--accent-color); /* Accent border on hover */
 }
 
-.video-topic-card h4 {
-    margin-top: 0;
-    margin-bottom: 6px; /* Less space */
-    font-size: 1.05rem; /* Slightly smaller font */
-    color: var(--accent-color); /* Accent color for topic titles */
+.topic-card h4 {
+    margin: 0 0 5px 0; /* Space below title */
+    font-size: 1.1rem;
+    color: var(--text-primary); /* White title text */
 }
 
-.video-topic-card p {
-    margin-bottom: 10px; /* Less space */
-    font-size: 0.9rem; /* Smaller description font */
-    color: var(--text-secondary);
-    flex-grow: 1;
-}
-
-.video-topic-card .watch-link,
-.video-topic-card .video-duration {
-    display: block;
-    font-size: 0.85rem; /* Smaller text */
-    color: var(--text-secondary); /* Secondary color for links/duration */
-    font-weight: 400; /* Normal weight */
-    margin-top: 5px; /* Less space */
-}
-.video-topic-card .watch-link {
-     color: var(--accent-color); /* Accent color for the watch link */
-     font-weight: 500;
+.topic-card .topic-card-details {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary); /* Secondary text color */
 }
 
 
@@ -309,8 +286,8 @@ body {
     box-sizing: border-box;
     margin-bottom: 10px;
     background-color: #2b2b2b; /* Match body background */
-    color: var(--text-primary); /* White text */
-    border-color: #777; /* Slightly lighter border */
+    color: var(--text-primary);
+    border-color: #777;
 }
 
 .notes-section .message {
@@ -350,7 +327,7 @@ body {
 #playlistItemsContainer {
     margin-top: 20px;
     width: 100%;
-    background-color: var(--header-bg); /* Background for the playlist container */
+    background-color: var(--header-bg);
     border: 1px solid var(--card-border);
     border-radius: 8px;
     padding: 15px;
@@ -361,7 +338,7 @@ body {
      margin-top: 0;
      margin-bottom: 10px;
      color: var(--text-primary);
-     border-bottom: 1px solid var(--card-border); /* Separator */
+     border-bottom: 1px solid var(--card-border);
      padding-bottom: 10px;
 }
 
@@ -372,18 +349,18 @@ body {
 }
 
 #playlistItemsList li {
-    background-color: var(--card-bg); /* Background for individual playlist items */
+    background-color: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 4px;
     padding: 10px 15px;
     margin-bottom: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease;
-    color: var(--text-primary); /* White text for list items */
+    color: var(--text-primary);
 }
 
 #playlistItemsList li:last-child {
-     margin-bottom: 0; /* Remove margin from the last item */
+     margin-bottom: 0;
 }
 
 
@@ -391,7 +368,6 @@ body {
     background-color: var(--hover-bg);
 }
 
-/* Placeholder style for completion dot (needs JS to add class) */
 #playlistItemsList li .status {
      display: inline-block;
      width: 10px;
@@ -399,11 +375,11 @@ body {
      border-radius: 50%;
      margin-left: 10px;
      vertical-align: middle;
-     border: 1px solid var(--text-secondary); /* Blank/outline for not started */
+     border: 1px solid var(--text-secondary);
 }
 
 #playlistItemsList li .status.completed {
-     background-color: var(--progress-fill); /* Green for completed */
+     background-color: var(--progress-fill);
      border-color: var(--progress-fill);
 }
 
@@ -435,12 +411,22 @@ body {
         width: 100%;
         min-width: auto;
     }
-     .topic-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust grid for smaller screens */
+     .topic-cards-grid { /* Adjusted class name */
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust grid for smaller cards/screens */
         gap: 15px;
     }
-     .track-card {
-         padding: 15px;
+     .module-heading { /* Adjusted class name */
+         font-size: 1.5rem;
+     }
+     .topic-card { /* Adjusted class name */
+         min-height: 100px; /* Adjust min height for smaller cards */
+         padding: 10px;
+     }
+     .topic-card h4 {
+         font-size: 1rem;
+     }
+     .topic-card .topic-card-details {
+         font-size: 0.8rem;
      }
 }
 
