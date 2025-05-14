@@ -18,7 +18,8 @@
                 <h1 id="pageTitle">Loading...</h1> </div>
             <nav class="header-nav">
                 <a href="dashboard.html">Dashboard</a>
-                 <a href="notes.html">My Notes</a>
+                <a href="courses.html">Catalog</a>
+                <a href="notes.html">My Notes</a>
                 <a href="feedback.html">Feedback</a>
                  <a href="auth.html" class="logout-btn" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -35,24 +36,14 @@
                 <div class="back-link-container">
                     <a href="courses.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
                 </div>
-                <h2 id="videoTitle"></h2> <div class="video-notes-layout">
-                    <div class="video-player-section">
-                         <div id="youtubePlayer"></div>
-                         <p id="resumeMessage" class="message" style="display: none;"></p>
-                          <div id="playlistItemsContainer" class="hidden">
-                               <h4>Playlist Videos:</h4>
-                               <ul id="playlistItemsList">
-                                   </ul>
-                          </div>
-                    </div>
-                    <div class="notes-section">
-                        <h3>Your Notes</h3>
-                        <label for="videoNotes"></label>
-                        <textarea id="videoNotes" placeholder="Write your notes here..."></textarea>
-                         <p id="notesMessage" class="message"></p>
-                    </div>
+                <h2 id="videoTitle"></h2> <div class="video-container">
+                    <div id="youtubePlayer"></div>
                 </div>
-
+                <p id="resumeMessage" style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-top: 10px; display: none;"></p>
+                 <div class="notes-section">
+                    <h3>Your Notes</h3>
+                    <label for="videoNotes"></label> <textarea id="videoNotes" placeholder="Write your notes here..."></textarea>
+                     <p id="notesMessage" class="message"></p> </div>
             </div>
         </main>
 
@@ -62,69 +53,36 @@
             const LOGGED_IN_USERNAME_KEY = 'loggedInUsername';
 
 
-            // --- Authentication Check ---
-             const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
-             const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
-             const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
-
-             console.log("--- Courses.html Auth Check ---");
-             console.log("localStorage userAuthenticated:", localStorage.getItem('userAuthenticated'), "->", userAuthLocal);
-             console.log("sessionStorage userAuthenticated:", sessionStorage.getItem('userAuthenticated'), "->", userAuthSession);
-             console.log("localStorage adminAuthenticated:", localStorage.getItem(ADMIN_AUTH_KEY), "->", adminAuthLocal);
-
-
-             if (!userAuthLocal && !userAuthSession && !adminAuthLocal) {
-                 console.log("Courses: User is NOT authenticated. Redirecting to auth.html");
-                 window.location.replace("auth.html#login");
-                 throw new Error("Not Authenticated");
-             } else {
-                  console.log("Courses: User IS authenticated. Proceeding to load courses content.");
-             }
-
-
             // --- YouTube Player API Script ---
+            // This code loads the IFrame Player API asynchronously.
             var tag = document.createElement('script');
-             // Corrected YouTube API URL - Ensure this is the standard one
-             tag.src = "https://www.youtube.com/iframe_api";
+             tag.src = "https://www.youtube.com/iframe_api"; // Correct API URL
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 
             // --- Global variables for YouTube Player and Current Video ---
             var player;
-            let currentVideoTopicId = null;
-            let currentVideoDbId = null;
+            let currentVideoTopicId = null; // To keep track of the currently loaded video topic ID
+            let currentVideoDbId = null; // To store the database ID of the current video
 
 
             // --- Helper Function to show messages in a specific element ---
             function showMessage(element, message, type = 'info') {
                 if (element) {
                     element.textContent = message;
-                    element.className = `message message-${type}`;
-                     element.style.display = 'block';
+                    element.className = `message message-${type}`; // Use message class + type class
+                     element.style.display = 'block'; // Ensure it's visible
                 }
             }
 
+             // --- Helper Function to clear messages in a specific element ---
             function clearMessage(element) {
                  if (element) {
                      element.textContent = '';
                      element.className = 'message';
-                     element.style.display = 'none';
+                     element.style.display = 'none'; // Hide the message element
                  }
-            }
-
-             // --- Helper function to format seconds into HH:MM:SS ---
-             function formatTimeToHHMMSS(totalSeconds) {
-                if (isNaN(totalSeconds) || totalSeconds < 0) return '00:00:00';
-                const hours = Math.floor(totalSeconds / 3600);
-                const minutes = Math.floor((totalSeconds % 3600) / 60);
-                const seconds = Math.floor(totalSeconds % 60);
-
-                const paddedHours = hours < 10 ? '0' + hours : hours;
-                const paddedMinutes = minutes < 10 ? '0' + minutes : minutes;
-                const paddedSeconds = seconds < 10 ? '0' + seconds : seconds;
-
-                return hours > 0 ? `${paddedHours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
              }
 
 
@@ -135,9 +93,11 @@
                  const videoTopicIdInUrl = urlParams.get('video');
 
                  if (videoTopicIdInUrl) {
+                      // If a video ID is in the URL, fetch its details and load the player
                       fetchVideoAndLoadPlayer(videoTopicIdInUrl);
                  } else {
-                      console.log("No video ID in URL, DOMContentLoaded will handle catalog.");
+                      // If no video ID, the DOMContentLoaded handler will fetch and render the catalog
+                      console.log("No video ID in URL, waiting for DOMContentLoaded to render catalog.");
                  }
             }
 
@@ -147,11 +107,12 @@
                  const videoPlayerContentDiv = document.getElementById('videoPlayerContent');
                  const courseIndexContentDiv = document.getElementById('courseIndexContent');
                  const pageTitleElement = document.getElementById('pageTitle');
-                 const loadingMessageElement = document.getElementById('indexLoadingMessage');
+                 const loadingMessageElement = document.getElementById('indexLoadingMessage'); // Use the catalog loading message
 
+                 // Ensure video player content is visible and index is hidden
                  if (courseIndexContentDiv) courseIndexContentDiv.classList.add('hidden');
                  if (videoPlayerContentDiv) videoPlayerContentDiv.classList.remove('hidden');
-                 if (loadingMessageElement) loadingMessageElement.style.display = 'none';
+                 if (loadingMessageElement) loadingMessageElement.style.display = 'none'; // Hide catalog loading message
 
 
                 if (videoTitleElement) videoTitleElement.textContent = "Loading Video...";
@@ -166,11 +127,12 @@
                           if (videoTitleElement) videoTitleElement.textContent = "Error Loading Video";
                           if (pageTitleElement) pageTitleElement.textContent = "Video Error";
                            if (videoPlayerContentDiv) videoPlayerContentDiv.innerHTML = '<p class="message message-error">Error loading video details.</p>';
-                         return;
+                         return; // Stop if fetch fails
                      }
                      const videoDetails = await response.json();
                      console.log('Video details fetched:', videoDetails);
 
+                     // Check if the response contains valid video data
                      if (!videoDetails || !videoDetails.topicId || !videoDetails.videoUrl) {
                           console.error('Fetched video data is incomplete or invalid:', videoDetails);
                            if (videoTitleElement) videoTitleElement.textContent = "Error Loading Video";
@@ -179,50 +141,41 @@
                           return;
                      }
 
-                     currentVideoTopicId = videoDetails.topicId;
-                     currentVideoDbId = videoDetails.id;
+                     currentVideoTopicId = videoDetails.topicId; // Store topic ID
+                     currentVideoDbId = videoDetails.id; // Store database ID (useful for progress/notes API)
 
-                     if (videoTitleElement) videoTitleElement.textContent = videoDetails.videoTitle;
-                     if (pageTitleElement) pageTitleElement.textContent = videoDetails.videoTitle;
+                     if (videoTitleElement) videoTitleElement.textContent = videoDetails.videoTitle; // Set the video title
+                     if (pageTitleElement) pageTitleElement.textContent = videoDetails.videoTitle; // Update page title
 
 
-                     let youtubeId = null;
-                     let isPlaylist = false;
+                     // Extract YouTube ID from the URL (assuming it's a standard YouTube URL)
+                      let youtubeId = null;
+                      let isPlaylist = false;
 
                       try {
                            const url = new URL(videoDetails.videoUrl);
-                           // Check for standard YouTube domains
                            if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
                                 if (url.searchParams.get('list')) {
                                     isPlaylist = true;
-                                    youtubeId = url.searchParams.get('list');
+                                    youtubeId = url.searchParams.get('list'); // Get playlist ID
                                      console.log('Detected YouTube playlist ID:', youtubeId);
                                 } else if (url.searchParams.get('v')) {
-                                    youtubeId = url.searchParams.get('v');
-                                     console.log('Detected YouTube video ID from v parameter:', youtubeId);
-                                } else if (url.hostname === 'youtu.be') {
-                                     // Handle youtu.be short URLs
-                                     const pathSegments = url.pathname.split('/').filter(segment => segment);
-                                     if (pathSegments.length > 0) {
-                                          youtubeId = pathSegments[0];
-                                           console.log('Detected YouTube video ID from youtu.be path:', youtubeId);
-                                     }
+                                    youtubeId = url.searchParams.get('v'); // Get video ID from 'v' parameter
+                                     console.log('Detected YouTube video ID:', youtubeId);
                                 } else {
-                                     // Handle /embed/ or other path formats if necessary
+                                     // Handle youtu.be/VIDEO_ID format
                                      const pathSegments = url.pathname.split('/').filter(segment => segment);
-                                      if (pathSegments.length > 1 && pathSegments[0] === 'embed') {
-                                          youtubeId = pathSegments[1];
-                                          console.log('Detected YouTube video ID from /embed/ path:', youtubeId);
+                                      if (pathSegments.length > 0) {
+                                          youtubeId = pathSegments[pathSegments.length - 1];
+                                           console.log('Detected youtu.be video ID:', youtubeId);
                                       }
                                 }
-                           } else {
-                                console.warn("Video URL does not appear to be a standard YouTube URL:", videoDetails.videoUrl);
                            }
                       } catch (e) {
                           console.error("Error parsing video URL:", videoDetails.videoUrl, e);
-                           if (videoTitleElement) videoTitleElement.textContent = "Invalid Video URL Format";
+                           if (videoTitleElement) videoTitleElement.textContent = "Invalid Video URL";
                            if (pageTitleElement) pageTitleElement.textContent = "Video Error";
-                           if (videoPlayerContentDiv) videoPlayerContentDiv.innerHTML = '<p class="message message-error">The video URL format is invalid.</p>';
+                           if (videoPlayerContentDiv) videoPlayerContentContent.innerHTML = '<p class="message message-error">The video URL is invalid.</p>';
                           return;
                       }
 
@@ -237,62 +190,61 @@
 
 
                      // --- Load the YouTube Player ---
-                      const youtubePlayerDiv = document.getElementById('youtubePlayer');
-                     if (typeof YT !== 'undefined' && YT.Player && youtubePlayerDiv) {
-                          const playerOptions = {
-                              height: '390',
-                              width: '100%', // Use 100% width and let CSS container handle responsive
-                              playerVars: {
-                                  'autoplay': 1,
-                                  'controls': 1,
-                                  'enablejsapi': 1,
-                                  'rel': 0,
-                                  'showinfo': 0,
-                                  'modestbranding': 1,
-                                  'playsinline': 1
-                              },
-                              events: {
-                                  'onReady': onPlayerReady,
-                                  'onStateChange': onPlayerStateChange,
-                              }
-                          };
+                     const playerOptions = {
+                         height: '390',
+                         width: '640',
+                         playerVars: {
+                             'autoplay': 1, // Optional: Autoplay the video
+                             'controls': 1,
+                             'enablejsapi': 1,
+                             'rel': 0, // Hide related videos
+                             'showinfo': 0, // Hide video title and uploader info
+                             'modestbranding': 1,
+                             'playsinline': 1
+                         },
+                         events: {
+                             'onReady': onPlayerReady,
+                             'onStateChange': onPlayerStateChange,
+                             // Optional: Listen for playlist events if needed
+                             // 'onPlaylistNext': onPlaylistNext,
+                             // 'onPlaylistLoaded': onPlaylistLoaded
+                         }
+                     };
 
-                          if (isPlaylist) {
-                              playerOptions.playerVars.listType = 'playlist';
-                              playerOptions.playerVars.list = youtubeId;
-                               console.log("Loading YouTube Playlist with ID:", youtubeId);
-                               const playlistItemsContainer = document.getElementById('playlistItemsContainer');
-                               if (playlistItemsContainer) playlistItemsContainer.classList.remove('hidden');
+                     if (isPlaylist) {
+                         playerOptions.playerVars.listType = 'playlist';
+                         playerOptions.playerVars.list = youtubeId;
+                         // Optional: Start with a specific video in the playlist
+                         // playerOptions.playerVars.index = INDEX_NUMBER;
+                     } else {
+                         playerOptions.videoId = youtubeId;
+                     }
 
-                          } else {
-                              playerOptions.videoId = youtubeId;
-                               console.log("Loading YouTube Video with ID:", youtubeId);
-                               const playlistItemsContainer = document.getElementById('playlistItemsContainer');
-                               if (playlistItemsContainer) playlistItemsContainer.classList.add('hidden');
-                          }
-
-                           youtubePlayerDiv.innerHTML = '';
-
+                     // Create the YouTube Player
+                     // Ensure the 'youtubePlayer' div exists in your HTML
+                     const youtubePlayerDiv = document.getElementById('youtubePlayer');
+                      if (youtubePlayerDiv) {
                           player = new YT.Player('youtubePlayer', playerOptions);
                           console.log("YouTube Player initiated.");
-
                       } else {
-                            console.error("YouTube API not ready or 'youtubePlayer' element not found!");
-                             if (videoPlayerContentDiv) {
-                                  videoPlayerContentDiv.innerHTML = '<p class="message message-error">Error initializing video player (API not loaded or HTML element missing).</p>';
-                                   if (videoTitleElement) videoTitleElement.textContent = "Player Error";
-                                   if (pageTitleElement) pageTitleElement.textContent = "Player Error";
-                             }
+                           console.error("HTML element with id 'youtubePlayer' not found!");
+                            if (videoPlayerContentDiv) videoPlayerContentDiv.innerHTML = '<p class="message message-error">Error initializing video player (HTML element missing).</p>';
                       }
 
 
                     // --- Fetch and Load Saved Notes ---
-                    const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
-                    fetchAndLoadNotes(loggedInUsername, currentVideoTopicId);
+                    fetchAndLoadNotes(loggedInUsername, currentVideoTopicId); // Use topic ID
 
 
                     // --- Fetch and Load Saved Progress ---
-                     fetchAndLoadProgress(loggedInUsername, currentVideoTopicId);
+                    // You might fetch specific progress for this video here,
+                    // or rely on the continue learning endpoint's data if you stored it on dashboard load.
+                    // A dedicated endpoint like GET /progress/<username>/<topic_id> would be ideal.
+                    // For now, let's assume the continue learning endpoint is sufficient to get the last time.
+                    // However, fetching the full progress object (completed, time) is better.
+                    // Let's add a GET endpoint for single video progress to backend.
+                    // Assuming a new backend endpoint: GET /progress/<username>/<topic_id>
+                    fetchAndLoadProgress(loggedInUsername, currentVideoTopicId);
 
 
                  } catch (error) {
@@ -307,14 +259,15 @@
             async function fetchAndLoadNotes(username, topicId) {
                  const notesTextarea = document.getElementById('videoNotes');
                  const notesMessageElement = document.getElementById('notesMessage');
-                 if (!notesTextarea || !notesMessageElement) return;
+                 if (!notesTextarea || !notesMessageElement) return; // Elements not found
 
                  if (!username || !topicId) {
                      console.warn("Cannot fetch notes: Username or topicId is missing.");
+                     showMessage(notesMessageElement, "Cannot load notes (Login required).", 'secondary');
                      return;
                  }
 
-                 clearMessage(notesMessageElement);
+                 clearMessage(notesMessageElement); // Clear previous messages
                  showMessage(notesMessageElement, "Loading notes...", 'info');
 
                  console.log(`Workspaceing notes for user '${username}' and topic_id '${topicId}'`);
@@ -329,14 +282,18 @@
                      const notesData = await response.json();
                      console.log('Notes data fetched:', notesData);
 
-                     clearMessage(notesMessageElement);
+                     clearMessage(notesMessageElement); // Clear loading message
 
                      if (notesData && notesData.noteContent !== undefined) {
+                          // If a note was found, populate the textarea
                           notesTextarea.value = notesData.noteContent;
                           console.log("Notes textarea populated.");
+                          // Optionally show a timestamp: showMessage(notesMessageElement, `Last saved: ${new Date(notesData.timestamp).toLocaleString()}`, 'info');
                      } else {
-                          notesTextarea.value = '';
+                         // No note found (backend returned 200 with message or empty content)
+                          notesTextarea.value = ''; // Ensure textarea is empty
                           console.log("No note found for this video.");
+                          // showMessage(notesMessageElement, "No notes saved yet.", 'secondary'); // Optional message
                      }
 
                  } catch (error) {
@@ -348,13 +305,16 @@
             // --- Function to Save Notes ---
              async function saveNotes(username, topicId, noteContent) {
                  const notesMessageElement = document.getElementById('notesMessage');
-                  if (!notesMessageElement) return;
+                  if (!notesMessageElement) return; // Element not found
 
                  if (!username || !topicId) {
                      console.warn("Cannot save notes: Username or topicId is missing.");
-                      showMessage(notesMessageElement, "Login required to save notes.", 'secondary');
+                      showMessage(notesMessageElement, "Cannot save notes (Login required).", 'secondary');
                      return;
                  }
+
+                 clearMessage(notesMessageElement); // Clear previous messages
+                 showMessage(notesMessageElement, "Saving notes...", 'info');
 
                  console.log(`Attempting to save notes for user '${username}' and topic_id '${topicId}'`);
 
@@ -369,80 +329,85 @@
 
                        if (!response.ok) {
                             console.error('Failed to save notes:', response.status, response.statusText);
+                            // Attempt to read backend error message
                            const errorData = await response.json().catch(() => ({ message: `Error saving notes: ${response.statusText}` }));
                            showMessage(notesMessageElement, errorData.message, 'error');
-                            return;
+                            return; // Stop if save fails
                        }
 
-                       const successData = await response.json();
+                       const successData = await response.json(); // Backend returns success message
                        console.log('Notes save success:', successData);
-                       showMessage(notesMessageElement, successData.message || 'Notes saved!', 'success');
+                       showMessage(notesMessageElement, successData.message || 'Notes saved successfully!', 'success');
 
-
-                       setTimeout(() => { clearMessage(notesMessageElement); }, 2000);
+                       // Optionally clear the success message after a delay
+                       setTimeout(() => { clearMessage(notesMessageElement); }, 3000);
 
                  } catch (error) {
                       console.error('Error during notes save fetch:', error);
-                       showMessage(notesMessageElement, `Error saving notes: ${error.message}`, 'error');
+                       showMessage(notesMessageElement, `An unexpected error occurred while saving notes: ${error.message}`, 'error');
                  }
              }
 
 
             // --- Function to Fetch and Load Saved Progress ---
-             async function fetchAndLoadProgress(username, topicId) {
+            // This assumes a backend endpoint GET /progress/<username>/<topic_id> exists
+            async function fetchAndLoadProgress(username, topicId) {
                  const resumeMessageElement = document.getElementById('resumeMessage');
-                 if (!resumeMessageElement) return;
+                 if (!resumeMessageElement) return; // Element not found
 
                  if (!username || !topicId) {
                      console.warn("Cannot fetch progress: Username or topicId is missing.");
-                     return;
+                     return; // Don't fetch for guests or if video ID is missing
                  }
 
                  console.log(`Workspaceing progress for user '${username}' and topic_id '${topicId}'`);
 
                  try {
-                     const response = await fetch(`http://127.0.0.1:5000/progress/${username}/${topicId}`);
-                     if (response.status === 404) {
-                         console.log(`No existing progress found for ${username} / ${topicId} (404).`);
-                         return;
-                     }
+                     const response = await fetch(`http://127.0.0.1:5000/progress/${username}/${topicId}`); // Assuming this endpoint exists
                      if (!response.ok) {
-                          console.error('Backend progress fetch failed with unexpected status:', response.status, response.statusText);
-                         return;
+                         console.warn('Backend progress fetch failed (might be okay if no progress yet):', response.status, response.statusText);
+                          // Don't show an error message on the page for expected 404 (no progress)
+                          if (response.status === 404) {
+                               console.log("No existing progress found (404).");
+                          } else {
+                               console.error('Failed to fetch progress with unexpected status:', response.status);
+                                // Show an error message if status is unexpected
+                                // showMessage(resumeMessageElement, `Error loading progress: ${response.statusText}`, 'error'); // Optional
+                          }
+                         return; // Stop if fetch fails or returns 404
                      }
                      const progressData = await response.json();
                      console.log('Progress data fetched:', progressData);
 
+                     // Check if progress data is valid and not completed
                      if (progressData && progressData.lastWatchedTime !== undefined && progressData.lastWatchedTime > 0 && !progressData.completed) {
                          const timeToSeek = progressData.lastWatchedTime;
-                         const lastUpdatedTimestamp = progressData.lastUpdated;
+                         const lastUpdatedTimestamp = progressData.lastUpdated; // ISO format
 
-                          function seekWhenReady() {
-                               if (player && typeof player.seekTo === 'function') {
-                                   player.seekTo(timeToSeek);
-                                   console.log('Resuming video to:', timeToSeek, 'seconds after player ready');
+                         if (player && player.seekTo) { // Check if player is ready
+                             player.seekTo(timeToSeek); // Resume video
+                             console.log('Resuming video to:', timeToSeek, 'seconds');
 
-                                    const minutes = Math.floor(timeToSeek / 60);
-                                    const seconds = Math.floor(timeToSeek % 60);
-                                    const timestamp = lastUpdatedTimestamp ? new Date(lastUpdatedTimestamp).toLocaleString() : 'unknown date';
+                              const minutes = Math.floor(timeToSeek / 60);
+                              const seconds = Math.floor(timeToSeek % 60);
+                              const timestamp = lastUpdatedTimestamp ? new Date(lastUpdatedTimestamp).toLocaleString() : 'unknown date';
 
-                                    showMessage(resumeMessageElement, `Resuming from ${minutes}m ${seconds}s (Last viewed: ${timestamp})`, 'info');
-                                    setTimeout(() => { clearMessage(resumeMessageElement); }, 8000);
-                               } else {
-                                   console.log("Player not yet ready for seeking, waiting...");
-                                    setTimeout(seekWhenReady, 100);
-                               }
-                           }
-
-                          seekWhenReady();
-
-
+                              showMessage(resumeMessageElement, `Resuming from ${minutes}m ${seconds}s (Last viewed: ${timestamp})`, 'info');
+                              // Hide message after a few seconds
+                              setTimeout(() => { clearMessage(resumeMessageElement); }, 8000);
+                         } else {
+                             console.log("Player not ready yet, cannot resume.");
+                             // You might store the timeToSeek globally and seek when player is ready
+                              // This requires modifying onPlayerReady
+                         }
                      } else {
-                         console.log("No valid progress data found to resume from, or video already completed.");
+                         console.log("No valid progress data found to resume from.");
+                          // progressData might be empty, completed, or time is 0
                      }
 
                  } catch (error) {
                      console.error('Error fetching or processing progress data:', error);
+                      // showMessage(resumeMessageElement, `An unexpected error occurred while loading progress: ${error.message}`, 'error'); // Optional
                  }
             }
 
@@ -453,6 +418,8 @@
                      console.warn("Cannot save progress: Username, topicId, or current time is missing.");
                      return;
                  }
+
+                 // console.log(`Saving progress for user '${username}', topic_id '${topicId}': ${currentTime}s`); // Avoid excessive logging
 
                   const saveUrl = `http://127.0.0.1:5000/progress/save/${username}/${topicId}`;
                   const progressData = { currentTime: currentTime };
@@ -468,11 +435,14 @@
 
                         if (!response.ok) {
                             console.error('Failed to save progress:', response.status, response.statusText);
+                             // Optional: Show error message on the page
+                             // showMessage(someElement, `Error saving progress: ${response.statusText}`, 'error');
                         } else {
-                             // console.log('Progress saved successfully.');
+                             // console.log('Progress saved successfully.'); // Avoid excessive logging
                         }
                    } catch (error) {
                         console.error('Error during save progress fetch:', error);
+                         // Optional: Show error message
                    }
              }
 
@@ -492,86 +462,103 @@
                            headers: {
                                'Content-Type': 'application/json',
                            },
+                           // No body needed for this endpoint usually
                        });
 
                        if (!response.ok) {
                            console.error('Failed to mark video as completed:', response.status, response.statusText);
+                            // Optional: Show error message on the page
+                             // showMessage(someElement, `Error marking completed: ${response.statusText}`, 'error');
                        } else {
-                            const successData = await response.json().catch(() => ({ message: 'Completed successfully (no message from backend)'}));
+                            const successData = await response.json(); // Backend might return a message
                             console.log('Video marked completed successfully:', successData.message);
+                            // Optional: Show success message on the page briefly
                        }
                  } catch (error) {
                       console.error('Error during mark completed fetch:', error);
+                       // Optional: Show error message
                  }
              }
 
 
             // --- YouTube Player API Event Handlers ---
 
+            // The API calls this function when the video player is ready.
             function onPlayerReady(event) {
                  console.log('YouTube Player is ready');
+                 // Now that the player is ready, if we had a pending seek time
+                 // from fetchAndLoadProgress, we could seek here.
+                 // For simplicity, fetchAndLoadProgress now seeks directly if player is ready.
+
+                 // Start saving progress periodically or on state change
+                 // We will save progress on state change (play, pause, end)
+                 // No need for a continuous timer if saving on state changes.
+
+                 // If the user has a saved progress time from fetchAndLoadProgress
+                 // that couldn't be applied because the player wasn't ready,
+                 // we could store that time globally and apply it here.
+                 // e.g., if (window.pendingSeekTime !== undefined) { event.target.seekTo(window.pendingSeekTime); window.pendingSeekTime = undefined; }
             }
 
+            // The API calls this function when the player's state changes.
             function onPlayerStateChange(event) {
+                 // Ensure we have the current video topic ID and user
                  const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
                  if (!loggedInUsername || loggedInUsername === 'Guest' || !currentVideoTopicId) {
+                     // Cannot save progress for guests or if video ID is missing
                      return;
                  }
 
+                 // Save video progress (time and timestamp) when playing, paused, or ended
                  if (event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.PAUSED) {
                      const currentTime = player.getCurrentTime();
-                      if (window.saveProgressTimer) {
-                           clearTimeout(window.saveProgressTimer);
-                       }
-                       window.saveProgressTimer = setTimeout(() => {
-                            saveProgress(loggedInUsername, currentVideoTopicId, currentTime);
-                       }, 2000);
-
+                     // Call the async saveProgress function (don't await inside event handler)
+                     saveProgress(loggedInUsername, currentVideoTopicId, currentTime);
 
                  } else if (event.data === YT.PlayerState.ENDED) {
                      console.log('Video ended.');
-                     if (window.saveProgressTimer) {
-                          clearTimeout(window.saveProgressTimer);
-                      }
-                     const currentTime = player.getCurrentTime();
+                     const currentTime = player.getCurrentTime(); // Get final time (should be close to duration)
+                     // Mark this video as completed for the logged-in user
                      markVideoAsCompleted(loggedInUsername, currentVideoTopicId);
+
+                     // Save final time (optional, complete might handle it)
                      saveProgress(loggedInUsername, currentVideoTopicId, currentTime);
 
+                     // Optional: Remove saved progress data from localStorage if using it (we are now using backend)
+                     // localStorage.removeItem(VIDEO_PROGRESS_KEY_PREFIX + currentVideoTopicId);
+                     // console.log('Removed saved progress from localStorage for ended video.');
 
                      const resumeMessageElement = document.getElementById('resumeMessage');
                      if (resumeMessageElement) {
-                         clearMessage(resumeMessageElement);
+                         clearMessage(resumeMessageElement); // Hide resume message
                      }
                  }
+                 // Optional: Handle other states like BUFFERING, CUED, etc.
             }
 
 
-            // --- Event Listener for Note Saving (Auto-save while typing & on blur) ---
+            // --- Event Listener for Note Saving ---
              document.addEventListener('DOMContentLoaded', function() {
                   const notesTextarea = document.getElementById('videoNotes');
                    const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
 
+                   // Note: The note saving logic needs to know the current video ID.
+                   // The 'input' listener is attached when DOM is ready, but needs to wait for video details to be fetched.
+                   // Let's add the event listener inside fetchVideoAndLoadPlayer after currentVideoTopicId is set.
+                   // OR, add the listener here, but the saveNotes function checks for currentVideoTopicId and username.
+
+                   // Attaching listener here, saveNotes function handles validation
                    if (notesTextarea) {
                        let saveNotesTimer = null;
                        notesTextarea.addEventListener('input', function() {
+                            // Clear previous timer
                            clearTimeout(saveNotesTimer);
+                           // Set a new timer to save after a delay (user stops typing)
                            saveNotesTimer = setTimeout(() => {
                                 const noteContent = notesTextarea.value;
-                                 if (currentVideoTopicId) {
-                                      saveNotes(loggedInUsername, currentVideoTopicId, noteContent);
-                                 } else {
-                                      console.warn("Cannot auto-save notes: Video Topic ID not set.");
-                                 }
-                           }, 1000);
-                       });
-                       notesTextarea.addEventListener('blur', function() {
-                           clearTimeout(saveNotesTimer);
-                           const noteContent = notesTextarea.value;
-                            if (currentVideoTopicId) {
-                                 saveNotes(loggedInUsername, currentVideoTopicId, noteContent);
-                            } else {
-                                 console.warn("Cannot save notes on blur: Video Topic ID not set.");
-                            }
+                                 // Call the async saveNotes function (don't await inside event handler)
+                                saveNotes(loggedInUsername, currentVideoTopicId, noteContent);
+                           }, 1000); // Save 1 second after user stops typing
                        });
                    }
 
@@ -603,18 +590,23 @@
 
 
                     if (videoTopicIdInUrl) {
+                        // If a video ID is present in the URL
                         console.log(`Video ID "${videoTopicIdInUrl}" found in URL. Switching to player view.`);
+                        // We wait for onYouTubeIframeAPIReady to call fetchVideoAndLoadPlayer
+
+                        // Set initial display state while waiting for API/fetch
                         if (courseIndexContent) courseIndexContent.classList.add('hidden');
                         if (videoPlayerContent) videoPlayerContent.classList.remove('hidden');
                          if (pageTitle) pageTitle.textContent = "Loading Video...";
-                         if (indexLoadingMessage) indexLoadingMessage.style.display = 'none';
+                         if (indexLoadingMessage) indexLoadingMessage.style.display = 'none'; // Hide catalog loading
 
 
                     } else {
+                        // If no video ID in URL, display the course index
                         console.log("No video ID in URL. Displaying course catalog.");
                          if (pageTitle) pageTitle.textContent = "Course Catalog";
-                         if (videoPlayerContent) videoPlayerContent.classList.add('hidden');
-                         if (courseIndexContent) courseIndexContent.classList.remove('hidden');
+                         if (videoPlayerContent) videoPlayerContent.classList.add('hidden'); // Ensure player is hidden
+                         if (courseIndexContent) courseIndexContent.classList.remove('hidden'); // Ensure index is visible
 
                         // Fetch all videos and render the index
                          fetchAllVideosAndRenderIndex();
@@ -629,8 +621,8 @@
                  const indexLoadingMessageElement = document.getElementById('indexLoadingMessage');
                  if (!courseIndexContentDiv || !indexLoadingMessageElement) return;
 
-                 clearMessage(indexLoadingMessageElement);
-                 showMessage(indexLoadingMessageElement, "Loading course catalog...", 'info');
+                 clearMessage(indexLoadingMessageElement); // Clear previous content
+                 showMessage(indexLoadingMessageElement, "Loading course catalog...", 'info'); // Show loading message
 
                  console.log("Fetching all videos from backend for catalog.");
 
@@ -639,12 +631,12 @@
                      if (!response.ok) {
                          console.error('Failed to fetch all videos:', response.status, response.statusText);
                           showMessage(indexLoadingMessageElement, `Error loading courses: ${response.statusText}`, 'error');
-                         return;
+                         return; // Stop if fetch fails
                      }
                      const videosData = await response.json();
                      console.log('All videos data fetched:', videosData);
 
-                     clearMessage(indexLoadingMessageElement);
+                     clearMessage(indexLoadingMessageElement); // Clear loading message
 
                      if (!Array.isArray(videosData) || videosData.length === 0) {
                           showMessage(courseIndexContentDiv, 'No courses or videos available yet. Admin needs to add them.', 'secondary');
@@ -652,6 +644,7 @@
                           return;
                      }
 
+                     // --- Render the Course Index from Fetched Video Data ---
                      renderCourseIndex(videosData);
 
 
@@ -661,20 +654,23 @@
                  }
              }
 
-             // --- Function to Render the Course Index from Video Data Array (Header + Grid Layout) ---
+             // --- Function to Render the Course Index from Video Data Array ---
              function renderCourseIndex(videosData) {
                   const courseIndexContentDiv = document.getElementById('courseIndexContent');
                   if (!courseIndexContentDiv) return;
 
-                 courseIndexContentDiv.innerHTML = '';
+                 courseIndexContentDiv.innerHTML = ''; // Clear current content area
 
                  if (videosData.length === 0) {
+                     // This case is already handled by fetchAllVideosAndRenderIndex, but as a fallback
                       showMessage(courseIndexContentDiv, 'No courses or videos available to render.', 'secondary');
                      return;
                  }
 
+                 // Group videos by module/track
                  const modules = {};
                  videosData.forEach(video => {
+                      // Ensure videoModule exists, use a default if not
                       const moduleName = video.videoModule || 'Uncategorized';
                       if (!modules[moduleName]) {
                            modules[moduleName] = [];
@@ -682,21 +678,23 @@
                        modules[moduleName].push(video);
                    });
 
-                  // Define display titles and descriptions for modules/tracks
-                  const moduleDisplayInfo = {
-                       'Statistics': { title: '📊 Statistics Fundamentals', description: 'Learn the basics of statistical analysis.'},
-                       'Excel': { title: '📈 Excel for Data Analysis', description: 'Master Excel for data manipulation and analysis.'},
-                       'SQL': { title: '🗄️ SQL for Analytics', description: 'Query and manage data using SQL.'},
-                       'data-analyst': { title: '🟦 Data Analyst Track', description: 'Comprehensive path for aspiring data analysts. Includes Statistics, Excel, and SQL basics.'},
-                       'business-analyst': { title: '🟨 Business Analyst Track', description: 'Build on fundamentals with business concepts and tools.'},
-                       'data-scientist': { title: '🟥 Data Scientist Track', description: 'Dive into advanced statistics, machine learning, and algorithms.'},
-                       'big-data': { title: '🟩 Big Data & Cloud Tools', description: 'Explore technologies for large-scale data.'},
-                       'Uncategorized': { title: '❓ Uncategorized Videos', description: 'Videos not assigned to a specific module.'}
+                 // Get module titles and symbols (You might want to store these in DB/backend)
+                  const moduleTitles = {
+                       'Statistics': '📊 Statistics Fundamentals',
+                       'Excel': '📈 Excel for Data Analysis',
+                       'SQL': '🗄️ SQL for Analytics',
+                      'data-analyst': '🟦 MODULE 1: Data Analyst Track', // Include previous examples
+                      'business-analyst': '🟨 MODULE 2: Business Analyst Track',
+                      'data-scientist': '🟥 MODULE 3: Data Scientist Track',
+                      'big-data': '🟩 BONUS MODULE: Big Data & Cloud Tools',
+                      'Uncategorized': '❓ Uncategorized Videos', // Handle uncategorized
                    };
 
-                 const moduleKeys = Object.keys(modules).sort(); // Sort module keys alphabetically
+                 // Render modules and topics
+                 const moduleKeys = Object.keys(modules).sort(); // Sort modules alphabetically
 
                  if (moduleKeys.length === 0) {
+                      // Should not happen if videosData is not empty and all have modules, but as a fallback
                       showMessage(courseIndexContentDiv, 'No course modules defined in data. Videos might be missing module names.', 'secondary');
                       return;
                    }
@@ -704,47 +702,40 @@
 
                  moduleKeys.forEach(moduleKey => {
                      const moduleVideos = modules[moduleKey];
-                     moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle)); // Sort videos alphabetically within module
+                      // Sort videos within the module by video title
+                     moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
 
-                     // Create a section for each module
                      const moduleSection = document.createElement('section');
-                     moduleSection.classList.add('module-section'); // Class for the module container
+                     moduleSection.classList.add('course-module');
 
-                     const displayInfo = moduleDisplayInfo[moduleKey] || { title: `📚 ${moduleKey}`, description: 'Videos in this module.' };
-
-                     // Add the module heading
-                     const moduleHeading = document.createElement('h2');
-                     moduleHeading.classList.add('module-heading'); // Class for the module heading
-                     moduleHeading.textContent = displayInfo.title;
-                     moduleSection.appendChild(moduleHeading);
-
-                      // Add the module description (optional, based on screenshot)
-                      // const moduleDescription = document.createElement('p');
-                      // moduleDescription.classList.add('module-description');
-                      // moduleDescription.textContent = displayInfo.description;
-                      // moduleSection.appendChild(moduleDescription);
+                     // Use the full module title from the map, fallback to moduleKey
+                      const fullModuleTitle = moduleTitles[moduleKey] || `📚 ${moduleKey}`;
 
 
-                     // Create the grid container for topics
-                     const topicCardsGrid = document.createElement('div');
-                     topicCardsGrid.classList.add('topic-cards-grid'); // Class for the grid
+                     moduleSection.innerHTML = `
+                         <h2>${fullModuleTitle}</h2>
+                         <p class="module-goal">Browse videos in this module.</p> <div class="topic-list-grid">
+                         </div>
+                     `;
+
+                     const topicListGrid = moduleSection.querySelector('.topic-list-grid');
 
                      moduleVideos.forEach(video => {
                          const topicCardLink = document.createElement('a');
-                         topicCardLink.href = `courses.html?video=${video.topicId}`;
-                         topicCardLink.classList.add('topic-card'); // Class for individual topic cards
+                         topicCardLink.href = `courses.html?video=${video.topicId}`; // Link to the video player view
+                         topicCardLink.classList.add('topic-card');
 
-                          // Simplified card content based on screenshot (Title and minimal details)
                          topicCardLink.innerHTML = `
                              <h4>${video.videoTitle}</h4>
-                              <p class="topic-card-details">Some details</p> `;
-                         topicCardsGrid.appendChild(topicCardLink); // Append to the grid
+                             <p>${video.videoDescription || 'No description available.'}</p>
+                             <span class="view-video-link"><i class="fas fa-video"></i> Watch ${video.videoUrl && video.videoUrl.includes('list=') ? 'Playlist' : 'Video'}</span> `;
+                         topicListGrid.appendChild(topicCardLink);
                      });
 
-                     moduleSection.appendChild(topicCardsGrid); // Append the grid to the module section
-                     courseIndexContentDiv.appendChild(moduleSection); // Append the module section to the main content div
+                     courseIndexContentDiv.appendChild(moduleSection);
                  });
 
+                 // Add the coming soon message at the end
                  const comingSoonMessage = document.createElement('p');
                  comingSoonMessage.classList.add('coming-soon');
                  comingSoonMessage.textContent = '🚧 More categories and videos coming soon...';
