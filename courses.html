@@ -38,7 +38,7 @@
                 <h2 id="videoTitle"></h2> <div class="video-notes-layout">
                     <div class="video-player-section">
                          <div id="youtubePlayer"></div>
-                         <p id="resumeMessage" style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-top: 10px; display: none;"></p>
+                         <p id="resumeMessage" class="message" style="display: none;"></p>
                           <div id="playlistItemsContainer" class="hidden">
                                <h4>Playlist Videos:</h4>
                                <ul id="playlistItemsList">
@@ -63,7 +63,6 @@
 
 
             // --- Authentication Check ---
-            // This runs at the very start to protect the page
              const userAuthLocal = localStorage.getItem('userAuthenticated') === 'true';
              const userAuthSession = sessionStorage.getItem('userAuthenticated') === 'true';
              const adminAuthLocal = localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
@@ -85,7 +84,8 @@
 
             // --- YouTube Player API Script ---
             var tag = document.createElement('script');
-             tag.src = "http://www.youtube.com/iframe_api"; // Correct API URL
+             // Corrected YouTube API URL - Ensure this is the standard one
+             tag.src = "https://www.youtube.com/iframe_api";
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -191,8 +191,8 @@
 
                       try {
                            const url = new URL(videoDetails.videoUrl);
-                           // Corrected YouTube URL check to include common YouTube hosts
-                           if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be') || url.hostname === 'youtu.be' || url.hostname === 'youtube.com' || url.hostname.includes('https://www.youtube.com/watch?v=la8xtsRbqRY') || url.hostname.includes('https://www.youtube.com/watch?v=NwnZU6mWJkk3')) {
+                           // Check for standard YouTube domains
+                           if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
                                 if (url.searchParams.get('list')) {
                                     isPlaylist = true;
                                     youtubeId = url.searchParams.get('list');
@@ -200,16 +200,19 @@
                                 } else if (url.searchParams.get('v')) {
                                     youtubeId = url.searchParams.get('v');
                                      console.log('Detected YouTube video ID from v parameter:', youtubeId);
-                                } else {
-                                     // Handle youtu.be/VIDEO_ID or youtu.be format by checking path
+                                } else if (url.hostname === 'youtu.be') {
+                                     // Handle youtu.be short URLs
                                      const pathSegments = url.pathname.split('/').filter(segment => segment);
-                                      if (pathSegments.length > 0 && pathSegments[0] === 'watch' && url.searchParams.get('v')) {
-                                           youtubeId = url.searchParams.get('v'); // Double check 'v' param for /watch paths
-                                            console.log('Detected YouTube video ID from /watch path and v parameter:', youtubeId);
-                                      } else if (pathSegments.length > 0 && !pathSegments[0].includes('watch')) {
-                                          // Assume the last segment is the video ID if not a /watch path (e.g., youtu.be/VIDEO_ID)
-                                           youtubeId = pathSegments[pathSegments.length - 1];
-                                            console.log('Detected YouTube video ID from path segment:', youtubeId);
+                                     if (pathSegments.length > 0) {
+                                          youtubeId = pathSegments[0];
+                                           console.log('Detected YouTube video ID from youtu.be path:', youtubeId);
+                                     }
+                                } else {
+                                     // Handle /embed/ or other path formats if necessary
+                                     const pathSegments = url.pathname.split('/').filter(segment => segment);
+                                      if (pathSegments.length > 1 && pathSegments[0] === 'embed') {
+                                          youtubeId = pathSegments[1];
+                                          console.log('Detected YouTube video ID from /embed/ path:', youtubeId);
                                       }
                                 }
                            } else {
@@ -239,7 +242,7 @@
                      if (typeof YT !== 'undefined' && YT.Player && youtubePlayerDiv) {
                           const playerOptions = {
                               height: '390',
-                              width: '640', // Adjust width if needed based on CSS layout
+                              width: '100%', // Use 100% width and let CSS container handle responsive
                               playerVars: {
                                   'autoplay': 1,
                                   'controls': 1,
@@ -259,19 +262,20 @@
                               playerOptions.playerVars.listType = 'playlist';
                               playerOptions.playerVars.list = youtubeId;
                                console.log("Loading YouTube Playlist with ID:", youtubeId);
-                               // Show the playlist items container (even if empty for now)
                                const playlistItemsContainer = document.getElementById('playlistItemsContainer');
                                if (playlistItemsContainer) playlistItemsContainer.classList.remove('hidden');
+                               // TODO: Fetch playlist items from YouTube Data API and populate #playlistItemsList
+                               // This requires a Google API key and separate API calls.
+                               console.warn("Playlist item listing is not yet implemented (requires YouTube Data API).");
 
                           } else {
                               playerOptions.videoId = youtubeId;
                                console.log("Loading YouTube Video with ID:", youtubeId);
-                               // Hide the playlist items container for single videos
                                const playlistItemsContainer = document.getElementById('playlistItemsContainer');
                                if (playlistItemsContainer) playlistItemsContainer.classList.add('hidden');
                           }
 
-                           youtubePlayerDiv.innerHTML = ''; // Clear previous player content
+                           youtubePlayerDiv.innerHTML = '';
 
                           player = new YT.Player('youtubePlayer', playerOptions);
                           console.log("YouTube Player initiated.");
@@ -356,10 +360,6 @@
                      return;
                  }
 
-                 // Clear previous messages but don't immediately show "Saving..." to avoid flicker on quick typing
-                 // clearMessage(notesMessageElement);
-                 // showMessage(notesMessageElement, "Saving notes...", 'info'); // Optional: if you want immediate feedback
-
                  console.log(`Attempting to save notes for user '${username}' and topic_id '${topicId}'`);
 
                  try {
@@ -380,10 +380,10 @@
 
                        const successData = await response.json();
                        console.log('Notes save success:', successData);
-                       showMessage(notesMessageElement, successData.message || 'Notes saved!', 'success'); // Shorter message
+                       showMessage(notesMessageElement, successData.message || 'Notes saved!', 'success');
 
 
-                       setTimeout(() => { clearMessage(notesMessageElement); }, 2000); // Hide message faster
+                       setTimeout(() => { clearMessage(notesMessageElement); }, 2000);
 
                  } catch (error) {
                       console.error('Error during notes save fetch:', error);
@@ -405,17 +405,14 @@
                  console.log(`Workspaceing progress for user '${username}' and topic_id '${topicId}'`);
 
                  try {
-                     const response = await fetch(`http://127.0.0.0.1:5000/progress/${username}/${topicId}`); // Corrected IP address - was 127.0.0.0.1
-                     // Backend should ideally return 404 if no progress
+                     const response = await fetch(`http://127.0.0.1:5000/progress/${username}/${topicId}`); // Corrected IP address if needed
                      if (response.status === 404) {
                          console.log(`No existing progress found for ${username} / ${topicId} (404).`);
-                         return; // Stop here if 404
+                         return;
                      }
                      if (!response.ok) {
                           console.error('Backend progress fetch failed with unexpected status:', response.status, response.statusText);
-                          // Optional: Show an error message if status is unexpected
-                          // showMessage(resumeMessageElement, `Error loading progress: ${response.statusText}`, 'error');
-                         return; // Stop if fetch fails
+                         return;
                      }
                      const progressData = await response.json();
                      console.log('Progress data fetched:', progressData);
@@ -437,7 +434,7 @@
                                     setTimeout(() => { clearMessage(resumeMessageElement); }, 8000);
                                } else {
                                    console.log("Player not yet ready for seeking, waiting...");
-                                    setTimeout(seekWhenReady, 100); // Retry after 100ms
+                                    setTimeout(seekWhenReady, 100);
                                }
                            }
 
@@ -519,7 +516,6 @@
 
             function onPlayerReady(event) {
                  console.log('YouTube Player is ready');
-                 // fetchAndLoadProgress calls seekWhenReady which handles player readiness.
             }
 
             function onPlayerStateChange(event) {
@@ -556,7 +552,7 @@
             }
 
 
-            // --- Event Listener for Note Saving (Auto-save while typing) ---
+            // --- Event Listener for Note Saving (Auto-save while typing & on blur) ---
              document.addEventListener('DOMContentLoaded', function() {
                   const notesTextarea = document.getElementById('videoNotes');
                    const loggedInUsername = localStorage.getItem(LOGGED_IN_USERNAME_KEY) || sessionStorage.getItem(LOGGED_IN_USERNAME_KEY);
@@ -567,18 +563,15 @@
                            clearTimeout(saveNotesTimer);
                            saveNotesTimer = setTimeout(() => {
                                 const noteContent = notesTextarea.value;
-                                // Ensure currentVideoTopicId is set before attempting to save
                                  if (currentVideoTopicId) {
                                       saveNotes(loggedInUsername, currentVideoTopicId, noteContent);
                                  } else {
                                       console.warn("Cannot auto-save notes: Video Topic ID not set.");
-                                      // Optional: Show message to user "Cannot save notes until video loads"
                                  }
                            }, 1000);
                        });
-                       // Also save when leaving the page or element loses focus for final changes
                        notesTextarea.addEventListener('blur', function() {
-                           clearTimeout(saveNotesTimer); // Clear any pending auto-save timer
+                           clearTimeout(saveNotesTimer);
                            const noteContent = notesTextarea.value;
                             if (currentVideoTopicId) {
                                  saveNotes(loggedInUsername, currentVideoTopicId, noteContent);
@@ -617,13 +610,10 @@
 
                     if (videoTopicIdInUrl) {
                         console.log(`Video ID "${videoTopicIdInUrl}" found in URL. Switching to player view.`);
-                        // Initial state setup
                         if (courseIndexContent) courseIndexContent.classList.add('hidden');
                         if (videoPlayerContent) videoPlayerContent.classList.remove('hidden');
                          if (pageTitle) pageTitle.textContent = "Loading Video...";
                          if (indexLoadingMessage) indexLoadingMessage.style.display = 'none';
-
-                         // fetchVideoAndLoadPlayer is called by onYouTubeIframeAPIReady
 
 
                     } else {
@@ -682,14 +672,13 @@
                   const courseIndexContentDiv = document.getElementById('courseIndexContent');
                   if (!courseIndexContentDiv) return;
 
-                 courseIndexContentDiv.innerHTML = ''; // Clear current content area
+                 courseIndexContentDiv.innerHTML = '';
 
                  if (videosData.length === 0) {
                       showMessage(courseIndexContentDiv, 'No courses or videos available to render.', 'secondary');
                      return;
                  }
 
-                 // Group videos by module/track
                  const modules = {};
                  videosData.forEach(video => {
                       const moduleName = video.videoModule || 'Uncategorized';
@@ -699,15 +688,15 @@
                        modules[moduleName].push(video);
                    });
 
-                  // Define display titles and symbols for modules
+                  // Define display titles and descriptions for modules/tracks
                   const moduleDisplayInfo = {
                        'Statistics': { title: '📊 Statistics Fundamentals', description: 'Learn the basics of statistical analysis.'},
                        'Excel': { title: '📈 Excel for Data Analysis', description: 'Master Excel for data manipulation and analysis.'},
                        'SQL': { title: '🗄️ SQL for Analytics', description: 'Query and manage data using SQL.'},
-                       'data-analyst': { title: '🟦 Data Analyst Track', description: 'Comprehensive path for aspiring data analysts.'},
-                       'business-analyst': { title: '🟨 Business Analyst Track', description: 'Apply data skills to business problems.'},
-                       'data-scientist': { title: '🟥 Data Scientist Track', description: 'Advanced topics in data science.'},
-                       'big-data': { title: '🟩 Big Data & Cloud Tools', description: 'Explore tools for large-scale data.'},
+                       'data-analyst': { title: '🟦 Data Analyst Track', description: 'Comprehensive path for aspiring data analysts. Includes Statistics, Excel, and SQL basics.'}, // Added description
+                       'business-analyst': { title: '🟨 Business Analyst Track', description: 'Build on fundamentals with business concepts and tools.'},
+                       'data-scientist': { title: '🟥 Data Scientist Track', description: 'Dive into advanced statistics, machine learning, and algorithms.'},
+                       'big-data': { title: '🟩 Big Data & Cloud Tools', description: 'Explore technologies for large-scale data.'},
                        'Uncategorized': { title: '❓ Uncategorized Videos', description: 'Videos not assigned to a specific module.'}
                    };
 
@@ -724,31 +713,32 @@
                      moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle)); // Sort videos alphabetically within module
 
                      const moduleSection = document.createElement('section');
-                     moduleSection.classList.add('course-module-card'); // Use a new class for the main module/track card
+                     moduleSection.classList.add('track-card'); // Use 'track-card' class for the main module/track card
 
                      const displayInfo = moduleDisplayInfo[moduleKey] || { title: `📚 ${moduleKey}`, description: 'Videos in this module.' };
 
 
                      moduleSection.innerHTML = `
                          <h2>${displayInfo.title}</h2>
-                         <p class="module-description">${displayInfo.description}</p>
-                         <div class="topic-list-grid">
+                         <p class="track-description">${displayInfo.description}</p>
+                         <div class="topic-grid">
                              </div>
                      `;
 
-                     const topicListGrid = moduleSection.querySelector('.topic-list-grid');
+                     const topicGrid = moduleSection.querySelector('.topic-grid'); // Corrected selector
 
                      moduleVideos.forEach(video => {
                          const topicCardLink = document.createElement('a');
                          topicCardLink.href = `courses.html?video=${video.topicId}`; // Link to the video player view
-                         topicCardLink.classList.add('topic-card');
+                         topicCardLink.classList.add('video-topic-card'); // Use 'video-topic-card' for nested video cards
 
                          topicCardLink.innerHTML = `
                              <h4>${video.videoTitle}</h4>
                              <p>${video.videoDescription || 'No description available.'}</p>
-                             <span class="view-video-link"><i class="fas fa-video"></i> Watch ${video.videoUrl && video.videoUrl.includes('list=') ? 'Playlist' : 'Video'}</span>
-                             ${video.totalDuration ? `<span><i class="far fa-clock"></i> ${formatTimeToHHMMSS(video.totalDuration)}</span>` : ''} `;
-                         topicListGrid.appendChild(topicCardLink);
+                             <span class="watch-link"><i class="fas fa-video"></i> Watch ${video.videoUrl && video.videoUrl.includes('list=') ? 'Playlist' : 'Video'}</span>
+                             ${video.totalDuration ? `<span class="video-duration"><i class="far fa-clock"></i> ${formatTimeToHHMMSS(video.totalDuration)}</span>` : ''}
+                         `;
+                         topicGrid.appendChild(topicCardLink); // Append to topicGrid
                      });
 
                      courseIndexContentDiv.appendChild(moduleSection);
