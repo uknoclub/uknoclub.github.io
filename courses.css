@@ -15,6 +15,10 @@
     --info-color: #17a2b8; /* Info blue */
     --message-secondary: #6c757d; /* Muted gray for secondary messages */
     --topic-card-bg: #4a4a4a; /* Slightly darker card background for topics */
+    --header-bg: #2b2b2b; /* Dark background for header */
+    --hover-bg: #4f4f4f; /* Background on hover for list items */
+    --progress-fill: #4CAF50; /* Green for progress indicators */
+
 }
 
 /* General Body and Container Styling (Dark Theme with Background Image) */
@@ -148,32 +152,26 @@ body {
 }
 
 
-/* --- Course Catalog Index View Styles (Nested Cards Layout) --- */
+/* --- Course Catalog Index View Styles (Heading + Grid Below Layout) --- */
 
-/* Style for the main Track/Module card */
-.track-card {
-    background-color: var(--bg-card); /* Use card background variable for the main card */
-    border: 1px solid var(--border); /* Use border variable */
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px; /* Space between track cards */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    display: flex; /* Use flex or block, layout of contents is important */
-    flex-direction: column; /* Stack heading, goal, and grid inside */
+/* Container for each module section (heading + grid) */
+.module-section {
+    margin-bottom: 30px; /* Space between module sections */
+    /* No background or border here, just groups heading and grid */
 }
 
-/* Style for the heading inside the main track card */
-.track-heading {
+/* Style for the module heading (e.g., Data Analyst Track) */
+.module-heading {
     font-size: 1.8rem;
-    color: var(--primary); /* Use primary accent for track headings */
+    color: var(--primary); /* Use primary accent for headings (RED) */
     margin-top: 0;
-    margin-bottom: 10px; /* Space below heading */
-    border-bottom: 2px solid var(--primary); /* Underline for the heading */
+    margin-bottom: 10px; /* Space below heading before goal or grid */
+    border-bottom: 2px solid var(--primary); /* Add red underline matching the image */
     padding-bottom: 10px;
 }
 
-/* Style for the goal/description inside the main track card */
-.track-goal {
+/* Style for the goal/description below the module heading */
+.module-goal {
     font-size: 1rem;
     color: var(--text-secondary);
     margin-top: 0;
@@ -181,12 +179,12 @@ body {
 }
 
 
-/* Grid for Topic (Video) cards *INSIDE* the main track card */
+/* Grid for Topic (Video) cards *BELOW* the module heading */
 .topic-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid for topics */
     gap: 20px; /* Space between topic cards */
-    /* No background or border here, as they are on the .track-card */
+    /* This grid container itself is not a card */
 }
 
 /* Style for individual Topic (Video) cards *INSIDE* the grid */
@@ -444,10 +442,11 @@ body {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 15px;
     }
-     .track-heading { /* Adjusted class name */
+     .module-heading { /* Adjusted class name */
          font-size: 1.5rem;
+         border-bottom-width: 1px; /* Thinner border on small screens */
      }
-     .track-goal {
+     .module-goal {
          font-size: 0.9rem;
      }
      .topic-card { /* Adjusted class name */

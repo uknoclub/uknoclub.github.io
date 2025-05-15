@@ -236,7 +236,7 @@
                            if (pageTitleElement) pageTitleElement.textContent = "Video Error";
                            if (videoPlayerContentDiv) videoPlayerContentDiv.innerHTML = '<p class="message message-error">The video URL format is invalid.</p>';
                           return;
-                      }
+                     }
 
 
                      if (!youtubeId) {
@@ -476,17 +476,17 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(progressData),
-                        });
+                           },
+                           body: JSON.stringify(progressData),
+                       });
 
-                        if (!response.ok) {
-                            console.error('Failed to save progress:', response.status, response.statusText);
-                        } else {
-                             // console.log('Progress saved successfully.');
-                        }
+                       if (!response.ok) {
+                           console.error('Failed to save progress:', response.status, response.statusText);
+                       } else {
+                            // console.log('Progress saved successfully.');
+                       }
                    } catch (error) {
-                        console.error('Error during save progress fetch:', error);
+                       console.error('Error during save progress fetch:', error);
                    }
              }
 
@@ -498,7 +498,7 @@
                  }
                  console.log(`Marking video ${topicId} as completed for user ${username}.`);
 
-                 const completeUrl = `http://127.0.0.1:5000/progress/complete/${username}/${topicId}`;
+                 const completeUrl = `http://127.0.0.0/progress/complete/${username}/${topicId}`;
 
                  try {
                       const response = await fetch(completeUrl, {
@@ -637,7 +637,7 @@
              }); // End of DOMContentLoaded
 
 
-            // --- Function to Fetch All Videos and Render the Course Index (Nested Cards) ---
+            // --- Function to Fetch All Videos and Render the Course Index (Heading + Grid Below) ---
             async function fetchAllVideosAndRenderIndex() {
                 const courseIndexContentDiv = document.getElementById('courseIndexContent');
                  const indexLoadingMessageElement = document.getElementById('indexLoadingMessage');
@@ -675,7 +675,7 @@
                  }
              }
 
-             // --- Function to Render the Course Index from Video Data Array (Nested Cards Layout) ---
+             // --- Function to Render the Course Index from Video Data Array (Heading + Grid Below Layout) ---
              function renderCourseIndex(videosData) {
                   const courseIndexContentDiv = document.getElementById('courseIndexContent');
                   if (!courseIndexContentDiv) return;
@@ -704,7 +704,7 @@
                        'business-analyst': { title: '🟨 MODULE 2: Business Analyst Track', goal: 'Learn tools to interpret and present business insights, focusing on decision-making, reporting, and stakeholder communication.'},
                        'data-scientist': { title: '🟥 MODULE 3: Data Scientist Track', goal: 'Learn modeling, prediction, and advanced data processing using ML and AI.'},
                        'big-data': { title: '🟩 BONUS MODULE: Big Data & Cloud Tools', goal: 'Learn to work with massive datasets using scalable tools and platforms.'},
-                       // Add other potential standalone modules here if they exist
+                       // Also include individual topic names if they are used as module names in backend
                         'Statistics': { title: 'STATISTICS'},
                         'Excel': { title: 'EXCEL'},
                         'SQL': { title: 'SQL'},
@@ -728,7 +728,7 @@
                      'business-analyst',
                      'data-scientist',
                      'big-data',
-                     // Add individual topics/modules here if they should appear as their own main card
+                     // Add individual topics/modules here if they should appear as their own main section
                       'Statistics', 'Excel', 'SQL', 'Power BI', 'Tableau',
                       'Python', 'R', 'SPSS', 'Business Decision Making',
                       'Machine Learning Basics', 'Deep Learning & Neural Networks', 'Artificial Intelligence Concepts',
@@ -746,35 +746,41 @@
                       return;
                    }
 
+                 // Optional: Add a main heading for the entire catalog section if desired
+                 // const mainCatalogHeading = document.createElement('h2');
+                 // mainCatalogHeading.classList.add('main-catalog-heading');
+                 // mainCatalogHeading.textContent = 'Course Catalog'; // Or 'Available Tracks/Courses'
+                 // courseIndexContentDiv.appendChild(mainCatalogHeading);
+
 
                  orderedModuleKeys.forEach(moduleKey => {
                      const moduleVideos = modules[moduleKey];
                      moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle)); // Sort videos alphabetically within module
 
-                     // Create the main card for this track/module
-                     const trackCard = document.createElement('section');
-                     trackCard.classList.add('track-card'); // Class for the main module card
+                     // Create a section for each module (containing heading and grid)
+                     const moduleSection = document.createElement('section');
+                     moduleSection.classList.add('module-section'); // Container for module heading and grid
 
                      const displayInfo = moduleDisplayInfo[moduleKey] || { title: moduleKey, goal: '' };
 
-                     // Add the heading inside the track card
-                     const trackHeading = document.createElement('h2');
-                     trackHeading.classList.add('track-heading'); // Class for heading inside the main card
-                     trackHeading.textContent = displayInfo.title;
-                     trackCard.appendChild(trackHeading);
+                     // Add the module heading
+                     const moduleHeading = document.createElement('h2');
+                     moduleHeading.classList.add('module-heading'); // Class for the module heading
+                     moduleHeading.textContent = displayInfo.title;
+                     moduleSection.appendChild(moduleHeading);
 
-                     // Add the module goal/description inside the track card if available
+                     // Add the module goal/description if available
                      if (displayInfo.goal) {
-                         const trackGoal = document.createElement('p');
-                         trackGoal.classList.add('track-goal'); // Class for goal inside the main card
-                         trackGoal.textContent = `Goal: ${displayInfo.goal}`;
-                         trackCard.appendChild(trackGoal);
+                         const moduleGoal = document.createElement('p');
+                         moduleGoal.classList.add('module-goal');
+                         moduleGoal.textContent = `Goal: ${displayInfo.goal}`;
+                         moduleSection.appendChild(moduleGoal);
                      }
 
 
-                     // Create the grid container *inside* the track card for topic cards
+                     // Create the grid container *below* the module heading for topic cards
                      const topicCardsGrid = document.createElement('div');
-                     topicCardsGrid.classList.add('topic-cards-grid'); // Class for the grid *inside* the main card
+                     topicCardsGrid.classList.add('topic-cards-grid'); // Class for the grid *below* the heading
 
                      moduleVideos.forEach(video => {
                          const topicCardLink = document.createElement('a');
@@ -784,12 +790,12 @@
                           // Card content based on screenshot (Title) and backend data (description)
                          topicCardLink.innerHTML = `
                              <h4>${video.videoTitle.toUpperCase()}</h4> <p class="topic-card-details">${video.videoDescription || 'Some details'}</p> `;
-                         topicCardsGrid.appendChild(topicCardLink); // Append to the grid inside the track card
+                         topicCardsGrid.appendChild(topicCardLink); // Append to the grid below the heading
                      });
 
-                     trackCard.appendChild(topicCardsGrid); // Append the grid to the main track card
+                     moduleSection.appendChild(topicCardsGrid); // Append the grid to the module section
 
-                     courseIndexContentDiv.appendChild(trackCard); // Append the main track card to the main content div
+                     courseIndexContentDiv.appendChild(moduleSection); // Append the module section (heading + grid) to the main content div
 
                  });
 
