@@ -219,6 +219,15 @@ body {
     color: var(--text-secondary); /* Secondary text color */
 }
 
+/* Separator line between main modules */
+.module-separator {
+    border: none;
+    height: 1px;
+    background-color: var(--border); /* Use border color for the line */
+    margin: 40px 0; /* Space above and below the separator */
+    width: 100%;
+}
+
 
 .coming-soon {
     text-align: center;
@@ -263,7 +272,7 @@ body {
 .video-notes-layout {
     display: flex;
     gap: 30px;
-    flex-wrap: wrap; /* Allows stacking on small screens */
+    flex-wrap: wrap;
 }
 
 .video-player-section {

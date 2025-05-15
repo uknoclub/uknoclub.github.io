@@ -696,30 +696,43 @@
                        modules[moduleName].push(video);
                    });
 
-                  // Define display titles for modules/tracks based on your provided content structure
+                  // Define display titles and goals for modules/tracks based on your provided content structure
                   // The keys here should match the videoModule values you add in the admin panel
                   const moduleDisplayInfo = {
                        'data-analyst': { title: '🟦 MODULE 1: Data Analyst Track', goal: 'Learn tools to analyze and visualize data using spreadsheets, SQL, and BI tools.'},
                        'business-analyst': { title: '🟨 MODULE 2: Business Analyst Track', goal: 'Learn tools to interpret and present business insights, focusing on decision-making, reporting, and stakeholder communication.'},
                        'data-scientist': { title: '🟥 MODULE 3: Data Scientist Track', goal: 'Learn modeling, prediction, and advanced data processing using ML and AI.'},
                        'big-data': { title: '🟩 BONUS MODULE: Big Data & Cloud Tools', goal: 'Learn to work with massive datasets using scalable tools and platforms.'},
-                       'Statistics': { title: 'STATISTICS'}, // Assuming 'Statistics' is a module itself or a topic sometimes listed as a module
-                       'Excel': { title: 'EXCEL'}, // Assuming 'Excel' is a module itself or a topic sometimes listed as a module
-                       'SQL': { title: 'SQL'}, // Assuming 'SQL' is a module itself or a topic sometimes listed as a module
-                       'Power BI': { title: 'POWER BI'}, // Assuming 'Power BI' is a module itself or a topic sometimes listed as a module
-                       'Tableau': { title: 'TABLEAU'}, // Assuming 'Tableau' is a module itself or a topic sometimes listed as a module
+                       'Statistics': { title: 'STATISTICS'}, // These might be module names or topics within a track
+                       'Excel': { title: 'EXCEL'},
+                       'SQL': { title: 'SQL'},
+                       'Power BI': { title: 'POWER BI'},
+                       'Tableau': { title: 'TABLEAU'},
                        'Uncategorized': { title: '❓ Uncategorized'}
                    };
 
-                 const moduleKeys = Object.keys(modules).sort(); // Sort module keys alphabetically
+                 // Order the modules as specified in your content structure if keys match
+                 const orderedModuleKeys = [
+                     'data-analyst',
+                     'business-analyst',
+                     'data-scientist',
+                     'big-data',
+                     // Add other potential standalone modules here if they exist
+                      'Statistics', 'Excel', 'SQL', 'Power BI', 'Tableau', 'Uncategorized'
+                 ].filter(key => modules[key]); // Filter to only include keys that have videos
 
-                 if (moduleKeys.length === 0) {
+                 // Add any remaining module keys that weren't in the ordered list (e.g., new modules)
+                 const remainingKeys = Object.keys(modules).filter(key => !orderedModuleKeys.includes(key));
+                  orderedModuleKeys.push(...remainingKeys.sort());
+
+
+                 if (orderedModuleKeys.length === 0) {
                       showMessage(courseIndexContentDiv, 'No course modules defined in data. Videos might be missing module names.', 'secondary');
                       return;
                    }
 
 
-                 moduleKeys.forEach(moduleKey => {
+                 orderedModuleKeys.forEach(moduleKey => {
                      const moduleVideos = modules[moduleKey];
                      moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle)); // Sort videos alphabetically within module
 
@@ -754,7 +767,7 @@
                          topicCardLink.classList.add('topic-card'); // Class for individual topic cards
 
                           // Card content based on screenshot (Title) and provided content (details/description)
-                          // You can decide how much detail you want here. Using videoDescription from backend is good.
+                          // Use backend videoTitle (uppercase) and videoDescription
                          topicCardLink.innerHTML = `
                              <h4>${video.videoTitle.toUpperCase()}</h4> <p class="topic-card-details">${video.videoDescription || 'Some details'}</p> `;
                          topicCardsGrid.appendChild(topicCardLink); // Append to the grid
@@ -762,6 +775,14 @@
 
                      moduleSection.appendChild(topicCardsGrid); // Append the grid to the module section
                      courseIndexContentDiv.appendChild(moduleSection); // Append the module section to the main content div
+
+                     // Add a separator line after each major module section, except the last one
+                     if (['data-analyst', 'business-analyst', 'data-scientist', 'big-data'].includes(moduleKey) && orderedModuleKeys.indexOf(moduleKey) < orderedModuleKeys.length - 1) {
+                         const separator = document.createElement('hr');
+                         separator.classList.add('module-separator');
+                         courseIndexContentDiv.appendChild(separator);
+                     }
+
                  });
 
                  const comingSoonMessage = document.createElement('p');
