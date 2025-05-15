@@ -148,11 +148,11 @@ body {
 }
 
 
-/* --- Course Catalog Index View Styles (Matching Screenshot Design) --- */
+/* --- Course Catalog Index View Styles (Heading + Single Card Layout) --- */
 
-/* Container for each module section (heading + grid) */
+/* Container for each module section (heading + card) */
 .module-section {
-    margin-bottom: 30px;
+    margin-bottom: 30px; /* Space between module sections */
 }
 
 /* Style for the module heading */
@@ -160,72 +160,58 @@ body {
     font-size: 1.8rem;
     color: var(--primary); /* Use primary accent for headings */
     margin-top: 0;
-    margin-bottom: 10px; /* Reduced space below heading */
+    margin-bottom: 15px; /* Space below heading */
     /* Removed border and padding-bottom to match screenshot */
     /* border-bottom: 2px solid var(--primary); */
     /* padding-bottom: 10px; */
 }
 
-.module-goal {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin-top: 0;
-    margin-bottom: 20px; /* Space below goal */
-}
-
-
-/* Grid for Topic (Video) cards BELOW the module heading */
-.topic-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
-    gap: 20px;
-}
-
-/* Style for individual Topic (Video) cards */
-.topic-card {
-    display: block;
-    background-color: var(--topic-card-bg); /* Use topic card background variable */
+/* Style for the single Video/Topic card directly below the heading */
+.video-card-single {
+    display: block; /* Make the link a block element to take space */
+    background-color: var(--bg-card); /* Use card background variable */
     border: 1px solid var(--border); /* Use border variable */
     border-radius: 8px; /* Rounded corners */
-    padding: 15px;
+    padding: 20px;
     text-decoration: none;
     color: var(--text-main); /* Use main text variable */
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     overflow: hidden;
-    text-align: center;
-    display: flex;
+    display: flex; /* Use flex for internal layout if needed */
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 120px; /* Consistent height */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.topic-card:hover {
-    transform: translateY(-5px);
+.video-card-single:hover {
+    transform: translateY(-5px); /* Lift effect */
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     border-color: var(--primary); /* Accent border on hover */
 }
 
-.topic-card h4 {
-    margin: 0 0 5px 0;
-    font-size: 1.1rem;
+.video-card-single h4 {
+    margin-top: 0;
+    margin-bottom: 5px; /* Space below title */
+    font-size: 1.2rem;
     color: var(--text-main); /* White title text */
 }
 
-.topic-card .topic-card-details {
-    margin: 0;
-    font-size: 0.9rem;
+.video-card-single .video-card-details {
+    margin-bottom: 10px; /* Space below details */
+    font-size: 0.95rem;
     color: var(--text-secondary); /* Secondary text color */
 }
 
-/* Separator line between main modules */
-.module-separator {
-    border: none;
-    height: 1px;
-    background-color: var(--border); /* Use border color for the line */
-    margin: 40px 0; /* Space above and below the separator */
-    width: 100%;
+.video-card-single .watch-link {
+    display: flex; /* Use flex to align icon and text */
+    align-items: center;
+    font-size: 1rem;
+    color: var(--primary); /* Accent color for the watch link */
+    font-weight: 500;
+    margin-top: auto; /* Push to the bottom if flex column */
+}
+
+.video-card-single .watch-link i {
+    margin-right: 8px;
+    font-size: 1.1rem;
 }
 
 
@@ -440,23 +426,8 @@ body {
         width: 100%;
         min-width: auto;
     }
-     .topic-cards-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 15px;
-    }
-     .module-heading {
-         font-size: 1.5rem;
-     }
-     .topic-card {
-         min-height: 100px;
-         padding: 10px;
-     }
-     .topic-card h4 {
-         font-size: 1rem;
-     }
-     .topic-card .topic-card-details {
-         font-size: 0.8rem;
-     }
+    /* Removed topic-cards-grid styles as we're using single cards */
+
 }
 
 /* Ensure content within the main container is constrained */

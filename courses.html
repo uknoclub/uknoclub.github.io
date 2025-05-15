@@ -637,7 +637,7 @@
              }); // End of DOMContentLoaded
 
 
-            // --- Function to Fetch All Videos and Render the Course Index ---
+            // --- Function to Fetch All Videos and Render the Course Index (Heading + Single Card) ---
             async function fetchAllVideosAndRenderIndex() {
                 const courseIndexContentDiv = document.getElementById('courseIndexContent');
                  const indexLoadingMessageElement = document.getElementById('indexLoadingMessage');
@@ -675,7 +675,7 @@
                  }
              }
 
-             // --- Function to Render the Course Index from Video Data Array (Header + Grid Layout) ---
+             // --- Function to Render the Course Index from Video Data Array (Heading + Single Card Layout) ---
              function renderCourseIndex(videosData) {
                   const courseIndexContentDiv = document.getElementById('courseIndexContent');
                   if (!courseIndexContentDiv) return;
@@ -687,6 +687,7 @@
                      return;
                  }
 
+                 // Group videos by module/track (simple grouping for display)
                  const modules = {};
                  videosData.forEach(video => {
                       const moduleName = video.videoModule || 'Uncategorized';
@@ -696,34 +697,44 @@
                        modules[moduleName].push(video);
                    });
 
-                  // Define display titles and goals for modules/tracks based on your provided content structure
-                  // The keys here should match the videoModule values you add in the admin panel
+                  // Define display titles for modules/tracks (can use these or just the raw module name)
+                  // These are primarily for the heading text
                   const moduleDisplayInfo = {
-                       'data-analyst': { title: '🟦 MODULE 1: Data Analyst Track', goal: 'Learn tools to analyze and visualize data using spreadsheets, SQL, and BI tools.'},
-                       'business-analyst': { title: '🟨 MODULE 2: Business Analyst Track', goal: 'Learn tools to interpret and present business insights, focusing on decision-making, reporting, and stakeholder communication.'},
-                       'data-scientist': { title: '🟥 MODULE 3: Data Scientist Track', goal: 'Learn modeling, prediction, and advanced data processing using ML and AI.'},
-                       'big-data': { title: '🟩 BONUS MODULE: Big Data & Cloud Tools', goal: 'Learn to work with massive datasets using scalable tools and platforms.'},
-                       'Statistics': { title: 'STATISTICS'}, // These might be module names or topics within a track
+                       'data-analyst': { title: '🟦 MODULE 1: Data Analyst Track'}, // Using track names from your content structure
+                       'business-analyst': { title: '🟨 MODULE 2: Business Analyst Track'},
+                       'data-scientist': { title: '🟥 MODULE 3: Data Scientist Track'},
+                       'big-data': { title: '🟩 BONUS MODULE: Big Data & Cloud Tools'},
+                       // Also include individual topic names if they are used as module names in backend
+                       'Statistics': { title: 'STATISTICS'},
                        'Excel': { title: 'EXCEL'},
                        'SQL': { title: 'SQL'},
                        'Power BI': { title: 'POWER BI'},
                        'Tableau': { title: 'TABLEAU'},
+                       'Python': { title: 'PYTHON'},
+                       'R': { title: 'R'},
+                       'SPSS': { title: 'SPSS'},
+                       'Business Decision Making': { title: 'BUSINESS DECISION MAKING'},
+                       'Machine Learning Basics': { title: 'MACHINE LEARNING BASICS'},
+                       'Deep Learning & Neural Networks': { title: 'DEEP LEARNING & NEURAL NETWORKS'},
+                       'Artificial Intelligence Concepts': { title: 'ARTIFICIAL INTELLIGENCE CONCEPTS'},
+                       'Big Data Tools (Hadoop & Spark)': { title: 'BIG DATA TOOLS (HADOOP & SPARK)'},
+                       'Cloud Platforms (AWS, GCP, Azure)': { title: 'CLOUD PLATFORMS (AWS, GCP, AZURE)'},
                        'Uncategorized': { title: '❓ Uncategorized'}
                    };
 
-                 // Order the modules as specified in your content structure if keys match
+                 // Order the modules based on your content structure preference
                  const orderedModuleKeys = [
                      'data-analyst',
                      'business-analyst',
                      'data-scientist',
                      'big-data',
-                     // Add other potential standalone modules here if they exist
-                      'Statistics', 'Excel', 'SQL', 'Power BI', 'Tableau', 'Uncategorized'
+                     // Add individual topics/modules here if they should appear under their own heading
+                      'Statistics', 'Excel', 'SQL', 'Power BI', 'Tableau',
+                      'Python', 'R', 'SPSS', 'Business Decision Making',
+                      'Machine Learning Basics', 'Deep Learning & Neural Networks', 'Artificial Intelligence Concepts',
+                       'Big Data Tools (Hadoop & Spark)', 'Cloud Platforms (AWS, GCP, Azure)',
+                       'Uncategorized' // Keep uncategorized last
                  ].filter(key => modules[key]); // Filter to only include keys that have videos
-
-                 // Add any remaining module keys that weren't in the ordered list (e.g., new modules)
-                 const remainingKeys = Object.keys(modules).filter(key => !orderedModuleKeys.includes(key));
-                  orderedModuleKeys.push(...remainingKeys.sort());
 
 
                  if (orderedModuleKeys.length === 0) {
@@ -734,54 +745,42 @@
 
                  orderedModuleKeys.forEach(moduleKey => {
                      const moduleVideos = modules[moduleKey];
-                     moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle)); // Sort videos alphabetically within module
+                     // You might want to sort videos within a module if there are multiple under one heading
+                     // For the single-card-per-heading layout, often there's only one video per module name.
+                     // If there are multiple, this code will still render a heading and a single card *for each* video in that module.
+                     moduleVideos.sort((a, b) => a.videoTitle.localeCompare(b.videoTitle));
 
-                     // Create a section for each module
-                     const moduleSection = document.createElement('section');
-                     moduleSection.classList.add('module-section'); // Container for module heading and cards
+                     moduleVideos.forEach(video => { // Loop through each video to create a heading and card for it
+                         const moduleSection = document.createElement('section');
+                         moduleSection.classList.add('module-section'); // Container for heading and single card
 
-                     const displayInfo = moduleDisplayInfo[moduleKey] || { title: moduleKey, goal: '' };
+                         const displayInfo = moduleDisplayInfo[moduleKey] || { title: moduleKey };
 
-                     // Add the module heading
-                     const moduleHeading = document.createElement('h2');
-                     moduleHeading.classList.add('module-heading'); // Class for the module heading
-                     moduleHeading.textContent = displayInfo.title;
-                     moduleSection.appendChild(moduleHeading);
+                         // Add the module heading
+                         const moduleHeading = document.createElement('h2');
+                         moduleHeading.classList.add('module-heading'); // Class for the module heading
+                         // Use the module key title or the video title if module key title is generic
+                         moduleHeading.textContent = displayInfo.title !== moduleKey ? displayInfo.title : video.videoTitle.toUpperCase();
+                         moduleSection.appendChild(moduleHeading);
 
-                     // Add the module goal/description if available
-                     if (displayInfo.goal) {
-                         const moduleGoal = document.createElement('p');
-                         moduleGoal.classList.add('module-goal');
-                         moduleGoal.textContent = `Goal: ${displayInfo.goal}`;
-                         moduleSection.appendChild(moduleGoal);
-                     }
+                         // Create the single card for this video
+                         const videoCardLink = document.createElement('a');
+                         videoCardLink.href = `courses.html?video=${video.topicId}`; // Link to the video player view
+                         videoCardLink.classList.add('video-card-single'); // Class for the single video card
 
+                          // Card content based on screenshot (Title) and backend data (description)
+                         videoCardLink.innerHTML = `
+                             <h4>${video.videoTitle.toUpperCase()}</h4> <p class="video-card-details">${video.videoDescription || 'Some details'}</p> <span class="watch-link"><i class="fas fa-video"></i> Watch ${video.videoType === 'playlist' ? 'Playlist' : 'Video'}</span>
+                         `;
+                         moduleSection.appendChild(videoCardLink); // Append the single card to the module section
 
-                     // Create the grid container for topics
-                     const topicCardsGrid = document.createElement('div');
-                     topicCardsGrid.classList.add('topic-cards-grid'); // Class for the grid
-
-                     moduleVideos.forEach(video => {
-                         const topicCardLink = document.createElement('a');
-                         topicCardLink.href = `courses.html?video=${video.topicId}`; // Link to the video player view
-                         topicCardLink.classList.add('topic-card'); // Class for individual topic cards
-
-                          // Card content based on screenshot (Title) and provided content (details/description)
-                          // Use backend videoTitle (uppercase) and videoDescription
-                         topicCardLink.innerHTML = `
-                             <h4>${video.videoTitle.toUpperCase()}</h4> <p class="topic-card-details">${video.videoDescription || 'Some details'}</p> `;
-                         topicCardsGrid.appendChild(topicCardLink); // Append to the grid
+                         courseIndexContentDiv.appendChild(moduleSection); // Append the module section (heading + card) to the main content div
                      });
 
-                     moduleSection.appendChild(topicCardsGrid); // Append the grid to the module section
-                     courseIndexContentDiv.appendChild(moduleSection); // Append the module section to the main content div
-
-                     // Add a separator line after each major module section, except the last one
-                     if (['data-analyst', 'business-analyst', 'data-scientist', 'big-data'].includes(moduleKey) && orderedModuleKeys.indexOf(moduleKey) < orderedModuleKeys.length - 1) {
-                         const separator = document.createElement('hr');
-                         separator.classList.add('module-separator');
-                         courseIndexContentDiv.appendChild(separator);
-                     }
+                     // Optional: Add a separator line after each distinct module group if needed,
+                     // but for single cards per heading, maybe not necessary unless grouping tracks.
+                     // If you want separators between tracks like Data Analyst, Business Analyst etc.,
+                     // you'd need a different rendering loop structure.
 
                  });
 
