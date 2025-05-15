@@ -148,70 +148,83 @@ body {
 }
 
 
-/* --- Course Catalog Index View Styles (Heading + Single Card Layout) --- */
+/* --- Course Catalog Index View Styles (Nested Cards Layout) --- */
 
-/* Container for each module section (heading + card) */
-.module-section {
-    margin-bottom: 30px; /* Space between module sections */
+/* Style for the main Track/Module card */
+.track-card {
+    background-color: var(--bg-card); /* Use card background variable for the main card */
+    border: 1px solid var(--border); /* Use border variable */
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px; /* Space between track cards */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex; /* Use flex or block, layout of contents is important */
+    flex-direction: column; /* Stack heading, goal, and grid inside */
 }
 
-/* Style for the module heading */
-.module-heading {
+/* Style for the heading inside the main track card */
+.track-heading {
     font-size: 1.8rem;
-    color: var(--primary); /* Use primary accent for headings */
+    color: var(--primary); /* Use primary accent for track headings */
     margin-top: 0;
-    margin-bottom: 15px; /* Space below heading */
-    /* Removed border and padding-bottom to match screenshot */
-    /* border-bottom: 2px solid var(--primary); */
-    /* padding-bottom: 10px; */
+    margin-bottom: 10px; /* Space below heading */
+    border-bottom: 2px solid var(--primary); /* Underline for the heading */
+    padding-bottom: 10px;
 }
 
-/* Style for the single Video/Topic card directly below the heading */
-.video-card-single {
-    display: block; /* Make the link a block element to take space */
-    background-color: var(--bg-card); /* Use card background variable */
+/* Style for the goal/description inside the main track card */
+.track-goal {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-top: 0;
+    margin-bottom: 20px; /* Space below goal before the topic grid */
+}
+
+
+/* Grid for Topic (Video) cards *INSIDE* the main track card */
+.topic-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid for topics */
+    gap: 20px; /* Space between topic cards */
+    /* No background or border here, as they are on the .track-card */
+}
+
+/* Style for individual Topic (Video) cards *INSIDE* the grid */
+.topic-card {
+    display: block;
+    background-color: var(--topic-card-bg); /* Use topic card background variable */
     border: 1px solid var(--border); /* Use border variable */
     border-radius: 8px; /* Rounded corners */
-    padding: 20px;
+    padding: 15px;
     text-decoration: none;
     color: var(--text-main); /* Use main text variable */
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     overflow: hidden;
-    display: flex; /* Use flex for internal layout if needed */
+    text-align: center;
+    display: flex; /* Use flex to center content vertically if needed */
     flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    min-height: 120px; /* Consistent height */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.video-card-single:hover {
+.topic-card:hover {
     transform: translateY(-5px); /* Lift effect */
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     border-color: var(--primary); /* Accent border on hover */
 }
 
-.video-card-single h4 {
-    margin-top: 0;
-    margin-bottom: 5px; /* Space below title */
-    font-size: 1.2rem;
+.topic-card h4 {
+    margin: 0 0 5px 0; /* Space below title */
+    font-size: 1.1rem;
     color: var(--text-main); /* White title text */
 }
 
-.video-card-single .video-card-details {
-    margin-bottom: 10px; /* Space below details */
-    font-size: 0.95rem;
+.topic-card .topic-card-details {
+    margin: 0;
+    font-size: 0.9rem;
     color: var(--text-secondary); /* Secondary text color */
-}
-
-.video-card-single .watch-link {
-    display: flex; /* Use flex to align icon and text */
-    align-items: center;
-    font-size: 1rem;
-    color: var(--primary); /* Accent color for the watch link */
-    font-weight: 500;
-    margin-top: auto; /* Push to the bottom if flex column */
-}
-
-.video-card-single .watch-link i {
-    margin-right: 8px;
-    font-size: 1.1rem;
 }
 
 
@@ -426,8 +439,27 @@ body {
         width: 100%;
         min-width: auto;
     }
-    /* Removed topic-cards-grid styles as we're using single cards */
-
+     /* Adjusted grid for topic cards inside the track card */
+     .topic-cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+     .track-heading { /* Adjusted class name */
+         font-size: 1.5rem;
+     }
+     .track-goal {
+         font-size: 0.9rem;
+     }
+     .topic-card { /* Adjusted class name */
+         min-height: 100px;
+         padding: 10px;
+     }
+     .topic-card h4 {
+         font-size: 1rem;
+     }
+     .topic-card .topic-card-details {
+         font-size: 0.8rem;
+     }
 }
 
 /* Ensure content within the main container is constrained */
