@@ -1,440 +1,62 @@
-/* courses.css - Ukno Club Courses Styles */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Analyst Track | Ukno Club</title>
+  <link rel="stylesheet" href="courses.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="course-container">
+    <header class="course-header">
+      <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+      </a>
+      <h1>Data Analyst Track</h1>
+    </header>
 
-/* Adopt Dashboard Theme Variables */
-:root {
-    --primary: #F52929; /* Dashboard primary red */
-    --primary-dark: #D42020;
-    --secondary: #252835; /* Dashboard secondary */
-    --bg-dark: #2b2b2b; /* Dark background color */
-    --bg-card: #3c3c3c; /* Slightly lighter dark for card backgrounds */
-    --text-main: #FFFFFF; /* White main text */
-    --text-secondary: #cccccc; /* Light gray secondary text */
-    --border: #555; /* Border color */
-    --success: #4CAF50; /* Success green */
-    --error: #F44336; /* Error red */
-    --info-color: #17a2b8; /* Info blue */
-    --message-secondary: #6c757d; /* Muted gray for secondary messages */
-    --topic-card-bg: #4a4a4a; /* Slightly darker card background for topics */
-}
+    <div class="module-section">
+      <h2 class="module-heading blue">🟦 MODULE 1: Data Analyst</h2>
+      <p class="module-goal"><strong>Goal:</strong> Learn tools to analyze and visualize data using spreadsheets, SQL, and BI tools.</p>
 
-/* General Body and Container Styling (Dark Theme) */
-body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    background-color: var(--bg-dark); /* Use dark background variable */
-    color: var(--text-main); /* Use white text variable */
-    line-height: 1.6;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    box-sizing: border-box;
-    min-height: 100vh;
-}
+      <div class="topics-grid">
+        <!-- Topic 1 -->
+        <div class="topic-card">
+          <div class="topic-title">
+            <h3>Statistics Fundamentals</h3>
+          </div>
+          <p class="topic-description">Descriptive stats, probability, hypothesis testing</p>
+          
+          <div class="video-resource">
+            <h4><i class="fas fa-video"></i> Recommended Video</h4>
+            <div class="video-container">
+              <iframe src="https://www.youtube-nocookie.com/embed/NYVkqdT7SZ4" allowfullscreen></iframe>
+            </div>
+            <p class="video-source">NPTEL - Statistics for Data Science</p>
+          </div>
+        </div>
 
+        <!-- Topic 2 -->
+        <div class="topic-card">
+          <div class="topic-title">
+            <h3>Excel for Data Analysis</h3>
+          </div>
+          <p class="topic-description">Pivot tables, formulas, dashboards</p>
+          
+          <div class="video-resource">
+            <h4><i class="fas fa-video"></i> Recommended Video</h4>
+            <div class="video-container">
+              <iframe src="https://www.youtube-nocookie.com/embed/5r5Jy1v0lX0" allowfullscreen></iframe>
+            </div>
+            <p class="video-source">Data Analysis and Decision Making using Excel (NPTEL)</p>
+          </div>
+        </div>
 
-.course-container {
-    width: 100%;
-    max-width: 1200px;
-    background-color: var(--bg-card); /* Use card background variable */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Header Styling - Match Dashboard Header */
-.course-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    background-color: var(--header-bg); /* Use header background variable */
-    border-bottom: 1px solid var(--border); /* Use border variable */
-    flex-wrap: wrap;
-}
-
-.branding {
-    display: flex;
-    align-items: center;
-    gap: 15px; /* Added gap for consistency */
-}
-
-.logo {
-    height: 40px;
-    margin-right: 0; /* Removed margin if using gap */
-}
-
-.course-header h1 {
-    margin: 0;
-    font-size: 1.8rem;
-    color: var(--text-main); /* Use main text variable */
-}
-
-.header-nav a {
-    text-decoration: none;
-    color: var(--text-secondary); /* Use secondary text variable */
-    margin-left: 20px;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.header-nav a:hover {
-    color: var(--primary); /* Use primary accent color */
-}
-
-.logout-btn {
-    color: var(--error); /* Use error color variable */
-}
-
-.logout-btn i {
-    margin-right: 5px;
-}
-
-
-/* Main Content Area */
-.course-main {
-    padding: 20px 30px;
-    flex-grow: 1;
-}
-
-/* Loading/Message Styling - Match Dashboard Message Styles */
-.message {
-    text-align: center;
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 4px;
-    opacity: 1;
-    transition: opacity 0.3s ease;
-}
-
-.message-info {
-    background-color: #3a506b;
-    color: #b3e5fc;
-    border: 1px solid #4a6572;
-}
-
-.message-success {
-    background-color: #4caf50;
-    color: #e8f5e9;
-    border: 1px solid #388e3c;
-}
-
-.message-error {
-    background-color: #f44336;
-    color: #ffcdd2;
-    border: 1px solid #d32f2f;
-}
-
-.message-secondary {
-    background-color: #5a5a5a;
-    color: #e0e0e0;
-    border: 1px solid #757575;
-}
-
-
-/* Hidden Utility Class */
-.hidden {
-    display: none !important;
-}
-
-
-/* --- Course Catalog Index View Styles (Matching Screenshot Design) --- */
-
-/* Container for each module section (heading + grid) */
-.module-section {
-    margin-bottom: 30px;
-}
-
-/* Style for the module heading */
-.module-heading {
-    font-size: 1.8rem;
-    color: var(--primary); /* Use primary accent for headings */
-    margin-top: 0;
-    margin-bottom: 20px;
-    /* Removed border and padding-bottom to match screenshot */
-    /* border-bottom: 2px solid var(--primary); */
-    /* padding-bottom: 10px; */
-}
-
-/* Grid for Topic (Video) cards BELOW the module heading */
-.topic-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
-    gap: 20px;
-}
-
-/* Style for individual Topic (Video) cards */
-.topic-card {
-    display: block;
-    background-color: var(--topic-card-bg); /* Use topic card background variable */
-    border: 1px solid var(--border); /* Use border variable */
-    border-radius: 8px; /* Rounded corners */
-    padding: 15px;
-    text-decoration: none;
-    color: var(--text-main); /* Use main text variable */
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    overflow: hidden;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 120px; /* Consistent height */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.topic-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    border-color: var(--primary); /* Accent border on hover */
-}
-
-.topic-card h4 {
-    margin: 0 0 5px 0;
-    font-size: 1.1rem;
-    color: var(--text-main); /* White title text */
-}
-
-.topic-card .topic-card-details {
-    margin: 0;
-    font-size: 0.9rem;
-    color: var(--text-secondary); /* Secondary text color */
-}
-
-
-.coming-soon {
-    text-align: center;
-    margin-top: 40px;
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    font-weight: 600;
-}
-
-/* --- Video Player View Styles --- */
-
-.back-link-container {
-    margin-bottom: 20px;
-}
-
-.back-link {
-    text-decoration: none;
-    color: var(--text-secondary); /* Use secondary text color */
-    font-size: 1rem;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.back-link:hover {
-    color: var(--primary); /* Use primary accent color */
-}
-
-.back-link i {
-    margin-right: 5px;
-}
-
-#videoTitle {
-    font-size: 1.8rem;
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: var(--text-main); /* Use main text color */
-    text-align: center;
-}
-
-
-/* Flexbox/Grid for Video Player and Notes Layout */
-.video-notes-layout {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-}
-
-.video-player-section {
-    flex: 2; /* Takes 2/3 space */
-    min-width: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.notes-section {
-    flex: 1; /* Takes 1/3 space */
-    min-width: 250px;
-    background-color: var(--bg-card); /* Use card background variable */
-    border: 1px solid var(--border); /* Use border variable */
-    border-radius: 8px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-}
-
-.notes-section h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-    color: var(--text-main); /* Use main text color */
-    border-bottom: 1px solid var(--border); /* Use border variable */
-    padding-bottom: 10px;
-}
-
-.notes-section textarea {
-    width: 100%;
-    flex-grow: 1;
-    min-height: 200px;
-    padding: 10px;
-    border: 1px solid var(--border); /* Use border variable */
-    border-radius: 4px;
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    resize: vertical;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-    background-color: var(--bg-dark); /* Use dark background for textarea */
-    color: var(--text-main); /* Use main text color */
-}
-
-.notes-section .message {
-     margin-top: 0;
-     padding: 8px;
-     font-size: 0.9rem;
-}
-
-/* YouTube Player Container - maintain aspect ratio */
-.video-container {
-     position: relative;
-     width: 100%;
-     padding-top: 56.25%; /* 16:9 Aspect Ratio */
-     background-color: #000;
-     border-radius: 8px;
-     overflow: hidden;
-     margin-bottom: 15px;
-}
-
-#youtubePlayer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-/* Style for the resume message below the player */
-#resumeMessage {
-     margin-top: 10px;
-     color: var(--text-secondary);
-     font-size: 0.9rem;
-     text-align: center;
-}
-
-/* Styles for the Playlist Items List (Placeholder) */
-#playlistItemsContainer {
-    margin-top: 20px;
-    width: 100%;
-    background-color: var(--bg-card); /* Use card background variable */
-    border: 1px solid var(--border); /* Use border variable */
-    border-radius: 8px;
-    padding: 15px;
-}
-
-#playlistItemsContainer h4 {
-     font-size: 1.1rem;
-     margin-top: 0;
-     margin-bottom: 10px;
-     color: var(--text-main); /* Use main text color */
-     border-bottom: 1px solid var(--border); /* Use border variable */
-     padding-bottom: 10px;
-}
-
-#playlistItemsList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#playlistItemsList li {
-    background-color: var(--topic-card-bg); /* Use topic card background variable */
-    border: 1px solid var(--border); /* Use border variable */
-    border-radius: 4px;
-    padding: 10px 15px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    color: var(--text-main); /* Use main text color */
-}
-
-#playlistItemsList li:last-child {
-     margin-bottom: 0;
-}
-
-
-#playlistItemsList li:hover {
-    background-color: var(--hover-bg);
-}
-
-#playlistItemsList li .status {
-     display: inline-block;
-     width: 10px;
-     height: 10px;
-     border-radius: 50%;
-     margin-left: 10px;
-     vertical-align: middle;
-     border: 1px solid var(--text-secondary);
-}
-
-#playlistItemsList li .status.completed {
-     background-color: var(--progress-fill);
-     border-color: var(--progress-fill);
-}
-
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .course-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .header-nav {
-        margin-top: 10px;
-        width: 100%;
-        text-align: center;
-    }
-    .header-nav a {
-        margin: 0 10px;
-        display: inline-block;
-    }
-    .course-main {
-        padding: 15px;
-    }
-    .video-notes-layout {
-        flex-direction: column;
-        gap: 20px;
-    }
-    .video-player-section, .notes-section {
-        flex: none;
-        width: 100%;
-        min-width: auto;
-    }
-     .topic-cards-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 15px;
-    }
-     .module-heading {
-         font-size: 1.5rem;
-     }
-     .topic-card {
-         min-height: 100px;
-         padding: 10px;
-     }
-     .topic-card h4 {
-         font-size: 1rem;
-     }
-     .topic-card .topic-card-details {
-         font-size: 0.8rem;
-     }
-}
-
-/* Ensure content within the main container is constrained */
-.course-main > div {
-    max-width: 100%;
-    box-sizing: border-box;
-}
+        <!-- Add more topics following the same pattern -->
+      </div>
+    </div>
+  </div>
+</body>
+</html>
