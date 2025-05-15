@@ -407,8 +407,8 @@ body {
 }
 
 #playlistItemsList li .status.completed {
-     background-color: var(--progress-fill);
-     border-color: var(--progress-fill);
+     background-color: var(--primary); /* Use primary color for completed status */
+     border-color: var(--primary);
 }
 
 
