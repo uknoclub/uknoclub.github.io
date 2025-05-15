@@ -210,7 +210,6 @@
                                     youtubeId = url.searchParams.get('v');
                                      console.log('Detected YouTube video ID from v parameter:', youtubeId);
                                 } else if (url.hostname === 'youtu.be') {
-                                     // <<< Check this line (approx 185) and the surrounding lines for any extra characters, especially ')' >>>
                                      const pathSegments = url.pathname.split('/').filter(segment => segment);
                                      if (pathSegments.length > 0) {
                                           youtubeId = pathSegments[0];
@@ -235,7 +234,6 @@
                           console.error("Error parsing video URL:", videoDetails.videoUrl, e);
                            if (videoTitleElement) videoTitleElement.textContent = "Invalid Video URL Format";
                            if (pageTitleElement) pageTitleElement.textContent = "Video Error";
-                           // CORRECTED TYPO HERE: videoPlayerContentContentDiv -> videoPlayerContentDiv
                            if (videoPlayerContentDiv) videoPlayerContentDiv.innerHTML = '<p class="message message-error">The video URL format is invalid.</p>';
                           return;
                       }
@@ -698,18 +696,19 @@
                        modules[moduleName].push(video);
                    });
 
-                  // Define display titles for modules/tracks
+                  // Define display titles for modules/tracks based on your provided content structure
+                  // The keys here should match the videoModule values you add in the admin panel
                   const moduleDisplayInfo = {
-                       'Statistics': { title: 'STATISTICS'},
-                       'Excel': { title: 'EXCEL'},
-                       'SQL': { title: 'SQL'},
-                       'Power BI': { title: 'POWER BI'},
-                       'Tableau': { title: 'TABLEAU'},
-                       'data-analyst': { title: 'Data Analyst Track'},
-                       'business-analyst': { title: 'Business Analyst Track'},
-                       'data-scientist': { title: 'Data Scientist Track'},
-                       'big-data': { title: 'Big Data & Cloud Tools'},
-                       'Uncategorized': { title: 'Uncategorized'}
+                       'data-analyst': { title: '🟦 MODULE 1: Data Analyst Track', goal: 'Learn tools to analyze and visualize data using spreadsheets, SQL, and BI tools.'},
+                       'business-analyst': { title: '🟨 MODULE 2: Business Analyst Track', goal: 'Learn tools to interpret and present business insights, focusing on decision-making, reporting, and stakeholder communication.'},
+                       'data-scientist': { title: '🟥 MODULE 3: Data Scientist Track', goal: 'Learn modeling, prediction, and advanced data processing using ML and AI.'},
+                       'big-data': { title: '🟩 BONUS MODULE: Big Data & Cloud Tools', goal: 'Learn to work with massive datasets using scalable tools and platforms.'},
+                       'Statistics': { title: 'STATISTICS'}, // Assuming 'Statistics' is a module itself or a topic sometimes listed as a module
+                       'Excel': { title: 'EXCEL'}, // Assuming 'Excel' is a module itself or a topic sometimes listed as a module
+                       'SQL': { title: 'SQL'}, // Assuming 'SQL' is a module itself or a topic sometimes listed as a module
+                       'Power BI': { title: 'POWER BI'}, // Assuming 'Power BI' is a module itself or a topic sometimes listed as a module
+                       'Tableau': { title: 'TABLEAU'}, // Assuming 'Tableau' is a module itself or a topic sometimes listed as a module
+                       'Uncategorized': { title: '❓ Uncategorized'}
                    };
 
                  const moduleKeys = Object.keys(modules).sort(); // Sort module keys alphabetically
@@ -728,7 +727,7 @@
                      const moduleSection = document.createElement('section');
                      moduleSection.classList.add('module-section'); // Container for module heading and cards
 
-                     const displayInfo = moduleDisplayInfo[moduleKey] || { title: moduleKey };
+                     const displayInfo = moduleDisplayInfo[moduleKey] || { title: moduleKey, goal: '' };
 
                      // Add the module heading
                      const moduleHeading = document.createElement('h2');
@@ -736,18 +735,28 @@
                      moduleHeading.textContent = displayInfo.title;
                      moduleSection.appendChild(moduleHeading);
 
+                     // Add the module goal/description if available
+                     if (displayInfo.goal) {
+                         const moduleGoal = document.createElement('p');
+                         moduleGoal.classList.add('module-goal');
+                         moduleGoal.textContent = `Goal: ${displayInfo.goal}`;
+                         moduleSection.appendChild(moduleGoal);
+                     }
+
+
                      // Create the grid container for topics
                      const topicCardsGrid = document.createElement('div');
                      topicCardsGrid.classList.add('topic-cards-grid'); // Class for the grid
 
                      moduleVideos.forEach(video => {
                          const topicCardLink = document.createElement('a');
-                         topicCardLink.href = `courses.html?video=${video.topicId}`;
+                         topicCardLink.href = `courses.html?video=${video.topicId}`; // Link to the video player view
                          topicCardLink.classList.add('topic-card'); // Class for individual topic cards
 
-                          // Card content based on screenshot (Title and "SOME DETAILS")
+                          // Card content based on screenshot (Title) and provided content (details/description)
+                          // You can decide how much detail you want here. Using videoDescription from backend is good.
                          topicCardLink.innerHTML = `
-                             <h4>${video.videoTitle.toUpperCase()}</h4> <p class="topic-card-details">SOME DETAILS</p> `;
+                             <h4>${video.videoTitle.toUpperCase()}</h4> <p class="topic-card-details">${video.videoDescription || 'Some details'}</p> `;
                          topicCardsGrid.appendChild(topicCardLink); // Append to the grid
                      });
 
