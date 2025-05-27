@@ -5,174 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ukno Club - Courses</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-main: #2F303A;
-            --primary: #F52929;
-            --text-main: #FFFFFF;
-            --text-secondary: #CCCCCC;
-            --card-bg: #3A3B45;
-            --border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Align to the top */
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            padding: 40px 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px; /* Space between logo and title */
-        }
-
-        .header-logo {
-            height: 50px; /* Adjust logo size as needed */
-            width: auto;
-        }
-
-        .header h1 {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 700;
-            font-size: 2.5rem;
-            color: var(--text-main); /* Changed to white */
-            margin: 0;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-buttons a {
-            padding: 10px 20px;
-            background-color: var(--primary);
-            color: var(--text-main);
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-        }
-
-        .nav-buttons a:hover {
-            background-color: #D42020; /* Slightly darker red on hover */
-        }
-
-        .module-section {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .module-section h2 {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 600;
-            font-size: 1.8rem;
-            color: var(--text-main);
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .courses-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .course-button {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 15px;
-            background-color: #4A4B54; /* Darker card background for buttons */
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            text-decoration: none;
-            color: var(--text-main);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .course-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            background-color: #5A5B64; /* Slightly lighter on hover */
-        }
-
-        .course-button h3 {
-            font-size: 1.1rem;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        .course-button p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.4;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .nav-buttons {
-                flex-wrap: wrap;
-                justify-content: flex-start;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .module-section h2 {
-                font-size: 1.5rem;
-            }
-
-            .courses-grid {
-                grid-template-columns: 1fr; /* Stack buttons on small screens */
-            }
-        }
-    </style>
-</head>
+    <link rel="stylesheet" href="courses.css"> </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="header-left">
-                <img src="assets/logo.png" alt="Ukno Club Logo" class="header-logo">
+                <img src="logo.png" alt="Ukno Club Logo" class="header-logo">
                 <h1>Courses</h1>
             </div>
             <div class="nav-buttons">
@@ -183,101 +21,41 @@
         </div>
 
         <div class="module-section">
-            <h2>Module 1: Data Analytics Core</h2>
+            <h2>Data Analyst Track</h2>
             <div class="courses-grid">
                 <a href="#" class="course-button">
-                    <h3>Data Analytics - Excel</h3>
-                    <p>Master Excel for data analysis and reporting.</p>
-                </a>
-                <a href="#" class="course-button">
-                    <h3>Data Analytics - SQL</h3>
-                    <p>Learn SQL for database management and querying.</p>
-                </a>
-                <a href="#" class="course-button">
-                    <h3>Data Analytics - Power BI</h3>
-                    <p>Create interactive dashboards with Power BI.</p>
-                </a>
-                <a href="#" class="course-button">
-                    <h3>Data Analytics - Tableau</h3>
-                    <p>Visualize data effectively using Tableau.</p>
+                    <h3>Start here!</h3>
+                    <p>Learn Excel, Statistics, SQL, Power BI, and Tableau.</p>
                 </a>
             </div>
         </div>
 
         <div class="module-section">
-            <h2>Module 2: Business Analyst Fundamentals</h2>
+            <h2>Business Analyst Track</h2>
             <div class="courses-grid">
                 <a href="#" class="course-button">
-                    <h3>Business Analyst - Basics</h3>
-                    <p>Understand the core concepts of business analysis.</p>
-                </a>
-                <a href="#" class="course-button">
-                    <h3>Business Analyst - Requirements Gathering</h3>
-                    <p>Techniques for eliciting and documenting requirements.</p>
-                </a>
-                <a href="#" class="course-button">
-                    <h3>Business Analyst - Process Modeling</h3>
-                    <p>Model business processes for efficiency.</p>
+                    <h3>Build on fundamentals</h3>
+                    <p>with business concepts and tools.</p>
                 </a>
             </div>
         </div>
 
         <div class="module-section">
-            <h2>Module 3: Data Science Essentials</h2>
+            <h2>Data Scientist Track</h2>
             <div class="courses-grid">
                 <a href="#" class="course-button">
-                    <h3>Data Science - Python</h3>
-                    <p>Introduction to Python for data science.</p>
-                </a>
-                <a href="#" class="course-button">
-                    <h3>Data Science - R Programming</h3>
-                    <p>Learn R for statistical computing and graphics.</p>
-                </a>
-                <a href="#" class="course-button">
-                    <h3>Data Science - Machine Learning Basics</h3>
-                    <p>Fundamental machine learning algorithms.</p>
+                    <h3>Dive into advanced statistics</h3>
+                    <p>machine learning, and algorithms.</p>
                 </a>
             </div>
         </div>
 
         <div class="module-section">
-            <h2>Module 4: Big Data Technologies</h2>
+            <h2>Big Data & Cloud Tools</h2>
             <div class="courses-grid">
                 <a href="#" class="course-button">
-                    <h3>Big Data - Hadoop</h3>
-                    <p>Explore the Hadoop ecosystem for big data processing.</p>
-                </a>
-                <a href="#" class="course-button">
-                    <h3>Big Data - Spark</h3>
-                    <p>Learn Spark for fast and general-purpose cluster computing.</p>
-                </a>
-            </div>
-        </div>
-
-        <div class="module-section">
-            <h2>Module 5: AI & ML Advanced</h2>
-            <div class="courses-grid">
-                <a href="#" class="course-button">
-                    <h3>AI & ML - Deep Learning Frameworks</h3>
-                    <p>Work with TensorFlow and PyTorch.</p>
-                </a>
-                <a href="#" class="course-button">
-                    <h3>AI & ML - Natural Language Processing</h3>
-                    <p>Understand text data with NLP techniques.</p>
-                </a>
-            </div>
-        </div>
-
-        <div class="module-section">
-            <h2>Module 6: Deep Learning Specialization</h2>
-            <div class="courses-grid">
-                <a href="#" class="course-button">
-                    <h3>Deep Learning - Computer Vision</h3>
-                    <p>Apply deep learning to image and video analysis.</p>
-                </a>
-                <a href="#" class="course-button">
-                    <h3>Deep Learning - Neural Networks</h3>
-                    <p>Dive deeper into neural network architectures.</p>
+                    <h3>Explore technologies</h3>
+                    <p>for large datasets and cloud platforms.</p>
                 </a>
             </div>
         </div>
